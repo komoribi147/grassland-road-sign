@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>草地上的路标 · 开放世界原型</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<canvas id="game"></canvas>
+<div class="rain" id="rain" aria-hidden="true"></div>
+<div class="night" id="night" aria-hidden="true"></div>
+
+<!-- 顶部状态 -->
+<header id="hud">
+  <div class="hud-left">
+    <span class="addr" id="addr">你</span>
+    <span class="trust-bar"><i id="trustFill"></i></span>
+  </div>
+  <div class="hud-mid" id="hint">雾很大，五步外看不见人</div>
+  <div class="hud-right">
+    <span id="markCount">路标 0</span>
+    <button id="btnHelp" type="button">?</button>
+  </div>
+</header>
+
+<!-- 罗盘 -->
+<div id="compass"><i id="needle"></i></div>
+
+<!-- 交互按钮（靠近人时才出现） -->
+<button id="btnTalk" type="button" hidden>跟他说句话（E）</button>
+<button id="btnStick" type="button" hidden>插一根木棍（E）</button>
+
+<!-- 对话框 -->
+<section id="talk" hidden>
+  <div class="talk-box">
+    <div class="talk-head">
+      <span id="talkWho">老班长</span>
+      <button class="x" id="talkClose" type="button">×</button>
+    </div>
+    <div class="talk-log" id="talkLog"></div>
+    <div class="talk-input">
+      <input id="talkText" type="text" maxlength="60" placeholder="你想说什么，按回车" />
+      <button id="talkSend" type="button">说</button>
+    </div>
+  </div>
+</section>
+
+<!-- 结局 -->
+<section id="ending" hidden>
+  <div class="end-box">
+    <h1>看到河了</h1>
+    <p>雨停了。草地尽头，一条河在晨光里发亮。</p>
+    <p class="small">这是开放世界原型的一段。完整的故事在主线版里。</p>
+    <div class="end-actions">
+      <a class="btn" href="../index.html">去看完整故事</a>
+      <button class="btn ghost" id="btnAgain" type="button">再走一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- 说明 -->
+<section id="help" hidden>
+  <div class="help-box">
+    <h2>怎么玩（原型）</h2>
+    <ul>
+      <li><b>走</b>：WASD / 方向键，或者直接点地图上想去的地方；手机上点哪走哪</li>
+      <li><b>说话</b>：走到人旁边，点跳出来的按钮（或按 E）</li>
+      <li><b>插路标</b>：站在能走的地方按 E —— 后面的人靠它认路</li>
+      <li><b>小心泥沼</b>：深色泥地会陷进去。别慌，等同志来拉你</li>
+      <li><b>目标</b>：往东走，找到班佑河</li>
+    </ul>
+    <p class="small">这是技术原型：地块和人物都用色块占位，美术还没做。玩法跑通了再谈画的事。</p>
+    <button class="btn" id="helpClose" type="button">知道了</button>
+  </div>
+</section>
+
+<div class="toast" id="toast" hidden></div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>

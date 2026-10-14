@@ -1,0 +1,110 @@
+/* 开放世界原型：色块占位，先证明玩法成立 */
+:root {
+  --ink: #e8e4da;
+  --ink-dim: #b8b4a8;
+  --paper: rgba(13, 17, 15, 0.94);
+  --line: rgba(232, 228, 218, 0.18);
+  --accent: #c8553d;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body {
+  margin: 0; height: 100%; overflow: hidden; background: #0d1210; color: var(--ink);
+  font-family: "Source Han Serif SC", "Noto Serif SC", "Songti SC", STSong, SimSun, serif;
+  -webkit-user-select: none; user-select: none;
+}
+#game { display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+
+.rain {
+  position: fixed; inset: -20% -10%; pointer-events: none; z-index: 3;
+  background-image: repeating-linear-gradient(74deg,
+    rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, rgba(255,255,255,0) 1px, rgba(255,255,255,0) 8px);
+  background-size: 200px 200px; animation: rainfall .55s linear infinite; opacity: .45;
+}
+@keyframes rainfall { from { background-position: 0 0; } to { background-position: -52px 200px; } }
+.night { position: fixed; inset: 0; pointer-events: none; z-index: 2; background: rgba(20, 30, 45, 0.18); }
+
+#hud {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 14px; font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; font-size: 13px;
+  background: linear-gradient(180deg, rgba(6,9,8,.8), rgba(6,9,8,0));
+}
+.hud-left { display: flex; align-items: center; gap: 8px; }
+.addr { color: var(--accent); letter-spacing: .1em; }
+.trust-bar { display: block; width: 70px; height: 3px; background: rgba(232,228,218,.16); border-radius: 2px; overflow: hidden; }
+.trust-bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .5s ease; }
+.hud-mid { color: var(--ink-dim); flex: 1; text-align: center; }
+.hud-right { display: flex; align-items: center; gap: 10px; color: var(--ink-dim); }
+#btnHelp {
+  width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line);
+  background: rgba(10,14,12,.6); color: var(--ink-dim); cursor: pointer;
+}
+
+#compass {
+  position: fixed; right: 18px; bottom: 96px; z-index: 10;
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid var(--line); background: rgba(10,14,12,.55);
+  display: flex; align-items: center; justify-content: center;
+}
+#compass i {
+  display: block; width: 2px; height: 16px; background: var(--accent);
+  transform-origin: 50% 100%; transform: translateY(-8px) rotate(0deg);
+}
+#compass::after {
+  content: "北"; position: absolute; top: -16px; font-size: 10px; color: var(--ink-dim);
+  font-family: "PingFang SC", system-ui, sans-serif;
+}
+
+#btnTalk, #btnStick {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 11;
+  padding: 12px 26px; border-radius: 999px; border: 1px solid rgba(200,85,61,.6);
+  background: rgba(200,85,61,.22); color: #f2eae4; font-size: 15px; letter-spacing: .08em;
+  font-family: "PingFang SC", system-ui, sans-serif; cursor: pointer;
+}
+
+#talk { position: fixed; inset: 0; z-index: 20; display: flex; align-items: flex-end; justify-content: center; padding: 0 16px 24px; background: rgba(6,9,8,.35); }
+.talk-box { width: min(680px, 100%); border: 1px solid var(--line); border-radius: 14px; background: var(--paper); padding: 16px 18px; }
+.talk-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.talk-head span { color: var(--accent); font-family: "PingFang SC", system-ui, sans-serif; font-size: 13px; letter-spacing: .14em; }
+.x { background: none; border: none; color: var(--ink-dim); font-size: 20px; cursor: pointer; line-height: 1; }
+.talk-log { max-height: 32vh; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.bubble { max-width: 84%; padding: 9px 13px; border-radius: 11px; font-size: 16px; line-height: 1.8; }
+.bubble.me { align-self: flex-end; background: rgba(200,85,61,.16); border: 1px solid rgba(200,85,61,.35); }
+.bubble.npc { align-self: flex-start; background: rgba(24,30,26,.8); border: 1px solid var(--line); }
+.bubble.pending { color: var(--ink-dim); font-size: 13px; font-family: "PingFang SC", system-ui, sans-serif; }
+.talk-input { display: flex; gap: 8px; }
+.talk-input input {
+  flex: 1; padding: 11px 13px; border-radius: 10px; border: 1px solid var(--line);
+  background: rgba(8,11,10,.6); color: var(--ink); font-family: inherit; font-size: 16px; outline: none;
+}
+.talk-input button {
+  padding: 0 22px; border-radius: 10px; border: 1px solid rgba(200,85,61,.55);
+  background: rgba(200,85,61,.18); color: var(--ink); font-size: 15px; cursor: pointer;
+}
+
+#ending, #help { position: fixed; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(6,9,8,.86); }
+.end-box, .help-box { width: min(560px, 94vw); border: 1px solid var(--line); border-radius: 16px; background: rgba(12,16,14,.96); padding: 26px 28px; }
+.end-box h1 { font-size: 30px; letter-spacing: .12em; margin: 0 0 16px; font-weight: 500; }
+.end-box p, .help-box li { color: var(--ink-dim); line-height: 1.95; font-size: 15px; }
+.help-box h2 { font-size: 19px; letter-spacing: .08em; margin: 0 0 14px; font-weight: 500; }
+.help-box ul { padding-left: 20px; margin: 0 0 14px; }
+.small { font-family: "PingFang SC", system-ui, sans-serif; font-size: 12.5px; color: #8b887e; }
+.end-actions { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+.btn {
+  display: inline-block; padding: 11px 24px; border-radius: 999px; text-decoration: none;
+  border: 1px solid rgba(200,85,61,.7); background: rgba(200,85,61,.18); color: var(--ink);
+  font-size: 15px; cursor: pointer; font-family: "PingFang SC", system-ui, sans-serif;
+}
+.btn.ghost { border-color: var(--line); background: rgba(10,14,12,.5); color: var(--ink-dim); }
+
+.toast {
+  position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%); z-index: 25;
+  padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line);
+  background: rgba(12,16,14,.94); font-family: "PingFang SC", system-ui, sans-serif; font-size: 13px; color: var(--ink-dim);
+}
+
+@media (max-width: 620px) {
+  .hud-mid { display: none; }
+  .talk-log { max-height: 26vh; }
+}

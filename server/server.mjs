@@ -197,7 +197,7 @@ const server = http.createServer(async (req, res) => {
 
   // 静态文件
   let rel = decodeURIComponent(url.pathname);
-  if (rel === "/") rel = "/index.html";
+  if (rel.endsWith("/")) rel += "index.html";   // 子目录也要能打开（例如 /openworld/）
   const filePath = path.join(root, path.normalize(rel).replace(/^(\.\.[/\\])+/, ""));
   if (!filePath.startsWith(root) || !existsSync(filePath)) {
     return send(res, 404, "Not found", "text/plain; charset=utf-8");
