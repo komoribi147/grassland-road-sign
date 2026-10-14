@@ -238,6 +238,18 @@ export class StoryEngine {
       this._ambient = want;
     }
     this.ui.rain.hidden = want !== "rain";
+
+    // 浏览器有时候会拦下自动播放。真被拦了就明确告诉玩家一句话，
+    // 不要让人对着一个没声音的页面猜。
+    if (want) {
+      const wanted = want;
+      setTimeout(() => {
+        const el = this.audio.layers.get(wanted);
+        if (el && el.paused && this.audio.enabled) {
+          this.on.toast?.("声音被浏览器挡住了，点一下屏幕任意位置就能开");
+        }
+      }, 1600);
+    }
   }
 
   updateTrust() {

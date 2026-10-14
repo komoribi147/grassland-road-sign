@@ -3,7 +3,7 @@ export class AudioManager {
   constructor() {
     this.layers = new Map(); // name -> HTMLAudioElement
     this.enabled = true;
-    this.volume = 0.35;
+    this.volume = 0.5;   // 雨声这类环境音本身偏"轻"，音量给足一点才听得出来
     this.missing = new Set(); // 已经确认缺失的文件，不再重复请求
   }
 
