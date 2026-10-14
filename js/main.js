@@ -53,6 +53,7 @@ function renderLoreList() {
 
 function showReport(r) {
   document.body.dataset.mode = "title";
+  engine.showHud(false);
   $("reportTitle").textContent = r.title;
   $("reportBody").innerHTML = `
     <p>${r.closing}</p>

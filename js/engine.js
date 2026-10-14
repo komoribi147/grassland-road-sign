@@ -108,12 +108,24 @@ export class StoryEngine {
   enterScene(id, initial = false) {
     const scene = this.scenes[id];
     if (!scene) throw new Error(`找不到场景：${id}`);
+    this.showHud(true);
     this.state.sceneId = id;
     if (!initial) this.state.step = 0;
     this.ui.chapterName.textContent = scene.title || id;
     if (scene.bg || scene.tone) this.setBg(scene.bg, scene.tone);
     if (scene.ambient !== undefined) this.setAmbient(scene.ambient);
     this.updateTrust();
+  }
+
+  /** 剧情进行中显示对话区与顶栏；结束时收起 */
+  showHud(on) {
+    this.ui.dialogue.hidden = !on;
+    this.ui.topbar.hidden = !on;
+    this.ui.text.textContent = "";
+    this.ui.speaker.hidden = true;
+    this.ui.choices.hidden = true;
+    this.ui.choices.innerHTML = "";
+    this.ui.hint.hidden = true;
   }
 
   setBg(src, tone) {
@@ -216,7 +228,8 @@ export class StoryEngine {
 
     this.ui.speaker.hidden = !who;
     this.ui.speaker.textContent = who;
-    this.ui.text.className = isNarration ? "narration" : isThought ? "thought" : isPlayer ? "who" : "";
+    const tone = isNarration ? "narration" : isThought ? "thought" : isPlayer ? "who" : "";
+    this.ui.text.className = tone ? `text ${tone}` : "text";
 
     const text = step.raw ? step.text : this.interpolate(step.text);
     if (who && !isNarration) {
@@ -236,7 +249,7 @@ export class StoryEngine {
     box.innerHTML = "";
     if (step.prompt) {
       this.ui.speaker.hidden = true;
-      this.ui.text.className = "narration";
+      this.ui.text.className = "text narration";
       await this.type(this.interpolate(step.prompt));
     }
 
@@ -346,7 +359,7 @@ export class StoryEngine {
     // 先给出"他在想"的停顿，再取大模型回复
     this.ui.speaker.hidden = false;
     this.ui.speaker.textContent = this.characters[step.ai]?.display || "";
-    this.ui.text.className = "thinking";
+    this.ui.text.className = "text thinking";
     this.ui.text.textContent = "……";
 
     let reply = "";

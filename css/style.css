@@ -9,11 +9,17 @@
   --line: rgba(232, 228, 218, 0.18);
   --accent: #c8553d;      /* 红布条 */
   --paper: rgba(14, 18, 16, 0.82);
+  --paper-solid: rgba(13, 17, 15, 0.94);
+  --veil: rgba(6, 9, 8, 0.88);
   --font-serif: "Source Han Serif SC", "Noto Serif SC", "Songti SC", STSong, SimSun, "SimSun", serif;
   --font-sans: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
+
+/* 关键：页面用 hidden 属性控制显示，而下面多处写了 display:flex，
+   如果不加这条规则，hidden 会被覆盖 —— 所有面板会一直叠在屏幕上。 */
+[hidden] { display: none !important; }
 
 html, body {
   margin: 0;
@@ -25,11 +31,16 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* 注意：这一层不能用 position: fixed。
+   实测 Chrome 在"整屏 fixed 层 + 半透明底色"下会把层里的文字按低分辨率栅格化，
+   结果就是文字发暗、几乎看不清。用 absolute 配合 body 撑满，视觉一样，文字正常。 */
+body { position: relative; }
+
 body[data-mode="playing"] { cursor: pointer; }
 
 /* ---------- 背景舞台 ---------- */
 
-#stage { position: fixed; inset: 0; z-index: 0; }
+#stage { position: absolute; inset: 0; z-index: 0; }
 
 .bg-layer {
   position: absolute;
@@ -76,7 +87,7 @@ body[data-mode="playing"] { cursor: pointer; }
 /* ---------- 顶部状态栏 ---------- */
 
 #topbar {
-  position: fixed;
+  position: absolute;
   top: 0; left: 0; right: 0;
   z-index: 5;
   display: flex;
@@ -152,7 +163,7 @@ button { font-family: var(--font-sans); cursor: pointer; }
 /* ---------- 对话区 ---------- */
 
 #dialogue {
-  position: fixed;
+  position: absolute;
   left: 0; right: 0; bottom: 0;
   z-index: 4;
   padding: 0 0 max(18px, env(safe-area-inset-bottom)) 0;
@@ -165,8 +176,7 @@ button { font-family: var(--font-sans); cursor: pointer; }
   padding: 20px 26px 22px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: var(--paper);
-  backdrop-filter: blur(6px);
+  background: var(--paper-solid);
   box-shadow: 0 18px 50px rgba(0,0,0,0.45);
 }
 
@@ -185,9 +195,10 @@ button { font-family: var(--font-sans); cursor: pointer; }
   min-height: 3.8em;
   white-space: pre-wrap;
 }
-.text .narration { color: var(--ink-dim); font-style: normal; }
-.text .thought { color: var(--ink-faint); }
-.text .who { color: var(--ink-faint); }
+.text.narration { color: var(--ink-dim); }
+.text.thought { color: var(--ink-faint); }
+.text.who { color: var(--ink-faint); }
+.text.thinking { color: var(--ink-faint); font-family: var(--font-sans); font-size: 14px; }
 
 .choices {
   margin-top: 16px;
@@ -248,20 +259,19 @@ button { font-family: var(--font-sans); cursor: pointer; }
 /* ---------- 全屏层（标题 / 面板） ---------- */
 
 .screen {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 20;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(6,9,8,0.78);
-  backdrop-filter: blur(3px);
+  background: var(--veil);
   animation: fadein 0.35s ease;
 }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 
-#screenTitle { background: rgba(6,9,8,0.6); }
+#screenTitle { background: rgba(6,9,8,0.72); }
 
 .title-card { text-align: center; max-width: 640px; }
 .eyebrow {
@@ -318,7 +328,7 @@ button { font-family: var(--font-sans); cursor: pointer; }
 .report-cell .v { font-size: 22px; margin-top: 6px; color: var(--ink); }
 
 .toast {
-  position: fixed;
+  position: absolute;
   left: 50%;
   bottom: 26px;
   transform: translateX(-50%);

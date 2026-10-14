@@ -4,6 +4,8 @@
 # 临时文件
 _smoke.html
 _smoke.png
+_shot*.png
+tools/_*
 *.log
 
 # 系统文件
