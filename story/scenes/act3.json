@@ -1,0 +1,148 @@
+{
+  "id": "act3",
+  "title": "第三幕 · 路标",
+  "bg": "assets/bg/act3-rain-markers.jpg",
+  "tone": ["#3f4841", "#141a16"],
+  "ambient": "rain",
+  "steps": [
+    { "t": "narrate", "text": "第三天。雨又下起来了，比之前更大。" },
+    { "t": "narrate", "text": "队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。" },
+    { "t": "narrate", "text": "天昏地暗。分不清方向。指南针受潮，失灵了。" },
+    { "t": "say", "who": "he-xiuying", "text": "老李，方向不对。我们是不是绕回来了？" },
+    { "t": "narrate", "text": "（老班长蹲在地上，用手指抠泥，闻了闻。）" },
+    { "t": "say", "who": "li-changhe", "text": "不对。这泥是黑的，刚才那个地方泥是黄的。没绕。" },
+    { "t": "narrate", "text": "（他站起来，眯着眼看远处。）" },
+    { "t": "say", "who": "li-changhe", "text": "往北。看到那棵歪脖子树没有？昨天走过的。" },
+    {
+      "t": "input",
+      "key": "answer_road",
+      "ai": "li-changhe",
+      "situation": "队伍在雾里迷了路，指南针受潮失灵。老班长靠记路找方向，你问他怎么记得住。",
+      "hint": "你想问他什么？（按回车）",
+      "trust": 4,
+      "fallback": ["记不住。但我记得走过的路。每走过一个地方，我就记一个记号。你看——"]
+    },
+    { "t": "narrate", "text": "画面拉远。\n身后泥泞的草地上，每隔几十步就有一根木棍，有的绑着布条，有的绑着草鞋，有的只是插着一根树枝。" },
+    { "t": "say", "who": "li-changhe", "text": "前面的人给我们留的。我们给后面的人留。这草地，一个人走不出去。但一群人，能。" },
+    { "t": "bg", "src": "assets/bg/act3-night-high-ground.jpg", "tone": ["#1e2521", "#080b09"] },
+    { "t": "ambient", "name": "" },
+    { "t": "narrate", "text": "夜晚。队伍挤在一块稍微干一点的高地上。火柴还是生不着。伤员在发烧，说胡话。" },
+    { "t": "narrate", "text": "石头缩在你旁边，浑身发抖。" },
+    { "t": "say", "who": "shitou", "text": "{player}……你说，我们能走出去吗？" },
+    {
+      "t": "input",
+      "key": "answer_walk",
+      "ai": "shitou",
+      "situation": "夜里，草地高地上，十六岁的司号员石头缩在你旁边，小声问你他们能不能走出去。他哥哥上个月在毛儿盖牺牲了。",
+      "hint": "你想怎么回答他？（按回车）",
+      "trust": 4,
+      "fallback": ["能。老班长说往北，就走得出去。"]
+    },
+    { "t": "say", "who": "shitou", "text": "我昨天晚上梦见我娘了。她给我烙饼，白面的。我一口咬下去——醒了，嘴里全是草。" },
+    { "t": "narrate", "text": "（沉默。）" },
+    { "t": "say", "who": "shitou", "text": "{player}，你说……革命胜利了，是不是天天吃白面馍？" },
+    {
+      "t": "input",
+      "key": "answer_baimian",
+      "ai": "shitou",
+      "situation": "石头问你：革命胜利了是不是天天吃白面馍。他缺了一颗门牙，饿得厉害，但不好意思直说。",
+      "hint": "你想怎么回答他？（按回车）",
+      "trust": 4,
+      "fallback": ["是。到时候你先吃，吃两个。"]
+    },
+    { "t": "narrate", "text": "（石头笑了，露出缺了的那颗门牙。）" },
+    { "t": "say", "who": "shitou", "text": "那我得活着走出去。我娘还等我呢。" },
+    { "t": "narrate", "text": "何大姐在另一边给伤员喂水。她自己的嘴唇干裂，但水壶先给伤员。" },
+    {
+      "t": "choose",
+      "prompt": "（要不要走过去？）",
+      "options": [
+        { "text": "走过去，站在何大姐旁边", "trust": 4, "goto": "act3:water" },
+        { "text": "留在原地，让她一个人待着", "trust": 0, "goto": "act3:after_water" }
+      ]
+    },
+
+    { "t": "label", "name": "water" },
+    {
+      "t": "input",
+      "key": "answer_water",
+      "ai": "he-xiuying",
+      "situation": "夜里，何大姐把水壶里最后一口水喂给了伤员，自己的嘴唇干裂。你走过来站在她旁边。",
+      "hint": "你想说什么？（按回车）",
+      "trust": 5,
+      "fallback": ["伤员比我需要。"],
+      "after": [
+        { "t": "narrate", "text": "（她把水壶摇了摇，空的。）" },
+        { "t": "say", "who": "he-xiuying", "text": "明天得找水。" }
+      ]
+    },
+
+    { "t": "label", "name": "after_water" },
+    { "t": "narrate", "text": "老班长把叫你到一边。" },
+    { "t": "say", "who": "li-changhe", "text": "{player}。你读过书，你跟我说——革命胜利了，是啥样？" },
+    {
+      "t": "input",
+      "key": "answer_victory",
+      "ai": "li-changhe",
+      "situation": "夜里在草地上，老班长偷偷问你：革命胜利了是什么样。他其实想问的不是天下，是他自己能不能等到那一天。",
+      "hint": "你想怎么说？（按回车）",
+      "trust": 5,
+      "fallback": ["嗯。那我要走到那天。"]
+    },
+    { "t": "narrate", "text": "（他睁开眼，看了看你，又看了看睡着的石头。）" },
+    { "t": "say", "who": "li-changhe", "text": "你替我记住。李长河，河南信阳人，1930年参加红军。" },
+    { "t": "say", "who": "__player__", "text": "您说这个干什么？" },
+    { "t": "say", "who": "li-changhe", "text": "没什么。睡吧。" },
+    { "t": "narrate", "text": "过了一会儿，何大姐走过来，坐在你旁边。这是她第一次主动靠近你。" },
+    { "t": "say", "who": "he-xiuying", "text": "老李跟你说他家的事了？" },
+    {
+      "t": "input",
+      "key": "answer_li",
+      "ai": "he-xiuying",
+      "situation": "何大姐第一次主动坐到玩家旁边，问老班长有没有跟玩家说过他家的事。",
+      "hint": "你想怎么回答？（按回车）",
+      "trust": 4,
+      "fallback": ["他没跟你说。他闺女，1931年河南大饥荒，逃荒走的。他找了三年，没找着。"]
+    },
+    { "t": "say", "who": "he-xiuying", "text": "后来参加红军，他说，打天下，让天下闺女都不遭那个罪。" },
+    { "t": "narrate", "text": "（沉默。）" },
+    { "t": "say", "who": "he-xiuying", "text": "他从来没跟别人说过。我是听卫生部的老同志讲的。" },
+    { "t": "narrate", "text": "（她转头看着你。）" },
+    { "t": "say", "who": "he-xiuying", "text": "他让你记住他的名字。你记住了吗？" },
+    {
+      "t": "input",
+      "key": "answer_name",
+      "ai": "he-xiuying",
+      "situation": "何大姐问你：老班长让你记住他的名字，你记住了吗。",
+      "hint": "你想怎么回答？（按回车）",
+      "trust": 6,
+      "fallback": ["记住就好。"]
+    },
+    { "t": "narrate", "text": "（她站起来要走。）" },
+    { "t": "say", "who": "he-xiuying", "text": "我叫何秀英。江西瑞金人。1931年参加红军。" },
+    { "t": "narrate", "text": "（她停了一下，声音更轻了。）" },
+    { "t": "say", "who": "he-xiuying", "text": "我男人……在湘江没的。他走之前说，革命胜利了，让我去念书。他教我认了三百多个字，我就学了三百多个。后面的……没人教了。" },
+    { "t": "lore", "card": "xiangjiang" },
+    {
+      "t": "input",
+      "key": "answer_hexiuying",
+      "ai": "he-xiuying",
+      "situation": "何大姐第一次对别人说起：她丈夫在湘江战役牺牲，走之前教她认了三百多个字。说完她有点后悔说多了。",
+      "hint": "你想说什么？（按回车）",
+      "trust": 8,
+      "fallback": ["不说这个了。石头烧得厉害，我去看看。"]
+    },
+    { "t": "narrate", "text": "老班长突然在旁边开口。他其实一直没睡着。" },
+    { "t": "say", "who": "li-changhe", "text": "何大姐。" },
+    { "t": "say", "who": "he-xiuying", "text": "嗯？" },
+    { "t": "say", "who": "li-changhe", "text": "革命胜利了，女同志能上学吗？" },
+    { "t": "narrate", "text": "（他学着她的语气，把她之前问过的话，重复了一遍。）" },
+    { "t": "say", "who": "he-xiuying", "text": "能。" },
+    { "t": "say", "who": "li-changhe", "text": "那你得当医生。" },
+    { "t": "say", "who": "he-xiuying", "text": "我当。" },
+    { "t": "say", "who": "li-changhe", "text": "正经的医生。" },
+    { "t": "say", "who": "he-xiuying", "text": "正经的。你到时候给我写证明。" },
+    { "t": "say", "who": "li-changhe", "text": "中。我李长河说话算话。" },
+    { "t": "goto", "scene": "act4" }
+  ]
+}

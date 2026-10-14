@@ -1,0 +1,66 @@
+# 草地上的路标
+
+一件以长征过草地为背景的**沉浸式叙事网页作品**：你不扮演英雄，你是一个在泥水里醒来、说不清自己番号的人。跟着老班长、石头、何大姐往外走，他们会观察你、记住你说过的话，并根据你的回答改变对你的称呼。
+
+> 河南工业大学 · 讯飞杯参赛作品（AI + 教育方向）
+
+## 现在就能跑
+
+需要本机有 Node.js（本项目零依赖，不用装任何东西）。
+
+```bash
+node server/server.mjs
+```
+
+然后浏览器打开 <http://localhost:8787>。
+
+没有服务器也能看：直接双击 `index.html` 即可（只是没有 AI 实时对话，NPC 会用剧本里写好的兜底台词）。
+
+想让 NPC 真正"活"起来（自由回答由大模型即兴回应）：把 `server/.env.example` 复制成项目根目录的 `.env`，填上讯飞开放平台的 APIPassword 和模型名，然后重新运行上面的命令。详见 [docs/DEPLOY.md](docs/DEPLOY.md)。
+
+想看自动演示（展台播放、录屏）：打开 <http://localhost:8787/#auto>，`#auto60` 是快放。
+
+## 三个亮点
+
+1. **AI 即兴对话**：剧本里写着"（自由回答）"的地方，玩家真的可以随便说，NPC 按人设、按当前信任值即兴回答，并且会记住你之前说过的话。
+2. **信任值系统**：开场叫你"你"，信任到 50 叫"同志"，到 80 叫"文书"。称呼变了，同一句台词的重量就不一样。
+3. **史料卡与学习报告**：体验过程中解锁 8 张史料卡（松潘草地、湘江战役、毛儿盖、女红军……），结束时生成一份学习报告：你做了什么选择、听谁讲了什么、还有哪些历史没了解。
+
+## 目录结构
+
+```
+index.html            页面
+css/                  样式
+js/                   引擎（剧情播放、信任值、AI 对话、存档）
+story/                剧本数据 ← 编剧改这里
+  manifest.json       章节清单
+  characters.json     人物设定（也用来生成大模型的人设提示词）
+  lore.json           史料卡
+  scenes/*.json       每一幕的剧情
+assets/               美术与音频资源 ← 美术交这里
+server/server.mjs     本地服务器 + AI 转发（零依赖）
+tools/check-story.mjs 剧本数据自检
+docs/                 协作、美术、部署、参赛文档
+```
+
+## 三种角色怎么参与
+
+| 你是 | 主要动这些文件 | 先读 |
+| --- | --- | --- |
+| 编剧 / 文案 | `story/scenes/*.json`、`story/lore.json` | [docs/STORY_FORMAT.md](docs/STORY_FORMAT.md) |
+| 美术 / 音频 | `assets/`（按 `docs/ART_GUIDE.md` 里的文件名放好就自动生效） | [docs/ART_GUIDE.md](docs/ART_GUIDE.md) |
+| 程序 | `js/`、`css/`、`server/` | [CONTRIBUTING.md](CONTRIBUTING.md) |
+
+所有人都先看 [docs/GIT_GUIDE.md](docs/GIT_GUIDE.md)——从没碰过 GitHub 也能照着做完。
+
+## 每次改完先自检
+
+```bash
+node tools/check-story.mjs
+```
+
+它会检查跳转、人物名、史料卡编号、缺图提示，还会列出"需要团队定稿的补写内容"。
+
+## 授权
+
+代码采用 MIT 协议（见 [LICENSE](LICENSE)）。剧本、人物、史料卡文字与美术资源版权归项目组所有，用于本作品及其宣传；引用史实时请标注来源。

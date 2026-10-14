@@ -1,0 +1,13 @@
+{
+  "title": "草地上的路标",
+  "subtitle": "1935 · 松潘草地",
+  "start": "prologue",
+  "scenes": [
+    "story/scenes/prologue.json",
+    "story/scenes/act1.json",
+    "story/scenes/act2.json",
+    "story/scenes/act3.json",
+    "story/scenes/act4.json",
+    "story/scenes/epilogue.json"
+  ]
+}

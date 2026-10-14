@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>草地上的路标 · 沉浸式叙事</title>
+<meta name="description" content="1935年8月，松潘草地。一个不记得自己番号的人，跟着一支队伍往外走。" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-mode="title">
+
+  <!-- 背景舞台：两张图做交叉淡入，缺图时用渐变兜底 -->
+  <div id="stage">
+    <div class="bg-layer" id="bgA"></div>
+    <div class="bg-layer" id="bgB"></div>
+    <div class="rain" id="rain" hidden></div>
+    <div class="vignette"></div>
+  </div>
+
+  <!-- 顶部状态栏 -->
+  <header id="topbar" hidden>
+    <div class="chapter">
+      <span id="chapterName">序章 · 泥水</span>
+    </div>
+    <div class="topbar-right">
+      <div class="trust" id="trustChip" title="信任值：NPC 对你的称呼会随信任值变化">
+        <span id="trustAddress">你</span>
+        <span class="trust-bar"><i id="trustFill"></i></span>
+      </div>
+      <button class="ghost-btn" id="btnLore" type="button">史料卡 <b id="loreCount">0</b></button>
+      <button class="ghost-btn" id="btnMenu" type="button">菜单</button>
+    </div>
+  </header>
+
+  <!-- 对话区 -->
+  <main id="dialogue" hidden>
+    <div class="dialogue-inner">
+      <div class="speaker" id="speakerName" hidden></div>
+      <div class="text" id="dialogueText"></div>
+      <div class="choices" id="choices" hidden></div>
+      <div class="click-hint" id="clickHint" hidden>点击继续</div>
+    </div>
+  </main>
+
+  <!-- 标题页 -->
+  <section class="screen" id="screenTitle">
+    <div class="title-card">
+      <p class="eyebrow">1935 · 松潘草地</p>
+      <h1>草地上的路标</h1>
+      <p class="subtitle">一个不记得自己番号的人，跟着一支队伍往外走。</p>
+      <div class="title-actions">
+        <button class="primary-btn" id="btnStart" type="button">开始</button>
+        <button class="ghost-btn" id="btnResume" type="button" hidden>继续上次</button>
+        <button class="ghost-btn" id="btnAbout" type="button">这是什么</button>
+      </div>
+      <p class="footnote">一次约 20 分钟的沉浸式体验 · 建议戴耳机</p>
+    </div>
+  </section>
+
+  <!-- 史料卡 -->
+  <section class="screen panel" id="screenLore" hidden>
+    <div class="panel-box">
+      <div class="panel-head">
+        <h2>史料卡</h2>
+        <button class="ghost-btn" data-close="screenLore" type="button">关闭</button>
+      </div>
+      <p class="panel-note">剧情中解锁的历史背景。人物为艺术形象，史实供延伸阅读。</p>
+      <div class="lore-list" id="loreList"></div>
+    </div>
+  </section>
+
+  <!-- 菜单 -->
+  <section class="screen panel" id="screenMenu" hidden>
+    <div class="panel-box small">
+      <div class="panel-head">
+        <h2>菜单</h2>
+        <button class="ghost-btn" data-close="screenMenu" type="button">关闭</button>
+      </div>
+      <div class="menu-list">
+        <button class="ghost-btn wide" id="btnSave" type="button">保存进度</button>
+        <button class="ghost-btn wide" id="btnToggleSound" type="button">音效：开</button>
+        <button class="ghost-btn wide" id="btnRestart" type="button">从头开始</button>
+        <button class="ghost-btn wide" id="btnAbout2" type="button">关于本作品</button>
+      </div>
+      <p class="panel-note" id="aiBadge">AI 状态：检测中…</p>
+    </div>
+  </section>
+
+  <!-- 关于 -->
+  <section class="screen panel" id="screenAbout" hidden>
+    <div class="panel-box">
+      <div class="panel-head">
+        <h2>关于本作品</h2>
+        <button class="ghost-btn" data-close="screenAbout" type="button">关闭</button>
+      </div>
+      <div class="about-body">
+        <p>《草地上的路标》是一件以长征过草地为背景的沉浸式叙事作品。你不扮演英雄，你是一个在泥水里醒来、说不清自己番号的人。</p>
+        <p>作品以剧本为骨、以大模型为血肉：NPC 会观察你、记住你、根据你的回答改变对你的称呼。我们不写战争，写人。</p>
+        <p class="small">河南工业大学 · 讯飞杯参赛作品（AI + 教育）</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 结尾学习报告 -->
+  <section class="screen panel" id="screenReport" hidden>
+    <div class="panel-box">
+      <div class="panel-head">
+        <h2 id="reportTitle">走出来了</h2>
+        <button class="ghost-btn" id="btnReportClose" type="button">重玩</button>
+      </div>
+      <div class="about-body" id="reportBody"></div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

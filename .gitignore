@@ -1,0 +1,15 @@
+# 本地配置（含大模型 Key，绝对不要提交）
+.env
+
+# 临时文件
+_smoke.html
+_smoke.png
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 依赖（本项目零依赖，一般用不到）
+node_modules/

@@ -1,0 +1,81 @@
+{
+  "id": "act1",
+  "title": "第一幕 · 断粮",
+  "bg": "assets/bg/act1-night-camp.jpg",
+  "tone": ["#232a26", "#0a0d0b"],
+  "ambient": "",
+  "steps": [
+    { "t": "narrate", "text": "草地深处。夜。雨暂时停了，但地上全是水。" },
+    { "t": "narrate", "text": "几十个红军战士背靠背坐着，浑身湿透。有人在拧衣服，水哗哗地流。有人靠在别人肩上就睡着了——不确定是睡着，还是别的。" },
+    { "t": "narrate", "text": "篝火生不起来，火柴全湿了。\n炊事班这边，老班长把黑锅架在几块石头上，锅里煮着一小把青稞面，汤稀得能照见人影。" },
+    { "t": "lore", "card": "kouliang" },
+    { "t": "say", "who": "shitou", "text": "老班长……今天能多给我一口不？我……我不多要，就一口。" },
+    { "t": "say", "who": "li-changhe", "text": "一人一勺。伤员两勺。这是规矩。" },
+    { "t": "say", "who": "shitou", "text": "我知道……我就是问问。" },
+    { "t": "say", "who": "he-xiuying", "text": "石头。你那勺已经盛了。伤员还没喝。" },
+    { "t": "narrate", "text": "（石头缩回去。）" },
+    { "t": "say", "who": "shitou", "text": "……我知道了。" },
+    { "t": "narrate", "text": "老班长盛汤。第一碗给伤员，第二碗给石头，第三碗递给你。锅里还剩一点底子。" },
+    { "t": "say", "who": "li-changhe", "text": "你喝。" },
+    {
+      "t": "input",
+      "key": "answer_soup",
+      "ai": "li-changhe",
+      "situation": "夜里，草地上，老班长把第三碗稀得照见人影的青稞面汤递给你，锅里只剩一点底子。",
+      "hint": "你想说什么？（按回车）",
+      "trust": 5,
+      "fallback": ["我胃小。喝不了多少。你们年轻人，路还长。"],
+      "after": [{ "t": "narrate", "text": "（他说这话的时候，把自己那只碗往身后挪了挪。）" }]
+    },
+    { "t": "narrate", "text": "老班长背过身，蹲在一边，从口袋里摸出什么东西往嘴里塞。" },
+    {
+      "t": "choose",
+      "prompt": "（你要不要走近看看？）",
+      "options": [
+        { "text": "走近看看", "trust": 3, "goto": "act1:observe" },
+        { "text": "不动，先把汤喝完", "trust": 0, "goto": "act1:skip" }
+      ]
+    },
+
+    { "t": "label", "name": "observe" },
+    { "t": "narrate", "text": "你走近。他在嚼草根，嘴角有绿色的汁液。" },
+    {
+      "t": "input",
+      "key": "answer_root",
+      "ai": "li-changhe",
+      "situation": "你撞见他蹲在一边偷偷嚼草根，他有点被逮住的意思。",
+      "hint": "你想说什么？（按回车）",
+      "trust": 6,
+      "fallback": ["这草根……甜。你们不懂。我老家河南，小时候放牛，就爱嚼这个。"],
+      "after": [
+        { "t": "narrate", "text": "（他拍拍手上的泥。）" },
+        { "t": "say", "who": "li-changhe", "text": "别跟石头说。那小子嘴碎。" }
+      ]
+    },
+    { "t": "lore", "card": "henan" },
+    { "t": "goto", "scene": "act1:hejie" },
+
+    { "t": "label", "name": "skip" },
+    { "t": "narrate", "text": "你没动。汤很快就凉了，你还是一口一口喝完了。" },
+
+    { "t": "label", "name": "hejie" },
+    { "t": "narrate", "text": "何大姐走过来。她手里拿着一个水壶。" },
+    { "t": "narrate", "text": "（她蹲下，看着老班长的嘴。）" },
+    { "t": "say", "who": "he-xiuying", "text": "你又吃草根。" },
+    { "t": "say", "who": "li-changhe", "text": "就嚼两口。" },
+    { "t": "say", "who": "he-xiuying", "text": "上回你说的“就嚼两口”，第二天吐了一宿。你是炊事班长，你倒了，全连喝西北风。" },
+    { "t": "narrate", "text": "（她从水壶里倒出一点水，递过去。）" },
+    { "t": "say", "who": "he-xiuying", "text": "漱口。" },
+    { "t": "say", "who": "li-changhe", "text": "中。听你的，何大姐。" },
+    { "t": "narrate", "text": "（他接过水。何大姐站起来要走，停了一下。）" },
+    { "t": "say", "who": "he-xiuying", "text": "那个新来的……你打算怎么办？" },
+    { "t": "say", "who": "li-changhe", "text": "先带着。" },
+    { "t": "say", "who": "he-xiuying", "text": "底细清楚吗？" },
+    { "t": "say", "who": "li-changhe", "text": "不清楚。" },
+    { "t": "say", "who": "he-xiuying", "text": "那你还带？" },
+    { "t": "say", "who": "li-changhe", "text": "你当年从瑞金跟出来的时候，有人问过你底细吗？" },
+    { "t": "narrate", "text": "（何大姐没说话。她看了你一眼，转身走了。）" },
+    { "t": "narrate", "text": "远处有人轻声唱：“八月继续向前进，草地行军不怕冷……”\n声音断断续续，被风吞掉。" },
+    { "t": "goto", "scene": "act2" }
+  ]
+}

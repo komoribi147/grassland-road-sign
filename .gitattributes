@@ -1,0 +1,12 @@
+# 统一换行符，避免 Windows / Mac 队友互相制造"整文件改动"
+* text=auto eol=lf
+
+# 二进制文件不做换行转换
+*.docx binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+*.mp3 binary
+*.ogg binary
+*.wav binary
