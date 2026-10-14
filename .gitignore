@@ -6,6 +6,7 @@ _smoke.html
 _smoke.png
 _shot*.png
 tools/_*
+_msg*.txt
 *.log
 
 # 系统文件
