@@ -18,6 +18,9 @@ export class AiClient {
       const info = await res.json();
       this.online = !!info.ai;
       this.model = info.model || "";
+      this.characters = info.characters || {};
+      this.ready = info.ready ?? 0;
+      this.total = info.total ?? 0;
       this.lastError = info.reason || "";
     } catch (err) {
       this.online = false;
@@ -41,7 +44,7 @@ export class AiClient {
       const data = await res.json();
       const text = (data.text || "").trim();
       if (!text) throw new Error("empty");
-      return text;
+      return { text, trust: Number(data.trust) || 0, mood: data.mood || "" };
     } finally {
       clearTimeout(t);
     }

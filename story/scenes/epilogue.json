@@ -4,6 +4,8 @@
   "bg": "assets/bg/epilogue-today.jpg",
   "tone": ["#6b7360", "#22261d"],
   "ambient": "",
+  "present": [],
+  "situation": "很多年以后，今天的松潘草地。",
   "steps": [
     { "t": "narrate", "text": "画面虚化。" },
     { "t": "narrate", "text": "雨停了。泥地变成了草甸，草甸上有一条小路，路边立着一块碑。" },

@@ -4,6 +4,8 @@
   "bg": "assets/bg/act3-rain-markers.jpg",
   "tone": ["#3f4841", "#141a16"],
   "ambient": "rain",
+  "present": ["li-changhe", "shitou", "he-xiuying"],
+  "situation": "第三天夜里，队伍走散了，只剩下老班长、石头、何大姐、三个伤员和你，挤在一小块稍微干一点的高地上。",
   "steps": [
     { "t": "narrate", "text": "第三天。雨又下起来了，比之前更大。" },
     { "t": "narrate", "text": "队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。" },

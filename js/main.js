@@ -3,7 +3,7 @@ import { StoryEngine } from "./engine.js";
 import { Save } from "./save.js";
 
 const $ = (id) => document.getElementById(id);
-const screens = ["screenTitle", "screenLore", "screenMenu", "screenAbout", "screenReport"];
+const screens = ["screenTitle", "screenLore", "screenMenu", "screenAbout", "screenReport", "screenTalk"];
 
 const engine = new StoryEngine({
   toast: showToast,
@@ -74,6 +74,106 @@ function showReport(r) {
 
 // ---------- 启动 ----------
 
+// ---------- 自由对话：主角想说什么就说什么 ----------
+
+let talkTarget = null;
+
+function renderTalkWho() {
+  const box = $("talkWho");
+  box.innerHTML = "";
+  const present = engine.state ? engine.presentNpcs() : [];
+  if (!present.length) {
+    box.innerHTML = '<div class="talk-empty">这会儿你身边没有人。</div>';
+    return;
+  }
+  if (talkTarget && !present.includes(talkTarget)) talkTarget = present[0];
+  present.forEach((id) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "who-chip" + (id === talkTarget ? " on" : "");
+    btn.textContent = engine.characters[id]?.display || id;
+    btn.addEventListener("click", () => {
+      talkTarget = id;
+      renderTalkWho();
+      renderTalkLog();
+      $("talkInput").focus();
+    });
+    box.appendChild(btn);
+  });
+}
+
+function renderTalkLog() {
+  const log = $("talkLog");
+  log.innerHTML = "";
+  if (!talkTarget) {
+    log.innerHTML = '<div class="talk-empty">选一个人，跟他说点什么。</div>';
+    return;
+  }
+  const mem = engine.memoryOf(talkTarget);
+  if (!mem.length) {
+    log.innerHTML = '<div class="talk-empty">你还没跟他说过话。他会记住你说的每一句。</div>';
+    return;
+  }
+  for (const m of mem) {
+    const div = document.createElement("div");
+    div.className = "bubble " + (m.role === "player" ? "me" : "npc");
+    div.textContent = m.text;
+    if (m.mood) {
+      const s = document.createElement("span");
+      s.className = "mood";
+      s.textContent = m.mood;
+      div.appendChild(s);
+    }
+    log.appendChild(div);
+  }
+  log.scrollTop = log.scrollHeight;
+}
+
+function openTalk() {
+  if (!engine.state) {
+    showToast("先开始剧情，再开口说话。");
+    return;
+  }
+  const present = engine.presentNpcs();
+  if (!present.length) {
+    showToast("这地方，一个人也看不见。");
+    return;
+  }
+  talkTarget = present.includes(talkTarget) ? talkTarget : present[0];
+  renderTalkWho();
+  renderTalkLog();
+  openScreen("screenTalk");
+  setTimeout(() => $("talkInput").focus(), 60);
+}
+
+async function sendTalk() {
+  const input = $("talkInput");
+  const text = input.value.trim();
+  if (!text || !talkTarget) return;
+  input.value = "";
+
+  const log = $("talkLog");
+  const pending = document.createElement("div");
+  pending.className = "bubble npc pending";
+  pending.textContent = "……";
+  log.appendChild(pending);
+  log.scrollTop = log.scrollHeight;
+  $("talkSend").disabled = true;
+
+  const out = await engine.freeTalk(talkTarget, text);
+
+  $("talkSend").disabled = false;
+  renderTalkLog();
+  if (out.trust) showToast(`信任 ${out.trust > 0 ? "+" : ""}${out.trust} · ${out.display}的反应`);
+  input.focus();
+}
+
+$("btnTalk").addEventListener("click", openTalk);
+$("talkSend").addEventListener("click", sendTalk);
+$("talkInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); sendTalk(); }
+});
+
 async function boot() {
   try {
     await engine.load();
@@ -85,8 +185,13 @@ async function boot() {
   $("btnResume").hidden = !Save.read();
 
   engine.ai.check().then((online) => {
+    const chars = engine.ai.characters || {};
+    const detail = Object.entries(chars)
+      .filter(([id]) => !id.startsWith("narration") && !id.endsWith("old"))
+      .map(([, info]) => `${info.model}${info.ready ? "" : "（缺 Key）"}`)
+      .join(" / ");
     $("aiBadge").textContent = online
-      ? `AI 状态：在线（${engine.ai.model}）—— 你的每一句自由回答都由大模型即兴回应`
+      ? `AI 状态：在线 —— 三个 NPC 各自独立：${detail}。你的每一句话都由他们自己对答。`
       : "AI 状态：离线台词模式（未启动本地服务或未配置大模型 Key，剧情仍可完整游玩）";
   });
 }
@@ -169,13 +274,14 @@ if (location.hash.includes("auto")) {
     engine.startNew().catch(() => {});
     for (;;) {
       await wait(speed);
-      const choice = document.querySelector(".choice-btn");
+      const visible = (el) => el && el.offsetParent !== null;
+      const choice = [...document.querySelectorAll("#dialogue .choice-btn")].find(visible);
       if (choice) { choice.click(); continue; }
-      const input = document.querySelector(".input-row input");
+      const input = [...document.querySelectorAll("#dialogue .input-row input")].find(visible);
       if (input) {
         input.value = canned[idx++ % canned.length];
         await wait(200);
-        document.querySelector(".input-row button")?.click();
+        [...document.querySelectorAll("#dialogue .input-row button")].find(visible)?.click();
         continue;
       }
       document.querySelector("#dialogue")?.click();

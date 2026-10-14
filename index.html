@@ -27,6 +27,7 @@
         <span id="trustAddress">你</span>
         <span class="trust-bar"><i id="trustFill"></i></span>
       </div>
+      <button class="ghost-btn" id="btnTalk" type="button">开口说话</button>
       <button class="ghost-btn" id="btnLore" type="button">史料卡 <b id="loreCount">0</b></button>
       <button class="ghost-btn" id="btnMenu" type="button">菜单</button>
     </div>
@@ -83,6 +84,23 @@
         <button class="ghost-btn wide" id="btnAbout2" type="button">关于本作品</button>
       </div>
       <p class="panel-note" id="aiBadge">AI 状态：检测中…</p>
+    </div>
+  </section>
+
+  <!-- 自由对话：主角想说什么就说什么 -->
+  <section class="screen panel" id="screenTalk" hidden>
+    <div class="panel-box">
+      <div class="panel-head">
+        <h2>自由对话</h2>
+        <button class="ghost-btn" data-close="screenTalk" type="button">关闭</button>
+      </div>
+      <p class="panel-note">他们各想各的，也各记各的：你在谁面前说过什么，只有那个人记得。</p>
+      <div class="talk-who" id="talkWho"></div>
+      <div class="talk-log" id="talkLog"></div>
+      <div class="input-row" id="talkRow">
+        <input id="talkInput" type="text" maxlength="60" placeholder="写下你想说的话，按回车" />
+        <button id="talkSend" type="button">说</button>
+      </div>
     </div>
   </section>
 

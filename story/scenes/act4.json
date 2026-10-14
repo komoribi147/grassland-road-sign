@@ -4,6 +4,8 @@
   "bg": "assets/bg/act4-dawn-river.jpg",
   "tone": ["#5a5a4a", "#1a1d17"],
   "ambient": "",
+  "present": ["shitou", "he-xiuying"],
+  "situation": "第四天清晨，雨停了，你们终于走出草地，看到了班佑河。老班长没有跟上来。",
   "steps": [
     { "t": "narrate", "text": "第四天清晨。雨停了。天边有一道亮光。" },
     { "t": "narrate", "text": "你醒来，发现自己身上盖着老班长那件破棉袄。\n老班长不在旁边。" },

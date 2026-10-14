@@ -42,6 +42,32 @@ Pages 版是纯静态的：**没有 AI 实时对话**，NPC 会用剧本里写�
 
 启动命令：`node server/server.mjs`（或 `npm start`）。
 
+## 三之补充、三个 NPC 各用各的模型（推荐）
+
+打开 `server/ai-config.json`，每个角色可以单独指定：
+
+```json
+"default":  { "model": "4.0Ultra", "apiKeyEnv": "AI_API_KEY", "temperature": 0.85 },
+"characters": {
+  "li-changhe":  { "temperature": 0.65, "apiKeyEnv": "AI_KEY_LAOBANZHANG" },
+  "shitou":      { "model": "lite",     "temperature": 1.0,  "apiKeyEnv": "AI_KEY_SHITOU" },
+  "he-xiuying":  { "temperature": 0.8,  "apiKeyEnv": "AI_KEY_HEXIUYING" }
+}
+```
+
+`apiKeyEnv` 写的是**环境变量名**。这样三个人可以各申请一个讯飞账号，各填各的 Key，
+额度互不占用，谁的角色就用谁的额度：
+
+```
+AI_API_KEY=组长备用Key
+AI_KEY_LAOBANZHANG=同学A的APIPassword
+AI_KEY_SHITOU=同学B的APIPassword
+AI_KEY_HEXIUYING=同学C的APIPassword
+```
+
+某个角色没填自己的 Key，就自动用 `AI_API_KEY`。一个都没配也不会崩，只是改用剧本兜底台词。
+启动时终端会打印每个 NPC 用的模型和有没有配上 Key，菜单里也能看到。
+
 ## 四、比赛现场 checklist
 
 - [ ] 提前一天在比赛用的那台电脑上跑通 `node server/server.mjs`

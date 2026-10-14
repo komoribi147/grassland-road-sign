@@ -4,6 +4,8 @@
   "bg": "assets/bg/prologue-marsh-dusk.jpg",
   "tone": ["#3d4739", "#131814"],
   "ambient": "rain",
+  "present": ["li-changhe", "shitou", "he-xiuying"],
+  "situation": "黄昏，松潘草地边缘，一直下雨。你刚在泥水里醒过来，是老班长把你叫起来的。石头和何大姐也在旁边。",
   "steps": [
     { "t": "narrate", "text": "1935年8月，松潘草地边缘。黄昏。雨。" },
     { "t": "narrate", "text": "屏幕从一片模糊的绿色和灰色里亮起来。\n你趴着，嘴里全是泥。雨落在后背上，很轻，很冷，一直没停过。" },
@@ -13,28 +15,15 @@
     { "t": "lore", "card": "songpan" },
     { "t": "say", "who": "li-changhe", "text": "你是哪个连的？" },
     {
-      "t": "choose",
-      "prompt": "（你张了张嘴。）",
-      "options": [
-        { "text": "我不记得了。", "trust": 3, "why": "坦诚", "set": { "story": "forgot" }, "goto": "prologue:forgot" },
-        { "text": "四团的。", "trust": -5, "why": "撒了谎", "set": { "story": "lie" }, "goto": "prologue:lie" }
-      ]
+      "t": "input",
+      "key": "answer_company",
+      "ai": "li-changhe",
+      "situation": "黄昏，松潘草地边缘的雨里。老班长蹲在你面前，手里握着探路木棍，正问你是哪个连的。他不认识你，也不信任你。",
+      "hint": "你想怎么回答？（按回车）",
+      "trust": 2,
+      "fallback": ["……先起来吧。是不是同志，走出去再说。"],
+      "after": [{ "t": "narrate", "text": "（他用木棍戳了戳你身边的泥，没再追问。）" }]
     },
-
-    { "t": "label", "name": "forgot" },
-    { "t": "say", "who": "li-changhe", "text": "不记得？番号不记得，连长不记得，自己叫啥也不记得？" },
-    { "t": "narrate", "text": "他用木棍戳了戳你身边的泥。" },
-    { "t": "say", "who": "li-changhe", "text": "行。那你记得啥？" },
-    { "t": "goto", "scene": "prologue:rejoin" },
-
-    { "t": "label", "name": "lie" },
-    { "t": "say", "who": "li-changhe", "text": "四团？四团前天往班佑走了。你掉队三天了？" },
-    { "t": "narrate", "text": "他眯起眼。" },
-    { "t": "say", "who": "li-changhe", "text": "四团团长姓啥？" },
-    { "t": "narrate", "text": "（你答不上来。）" },
-    { "t": "say", "who": "li-changhe", "text": "……先起来吧。是不是同志，走出去再说。" },
-
-    { "t": "label", "name": "rejoin" },
     { "t": "narrate", "text": "老班长没有再追问。\n他站起身，往旁边让了半步——不是拉你，是给你留了个站起来的地方。" },
     { "t": "narrate", "text": "石头在旁边小声嘀咕。" },
     { "t": "say", "who": "shitou", "text": "何大姐……这人哪来的？会不会是……" },

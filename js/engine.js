@@ -61,8 +61,88 @@ export class StoryEngine {
       picks: [],
       turns: 0,
       history: [],
+      memory: {},     // 每个 NPC 一份独立的对话记忆
+      freeTrust: {},  // 自由对话带来的信任值，按幕封顶，防止刷分
       startedAt: Date.now(),
     };
+  }
+
+  // ---------- 每个 NPC 自己的记性 ----------
+
+  memoryOf(npc) {
+    if (!this.state.memory) this.state.memory = {};
+    if (!this.state.memory[npc]) this.state.memory[npc] = [];
+    return this.state.memory[npc];
+  }
+
+  remember(npc, role, text, mood) {
+    if (!npc || npc === PLAYER || !text) return;
+    const mem = this.memoryOf(npc);
+    mem.push({ role, text, mood: mood || "" });
+    if (mem.length > 40) mem.shift();
+  }
+
+  /** 此刻在场、可以说话的人 */
+  presentNpcs() {
+    const scene = this.scene();
+    return (scene?.present || []).filter((id) => this.characters[id] && id !== "he-xiuying-old");
+  }
+
+  situationText(fallback = "") {
+    const scene = this.scene();
+    return this.interpolate(scene?.situation || fallback || scene?.title || "");
+  }
+
+  /** 自由对话时的信任值上限：每一幕最多累计 ±10，避免刷分 */
+  capFreeTrust(delta) {
+    if (!delta) return 0;
+    if (!this.state.freeTrust) this.state.freeTrust = {};
+    const key = this.state.sceneId;
+    const used = this.state.freeTrust[key] || 0;
+    const next = Math.max(-10, Math.min(10, used + delta));
+    this.state.freeTrust[key] = next;
+    return next - used;
+  }
+
+  /** 主动开口：玩家对着某个角色说一句话 */
+  async freeTalk(npcId, text) {
+    const display = this.characters[npcId]?.display || npcId;
+    this.remember(npcId, "player", text);
+    this.state.answers.push(text);
+    this.state.turns++;
+
+    let out = null;
+    if (this.ai.online) {
+      try {
+        out = await this.ai.reply({
+          npc: npcId,
+          mode: "free",
+          situation: this.situationText("队伍正在草地上往外走。"),
+          trust: this.state.trust,
+          address: this.address(),
+          playerText: text,
+          memories: this.state.answers.slice(-6),
+          history: this.memoryOf(npcId).slice(-10),
+        });
+      } catch (err) {
+        this.lastAiError = String(err.message || err);
+      }
+    }
+    if (!out) {
+      const pool = this.characters[npcId]?.freeFallback || ["……"];
+      const last = (this.state.lastFallback || {})[npcId];
+      const fresh = pool.filter((t) => t !== last);
+      const use = fresh.length ? fresh : pool;
+      const pick = use[Math.floor(Math.random() * use.length)];
+      this.state.lastFallback = { ...(this.state.lastFallback || {}), [npcId]: pick };
+      out = { text: pick, trust: 0, mood: "" };
+    }
+
+    this.remember(npcId, "npc", out.text, out.mood);
+    const delta = this.capFreeTrust(out.trust);
+    if (delta) this.addTrust(delta, `${display}的反应`);
+    this.autosave();
+    return { ...out, trust: delta, display, mood: out.mood || "" };
   }
 
   startNew() {
@@ -207,6 +287,7 @@ export class StoryEngine {
         resolve();
       };
       const onKey = (e) => {
+        if (e.target instanceof HTMLInputElement) return;
         if (e.key === " " || e.key === "Enter") { cleanup(); resolve(); }
       };
       document.addEventListener("click", onClick);
@@ -235,6 +316,7 @@ export class StoryEngine {
     if (who && !isNarration) {
       this.state.history.push({ role: isPlayer ? "player" : "npc", name: who, text });
       if (this.state.history.length > 60) this.state.history.shift();
+      if (!isPlayer) this.remember(step.who, "npc", text, step.mood);
     }
     await this.type(text);
     this.ui.hint.hidden = false;
@@ -354,6 +436,7 @@ export class StoryEngine {
     this.state.vars[step.key || "answer"] = value;
     this.state.answers.push(value);
     this.state.turns++;
+    this.remember(step.ai, "player", value);
     await this.speak({ t: "say", who: PLAYER, text: value, raw: true });
 
     // 先给出"他在想"的停顿，再取大模型回复
@@ -363,23 +446,31 @@ export class StoryEngine {
     this.ui.text.textContent = "……";
 
     let reply = "";
+    let aiTrust = 0;
     if (this.ai.online) {
       try {
-        reply = await this.ai.reply({
+        const out = await this.ai.reply({
           npc: step.ai,
-          situation: this.interpolate(step.situation || ""),
+          situation: this.interpolate(step.situation || "") || this.situationText(),
           trust: this.state.trust,
           address: this.address(),
           playerText: value,
           memories: this.state.answers.slice(-6),
-          history: this.state.history.slice(-8).map((h) => ({ role: h.role, text: h.text })),
+          history: this.memoryOf(step.ai).slice(-10),
         });
-      } catch { /* 超时或报错，退回剧本兜底台词 */ }
+        reply = out.text;
+        aiTrust = out.trust;
+      } catch (err) {
+        this.lastAiError = String(err.message || err); // 超时或报错，退回剧本兜底台词
+      }
     }
-    if (!reply) reply = this.pickFallback(step);
+    if (!reply) {
+      reply = this.pickFallback(step);
+      aiTrust = step.trust || 0;
+    }
 
     await this.speak({ t: "say", who: step.ai, text: reply, raw: true });
-    if (step.trust) this.addTrust(step.trust, step.why);
+    if (aiTrust) this.addTrust(aiTrust, `${this.characters[step.ai]?.display || ""}的反应`);
     if (await this.runAfter(step)) return "moved";
     return this.applyMove(step);
   }

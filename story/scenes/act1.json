@@ -4,6 +4,8 @@
   "bg": "assets/bg/act1-night-camp.jpg",
   "tone": ["#232a26", "#0a0d0b"],
   "ambient": "",
+  "present": ["li-changhe", "shitou", "he-xiuying"],
+  "situation": "夜里，草地上原地休息。篝火生不起来，全连只剩一点青稞面，老班长按“一人一勺、伤员两勺”的规矩盛汤。",
   "steps": [
     { "t": "narrate", "text": "草地深处。夜。雨暂时停了，但地上全是水。" },
     { "t": "narrate", "text": "几十个红军战士背靠背坐着，浑身湿透。有人在拧衣服，水哗哗地流。有人靠在别人肩上就睡着了——不确定是睡着，还是别的。" },

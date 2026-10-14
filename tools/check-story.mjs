@@ -72,6 +72,14 @@ const checkSteps = (list, sceneId, where) => {
 
 for (const scene of Object.values(scenes)) {
   if (scene.bg) bgFiles.add(scene.bg);
+  if (scene.present !== undefined) {
+    if (!Array.isArray(scene.present)) errors.push(`${scene.id} 的 present 必须是数组`);
+    else for (const id of scene.present) {
+      if (!characters[id]) errors.push(`${scene.id} 的 present 里有不认识的角色 ${id}`);
+    }
+  } else {
+    warnings.push(`${scene.id} 没写 present，玩家在这一幕不能主动开口说话`);
+  }
   checkSteps(scene.steps, scene.id, "steps");
 }
 

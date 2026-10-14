@@ -1,0 +1,33 @@
+{
+  "_说明": "每个 NPC 一个大模型配置。不填的字段自动用 default。apiKeyEnv 写环境变量名，这样三个人可以各用各的讯飞账号，额度互不占用。",
+
+  "default": {
+    "baseUrl": "https://spark-api-open.xf-yun.com/v1/chat/completions",
+    "apiKeyEnv": "AI_API_KEY",
+    "model": "4.0Ultra",
+    "temperature": 0.85,
+    "maxTokens": 220
+  },
+
+  "characters": {
+    "li-changhe": {
+      "temperature": 0.65,
+      "apiKeyEnv": "AI_KEY_LAOBANZHANG",
+      "模型说明": "老班长话少、短句，温度调低一点更稳。"
+    },
+    "shitou": {
+      "model": "lite",
+      "temperature": 1.0,
+      "apiKeyEnv": "AI_KEY_SHITOU",
+      "模型说明": "石头是个十六岁的孩子，温度调高一点，让他跳脱。"
+    },
+    "he-xiuying": {
+      "temperature": 0.8,
+      "apiKeyEnv": "AI_KEY_HEXIUYING",
+      "模型说明": "何大姐冷静克制。"
+    },
+    "he-xiuying-old": {
+      "temperature": 0.6
+    }
+  }
+}

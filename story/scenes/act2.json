@@ -4,6 +4,8 @@
   "bg": "assets/bg/act2-morning-fog.jpg",
   "tone": ["#485147", "#1d231e"],
   "ambient": "",
+  "present": ["li-changhe", "shitou", "he-xiuying"],
+  "situation": "第二天清晨，大雾，队伍踩着脚印走。刚刚把陷进泥沼的石头拉上来，老班长的脚被划开了一道口子，何大姐正在给他包扎。",
   "steps": [
     { "t": "narrate", "text": "第二天清晨。草地。雾很大，五步外看不见人。" },
     { "t": "narrate", "text": "队伍排成一列，踩着前面人的脚印走。老班长在最前面探路，每走一步，都要先用木棍戳几下。" },
