@@ -92,6 +92,8 @@ function showReport(r) {
       <div class="report-cell"><div class="k">史料卡</div><div class="v">${r.lore}/${r.loreTotal}</div></div>
     </div>
     <p class="small">你在这段路上遇到了：${r.met.join("、") || "——"}。用时约 ${r.minutes} 分钟。</p>
+    ${r.picks?.length ? `<p class="small">你做过的选择：${r.picks.join("、")}</p>` : ""}
+    ${r.said?.length ? `<p class="small">你自己说过的话：「${r.said.join("」「")}」</p>` : ""}
     <p class="small">继续了解：把史料卡里没解锁的卡片找齐，或者换个活法重走一次——他们记住的是你说过的话。</p>
   `;
   openScreen("screenReport");

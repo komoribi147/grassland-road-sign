@@ -197,6 +197,7 @@ export class StoryEngine {
     this.state.sceneId = id;
     if (!initial) this.state.step = 0;
     this.ui.chapterName.textContent = scene.title || id;
+    this.showChapterCard(scene.title);
     if (scene.bg || scene.tone) this.setBg(scene.bg, scene.tone);
     if (scene.ambient !== undefined) this.setAmbient(scene.ambient);
     this.updateTrust();
@@ -253,10 +254,29 @@ export class StoryEngine {
   }
 
   updateTrust() {
+    const before = this.state ? this.address() : "你";
     const t = Math.max(0, Math.min(100, Math.round(this.state.trust)));
     this.state.trust = t;
     this.ui.trustFill.style.width = `${t}%`;
-    this.ui.trustAddress.textContent = this.address(t);
+    const after = this.address(t);
+    this.ui.trustAddress.textContent = after;
+    // 称呼变了就说一声 —— 这是全片最重要的一个反馈
+    if (after !== before && this.state.startedAt) {
+      this.on.toast?.(`从现在起，他们叫你「${after}」`, 4200);
+    }
+  }
+
+  /** 换幕时闪一张章节卡 */
+  showChapterCard(title) {
+    const el = document.getElementById("chapterCard");
+    if (!el || !title) return;
+    document.getElementById("chapterCardText").textContent = title;
+    el.hidden = false;
+    el.style.animation = "none";
+    void el.offsetWidth;          // 强制重排，让动画重新播
+    el.style.animation = "";
+    clearTimeout(this._cardTimer);
+    this._cardTimer = setTimeout(() => { el.hidden = true; }, 2200);
   }
 
   addTrust(delta, why) {
@@ -431,6 +451,11 @@ export class StoryEngine {
     box.hidden = false;
     box.innerHTML = "";
 
+    const note = document.createElement("div");
+    note.className = "input-note";
+    note.textContent = "自由输入 · 你想说什么就打什么，不用挑选项";
+    box.appendChild(note);
+
     const row = document.createElement("div");
     row.className = "input-row";
     const input = document.createElement("input");
@@ -458,6 +483,10 @@ export class StoryEngine {
     this.state.vars[step.key || "answer"] = value;
     this.state.answers.push(value);
     this.state.turns++;
+    this.state.freeInputs = (this.state.freeInputs || 0) + 1;
+    if (this.state.freeInputs === 1) {
+      this.on.toast?.("这一句是你自己说的，他记住了", 3800);
+    }
     this.remember(step.ai, "player", value);
     await this.speak({ t: "say", who: PLAYER, text: value, raw: true });
 
@@ -645,6 +674,8 @@ export class StoryEngine {
       loreTotal: total,
       met: chars.filter((n) => n !== "我"),
       minutes: Math.max(1, Math.round((Date.now() - this.state.startedAt) / 60000)),
+      picks: (this.state.picks || []).slice(-8),
+      said: (this.state.answers || []).slice(-5),
     };
   }
 }
