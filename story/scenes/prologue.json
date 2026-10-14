@@ -61,6 +61,7 @@
       ]
     },
     { "t": "ambient", "name": "rain" },
+    { "t": "sfx", "name": "shout" },
     { "t": "narrate", "text": "雨声渐大。\n远处传来喊声：“一营的——跟上——别掉队——”" },
     { "t": "say", "who": "li-changhe", "text": "听见没？队伍在前面。走。" },
     { "t": "goto", "scene": "act1" }

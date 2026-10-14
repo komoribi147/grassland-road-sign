@@ -51,9 +51,35 @@ function renderLoreList() {
   }
 }
 
+let lastReport = null;
+
+function buildReportText(r) {
+  return [
+    "《草地上的路标》· 学习报告",
+    "",
+    `日期：${new Date().toLocaleString("zh-CN")}`,
+    `他们对你的称呼：${r.address}`,
+    `最终信任值：${r.trust}`,
+    `你做出的选择：${r.choices} 次`,
+    `你写下的话：${r.words} 字`,
+    `与他们对答：${r.turns} 轮`,
+    `解锁史料卡：${r.lore}/${r.loreTotal}`,
+    `用时：约 ${r.minutes} 分钟`,
+    "",
+    `你在这段路上遇到过：${r.met.join("、") || "——"}`,
+    "",
+    "结尾：",
+    `　　${r.closing}`,
+    "",
+    "可以继续了解：",
+    "　　松潘草地 · 班佑河 · 湘江战役 · 毛儿盖 · 长征中的女红军 · 1930年代初的河南",
+  ].join("\n");
+}
+
 function showReport(r) {
   document.body.dataset.mode = "title";
   engine.showHud(false);
+  lastReport = r;
   $("reportTitle").textContent = r.title;
   $("reportBody").innerHTML = `
     <p>${r.closing}</p>
@@ -241,6 +267,24 @@ $("btnReportClose").addEventListener("click", () => {
   openScreen("screenTitle");
   $("btnResume").hidden = true;
 });
+
+$("btnReportSave").addEventListener("click", () => {
+  if (!lastReport) return;
+  const blob = new Blob([buildReportText(lastReport)], { type: "text/plain;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "草地上的路标-学习报告.txt";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast("学习报告已保存");
+});
+
+// 浏览器要求先有用户操作才允许播放声音，第一次点屏幕时补上环境音
+const resumeAudio = () => {
+  engine.audio.resume();
+  document.removeEventListener("pointerdown", resumeAudio);
+};
+document.addEventListener("pointerdown", resumeAudio);
 
 document.querySelectorAll("[data-close]").forEach((btn) => {
   btn.addEventListener("click", () => {

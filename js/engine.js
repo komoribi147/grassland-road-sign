@@ -155,6 +155,11 @@ export class StoryEngine {
   resume(saved) {
     this.epoch++;
     this.state = { ...this.newState(), ...saved };
+    if (!this.scenes[this.state.sceneId]) {   // 旧存档指向已经不存在的场景
+      this.on.toast?.("这段路的地图变了，从序幕重新开始。");
+      this.state.sceneId = this.manifest.start;
+      this.state.step = 0;
+    }
     this.enterScene(this.state.sceneId, true);
     return this.run();
   }
@@ -226,8 +231,13 @@ export class StoryEngine {
   }
 
   setAmbient(name) {
-    if (name) this.audio.loop(name);
-    this.ui.rain.hidden = name !== "rain";
+    const want = name || "";
+    if (this._ambient !== want) {
+      if (this._ambient) this.audio.stop(this._ambient);
+      if (want) this.audio.loop(want);
+      this._ambient = want;
+    }
+    this.ui.rain.hidden = want !== "rain";
   }
 
   updateTrust() {

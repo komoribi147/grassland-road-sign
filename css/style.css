@@ -93,6 +93,7 @@ body[data-mode="playing"] { cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 14px 18px;
   background: linear-gradient(180deg, rgba(6,9,8,0.72), rgba(6,9,8,0));
@@ -103,7 +104,7 @@ body[data-mode="playing"] { cursor: pointer; }
 
 .chapter { color: var(--ink-dim); }
 
-.topbar-right { display: flex; align-items: center; gap: 10px; }
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 
 .trust {
   display: flex;
@@ -302,6 +303,7 @@ button { font-family: var(--font-sans); cursor: pointer; }
 }
 .panel-box.small { width: min(460px, 92vw); }
 .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.head-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .panel-head h2 { font-size: 20px; letter-spacing: 0.1em; margin: 0; font-weight: 500; }
 .panel-note { font-family: var(--font-sans); font-size: 12.5px; color: var(--ink-faint); line-height: 1.8; margin: 12px 0 18px; }
 .menu-list { display: flex; flex-direction: column; gap: 10px; margin: 18px 0 4px; }
@@ -383,7 +385,13 @@ button { font-family: var(--font-sans); cursor: pointer; }
   .dialogue-inner { padding: 16px 18px 18px; }
   .text { font-size: 17px; line-height: 1.85; }
   .trust-bar { width: 48px; }
-  #topbar { font-size: 12px; padding: 10px 12px; }
+  #topbar { font-size: 12px; padding: 8px 10px; gap: 8px; }
+  .topbar-right { gap: 6px; }
+  .ghost-btn { padding: 5px 10px; font-size: 12px; }
+  .trust { padding: 4px 9px; gap: 6px; }
+  .panel-box { padding: 18px 16px; }
+  .talk-log { height: min(34vh, 240px); }
+  .bubble { max-width: 88%; font-size: 15px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

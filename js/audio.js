@@ -16,6 +16,13 @@ export class AudioManager {
     }
   }
 
+  /** 浏览器要求先有用户操作才允许播放，第一次点击时把待播的环境音补上 */
+  resume() {
+    for (const el of this.layers.values()) {
+      el.play().catch(() => { /* 仍然不允许就下次再说 */ });
+    }
+  }
+
   /** 循环播放环境音，例如 rain / wind / steps */
   loop(name) {
     if (!name || this.layers.has(name) || this.missing.has(name)) return;
