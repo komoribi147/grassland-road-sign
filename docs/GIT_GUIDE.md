@@ -8,7 +8,10 @@
 - **分支（Branch）**：你自己的一条工作线。你在自己的分支上怎么改都不会影响别人。
 - **合并请求（Pull Request，简称 PR）**：你把分支合回主线（main）的申请。别人看过、点了通过，改动才会进 main。
 
-一句话记住流程：**开任务 → 拉分支 → 改 → 提 PR → 别人通过 → 合进 main。**
+一句话记住流程：**开任务 → 拉分支 → 改 → 提 PR → 合进 main。**
+
+> 注意：main 现在已经没有审核要求了，**小改动你也可以直接改 main**（见第 5 节）。
+> 下面这套 PR 流程依然值得学，大改动用它更稳。
 
 ## 1. 注册与加入（每人 5 分钟）
 
@@ -25,9 +28,10 @@
 2. 点右上角铅笔图标 **Edit this file**。
 3. 改内容。
 4. 滚到底部，填一句"改了什么"。
-5. **关键一步**：选 **Create a new branch for this commit and start a pull request**，分支名写 `story/act3-tweak`。
-6. 点 **Propose changes** → **Create pull request**，填一下说明，提交。
-7. 在 PR 页面右边 **Reviewers** 里选一个队友。他点通过后，点 **Merge pull request** 合进 main。
+5. **关键一步**（二选一）：
+   - 小改动（改一句话、传一张图）→ 选 **Commit directly to the main branch**，直接提交，完事。
+   - 大改动 → 选 **Create a new branch for this commit and start a pull request**，分支名写 `story/act3-tweak`，然后点 **Propose changes** → **Create pull request**。
+6. 走了 PR 的话：在 PR 页面右边 **Reviewers** 里选一个队友，他看过之后点 **Merge pull request** 合进 main。
 
 上传图片用 **Add file → Upload files**，同样走分支 + PR。
 
@@ -52,17 +56,27 @@ GitHub Desktop 的循环是这样的：
 - 看不懂：在 Issue 里喊人，或者把冲突页面截图发群里。**不要硬着头皮合。**
 - 预防办法：动手前先声明"我要改第几幕 / 哪个文件"，大家尽量别碰同一个文件。
 
-## 5. 组长要做的一次性设置
+## 5. 仓库现在的协作设置（2026 年 10 月起）
 
-1. 建仓库时选 **Public**（公开），勾上 **Add a README file** 可以不加，我们已经有 README。
-2. `Settings → General → Features`：Issues 保持开启。
-3. `Settings → Branches → Add branch protection rule`：
-   - Branch name pattern 填 `main`
-   - 勾 **Require a pull request before merging**
-   - 勾 **Require approvals**，数量填 1
-   这样谁都改不坏主线，包括你自己。
-4. `Settings → Pages`：Source 选 **GitHub Actions**，网站自动发布（见 `docs/DEPLOY.md`）。
-5. 把队友拉进 **Collaborators**（见第 1 节）。
+**结论：谁都可以直接改 main，不需要等任何人批准。**
+
+| 项目 | 现在的状态 |
+| --- | --- |
+| 分支保护 | 已取消，三位协作者都能直接提交、直接推 |
+| 唯一的硬限制 | 不能强推覆盖历史，不能删 main 分支（防手滑） |
+| 自动检查 | 每次推 main 都会跑剧本自检，写错了会亮红叉 |
+| 自动发布 | **自检通过才发布**；写坏的版本不会上线，线上一直是上一个能用的版本 |
+| 队友权限 | szy-11、gaoxuan566 已加入，权限和组长相同 |
+
+所以你可以：
+
+- 直接推 main（推荐小改动这样做）
+- 或者拉分支 → 提合并请求（大改动推荐，好回滚、有人帮看）
+
+### 如果以后想改回"必须审核"
+
+跟组长说一声即可，一条命令就能恢复：main 要求合并请求 + 至少 1 人通过。
+适合比赛前一周那种"谁都不许碰坏"的阶段。
 
 ## 6. Issue 怎么用
 

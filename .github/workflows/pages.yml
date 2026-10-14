@@ -15,7 +15,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: 先检查剧本数据
+        run: node tools/check-story.mjs
+
   deploy:
+    needs: check          # 检查不过就不发布：线上页面始终保留上一个能用的版本
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
