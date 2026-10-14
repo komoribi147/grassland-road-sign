@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server/server.mjs",
-    "check": "node tools/check-story.mjs"
+    "check": "node tools/check-story.mjs",
+    "gen": "node tools/gen-image.mjs"
   }
 }
