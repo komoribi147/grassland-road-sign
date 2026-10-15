@@ -3,7 +3,7 @@ import { StoryEngine } from "./engine.js";
 import { Save } from "./save.js";
 
 const $ = (id) => document.getElementById(id);
-const screens = ["screenTitle", "screenLore", "screenMenu", "screenAbout", "screenReport", "screenTalk"];
+const screens = ["screenTitle", "screenLore", "screenReplay", "screenMenu", "screenAbout", "screenReport", "screenTalk"];
 
 const engine = new StoryEngine({
   toast: showToast,
@@ -321,6 +321,131 @@ $("btnLore").addEventListener("click", () => {
   openScreen("screenLore");
 });
 $("btnMenu").addEventListener("click", () => openScreen("screenMenu"));
+
+// ---------- 回看：翻已经读过的内容，可以搜、可以跳到指定某句 ----------
+
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let replayIdx = -1;
+let replayArmed = false;   // 「从这句重新走」要点两次：改动会回退进度与信任值
+const replayLog = () => (engine.state && engine.state.log) || [];
+
+function updateReplayPos() {
+  const n = replayLog().length;
+  $("replayPos").textContent = n ? `${replayIdx + 1} / ${n}` : "";
+}
+
+function focusReplay(i, scroll = true) {
+  const rows = [...$("replayList").querySelectorAll(".rl-row")];
+  if (!rows.length) return;
+  const max = replayLog().length - 1;
+  replayIdx = Math.max(0, Math.min(max, i));
+  rows.forEach((el) => el.classList.toggle("on", Number(el.dataset.i) === replayIdx));
+  const el = $("replayList").querySelector(`.rl-row[data-i="${replayIdx}"]`);
+  if (el && scroll) scrollListToCenter($("replayList"), el);
+  updateReplayPos();
+  updateReplayPick();
+}
+
+/** 只滚列表自己，绝不带着整个页面跑（用 scrollIntoView 会把 body 一起滚，页面会不可控地上移） */
+function scrollListToCenter(list, row) {
+  const lr = list.getBoundingClientRect();
+  const rr = row.getBoundingClientRect();
+  const delta = rr.top - lr.top - (lr.height - rr.height) / 2;
+  list.scrollTo({ top: Math.max(0, list.scrollTop + delta), behavior: "smooth" });
+}
+
+/** 底部那条：显示当前选中句，并决定「从这句重新走」能不能点 */
+function updateReplayPick() {
+  const go = $("btnReplayGo");
+  const l = replayLog()[replayIdx];
+  replayArmed = false;
+  go.textContent = "从这句重新走";
+  if (!l) {
+    go.disabled = true;
+    $("replayPick").textContent = "选中一条，就能从这里重新走";
+    return;
+  }
+  go.disabled = false;
+  const head = l.kind === "n" ? "" : `${l.who}：`;
+  const text = l.text.length > 26 ? l.text.slice(0, 26) + "…" : l.text;
+  $("replayPick").textContent = `当前：${l.scene}:${l.step}　${head}${text}`;
+}
+
+/** 只列已经走到过的句子；term 为空 = 全部 */
+function renderReplay(term = "", focusLast = true) {
+  const q = String(term || "").trim().toLowerCase();
+  const list = replayLog();
+  const rows = list.map((l, i) => ({ l, i }))
+    .filter(({ l }) => !q || `${l.text} ${l.who} ${l.scene}:${l.step}`.toLowerCase().includes(q));
+  $("replayList").innerHTML = rows.length
+    ? rows.map(({ l, i }) => `<div class="rl-row${i === replayIdx ? " on" : ""}" data-i="${i}" title="跳到这一句">
+        <span class="rl-idx">${l.scene}:${l.step}</span>
+        <span><span class="rl-who">${l.kind === "n" ? "" : esc(l.who) + "："}</span><span class="rl-text${l.kind === "n" ? " narration" : ""}">${esc(l.text)}</span></span>
+      </div>`).join("")
+    : `<p class="panel-note">${list.length ? "没有匹配的句子。" : "还没开始读。走几句剧情再回来。"}</p>`;
+  $("replayList").querySelectorAll(".rl-row").forEach((el) => {
+    el.addEventListener("click", () => focusReplay(Number(el.dataset.i)));
+  });
+  if (rows.length) {
+    replayIdx = focusLast ? rows[rows.length - 1].i : rows[0].i;
+    focusReplay(replayIdx);
+  } else {
+    replayIdx = -1;
+    updateReplayPos();
+  }
+}
+
+/** 输入 act3:47 / 47 / 任意关键词，把光标移过去 */
+function replayJump(raw) {
+  const t = String(raw || "").trim();
+  if (!t) return false;
+  const list = replayLog();
+  const m = t.match(/^([a-z0-9]+)\s*:\s*(\d+)$/i);
+  let idx = -1;
+  if (m) idx = list.findIndex((l) => l.scene.toLowerCase() === m[1].toLowerCase() && l.step === Number(m[2]));
+  else if (/^\d+$/.test(t)) idx = list.findLastIndex((l) => l.step === Number(t));
+  else idx = list.findIndex((l) => `${l.text} ${l.who}`.includes(t));
+  if (idx < 0) {
+    $("replayPos").textContent = "还没读到这一句";
+    return false;
+  }
+  renderReplay("", false);          // 先展开全部，保证那一行在列表里
+  focusReplay(idx);
+  return true;
+}
+
+$("btnReplay").addEventListener("click", () => {
+  $("replayQ").value = "";
+  replayIdx = -1;
+  openScreen("screenReplay");
+  renderReplay("", true);           // 打开时停在最后一条（刚看过的那句）
+});
+$("replayQ").addEventListener("input", (e) => renderReplay(e.target.value, true));
+$("replayQ").addEventListener("keydown", (e) => {
+  if (e.key !== "Enter") return;
+  const v = e.target.value.trim();
+  if (/^([a-z0-9]+\s*:\s*\d+|\d+)$/i.test(v)) replayJump(v);
+  else renderReplay(v, false);
+});
+$("btnReplayPrev").addEventListener("click", () => focusReplay(replayIdx - 1));
+$("btnReplayNext").addEventListener("click", () => focusReplay(replayIdx + 1));
+$("btnReplayGo").addEventListener("click", () => {
+  const l = replayLog()[replayIdx];
+  if (!l) return;
+  const go = $("btnReplayGo");
+  if (!replayArmed) {
+    replayArmed = true;
+    go.textContent = "真的回到这里？（会回退进度和信任值）";
+    setTimeout(() => {
+      if (replayArmed) { replayArmed = false; go.textContent = "从这句重新走"; }
+    }, 6000);
+    return;
+  }
+  replayArmed = false;
+  go.textContent = "从这句重新走";
+  closeScreens();
+  engine.rewindTo(l.scene, l.step);
+});
 
 $("btnSave").addEventListener("click", () => {
   engine.autosave();

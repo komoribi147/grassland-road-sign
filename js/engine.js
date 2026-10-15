@@ -98,6 +98,8 @@ export class StoryEngine {
       picks: [],
       turns: 0,
       history: [],
+      log: [],        // 回看用：走到过的每一句（场景 + 步号 + 谁 + 文本）
+      trustLog: [],   // 回看用：每一笔信任值变化发生在哪一句（回退时按它扣回去）
       memory: {},     // 每个 NPC 一份独立的对话记忆
       freeTrust: {},  // 自由对话带来的信任值，按幕封顶，防止刷分
       startedAt: Date.now(),
@@ -201,6 +203,60 @@ export class StoryEngine {
       this.state.step = 0;
     }
     this.enterScene(this.state.sceneId, true);
+    return this.run();
+  }
+
+  /**
+   * 从某一句重新走：把进度指回那里，并把信任值回退到"那一步之前"的状态。
+   * 这一步自己的增量会在重走时重新加回来，所以不会重复累加。
+   * 同一幕里往回退时，背景与环境音也会退回到当时的样子。
+   */
+  rewindTo(sceneId, step) {
+    const scene = this.scenes[sceneId];
+    if (!scene || !scene.steps[step]) return false;
+
+    const log = this.state.log || [];
+    let idx = -1;
+    for (let i = log.length - 1; i >= 0; i--) {
+      if (log[i].scene === sceneId && log[i].step === step) { idx = i; break; }
+    }
+    if (idx < 0) return false;
+
+    // 1) 信任值：把这一步及之后加过的分扣掉
+    const order = Object.keys(this.scenes);
+    const rank = (id) => { const k = order.indexOf(id); return k < 0 ? 999 : k; };
+    const tr = rank(sceneId);
+    let rollback = 0;
+    const keep = [];
+    for (const t of this.state.trustLog || []) {
+      const after = rank(t.scene) > tr || (rank(t.scene) === tr && t.step >= step);
+      if (after) rollback += t.delta; else keep.push(t);
+    }
+    this.state.trust = Math.max(0, Math.min(100, Math.round((this.state.trust || 0) - rollback)));
+    this.state.trustLog = keep;
+    this.state.log = log.slice(0, idx);
+
+    // 2) 背景与环境音退回到当时那一句的样子
+    let bg = scene.bg;
+    let tone = scene.tone;
+    let amb = scene.ambient;
+    for (let i = 0; i < step; i++) {
+      const s = scene.steps[i];
+      if (s.t === "bg") { bg = s.src; tone = s.tone; }
+      if (s.t === "ambient") amb = s.name || "";
+    }
+    if (this.state.sceneId !== sceneId) this.enterScene(sceneId, false);
+    if (bg || tone) this.setBg(bg, tone);
+    if (amb !== undefined) this.setAmbient(amb);
+    this.state.sceneId = sceneId;
+    this.state.step = step;
+    this.updateTrust();
+    this.autosave();
+
+    // 3) 从这里重新跑
+    this.epoch++;
+    this.abortWaits();
+    this.on.toast?.(`回到 ${sceneId}:${step} —— 从这里接着走${rollback ? `（信任值回退 ${rollback}）` : ""}`);
     return this.run();
   }
 
@@ -323,6 +379,8 @@ export class StoryEngine {
   addTrust(delta, why) {
     if (!delta) return;
     this.state.trust += delta;
+    (this.state.trustLog ||= []).push({ scene: this.state.sceneId, step: this.state.step, delta });
+    if (this.state.trustLog.length > 400) this.state.trustLog.shift();
     this.updateTrust();
     const sign = delta > 0 ? `+${delta}` : String(delta);
     this.on.toast?.(`信任 ${sign}${why ? " · " + why : ""}`);
@@ -404,6 +462,16 @@ export class StoryEngine {
     this.ui.text.className = tone ? `text ${tone}` : "text";
 
     const text = step.raw ? step.text : this.interpolate(step.text);
+    // 回看用：把这一句记下来（幕 + 步号 + 说话人 + 文本），按快了也能回去看
+    const log = (this.state.log ||= []);
+    log.push({
+      scene: this.state.sceneId,
+      step: this.state.step,
+      who: who || "",
+      kind: isNarration ? "n" : isThought ? "t" : "s",
+      text,
+    });
+    if (log.length > 400) log.shift();
     // 只有真人说话时才换立绘：旁白/心里话保持上一个人的画面，免得一闪一闪
     if (step.who && step.who !== PLAYER) this.setPortrait(step.who, step.mood);
     if (who && !isNarration) {
