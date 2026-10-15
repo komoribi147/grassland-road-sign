@@ -298,6 +298,37 @@ export class StoryEngine {
     if (scene.bg || scene.tone) this.setBg(scene.bg, scene.tone);
     if (scene.ambient !== undefined) this.setAmbient(scene.ambient);
     this.updateTrust();
+    this.warmScene(id);   // 提前把这一幕和下一幕的图和声音下下来
+  }
+
+  /**
+   * 预热：这一幕 + 下一幕要用的背景图与音频，提前下载。
+   * 不预热的话，换背景会先看到渐变底、音效要等下载完才响（音画不同步）。
+   */
+  warmScene(sceneId) {
+    const order = Object.keys(this.scenes);
+    const ids = [sceneId, order[order.indexOf(sceneId) + 1]].filter(Boolean);
+    for (const id of ids) {
+      const scene = this.scenes[id];
+      if (!scene) continue;
+      const sfx = [];
+      const images = [];
+      if (scene.bg) images.push(scene.bg);
+      for (const s of scene.steps || []) {
+        if (s.t === "sfx" && s.name) sfx.push(s.name);
+        if (s.t === "bg" && s.src) images.push(s.src);
+        for (const sub of s.after || []) if (sub.t === "sfx" && sub.name) sfx.push(sub.name);
+        for (const o of s.options || []) {
+          for (const sub of o.after || []) if (sub.t === "sfx" && sub.name) sfx.push(sub.name);
+        }
+      }
+      if (scene.ambient) this.audio.warm([scene.ambient], "ambient");
+      this.audio.warm(sfx, "sfx");
+      for (const src of images) {
+        const img = new Image();     // 只为把图下进缓存，不插入页面
+        img.src = src;
+      }
+    }
   }
 
   /** 剧情进行中显示对话区与顶栏；结束时收起 */

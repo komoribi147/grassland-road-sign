@@ -8,7 +8,7 @@
 // 模型、温度、甚至 API 账号都可以在 server/ai-config.json 里分别指定。
 
 import http from "node:http";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -203,8 +203,18 @@ const server = http.createServer(async (req, res) => {
     return send(res, 404, "Not found", "text/plain; charset=utf-8");
   }
   try {
+    // 用「大小 + 修改时间」当版本号：文件没变就回 304，浏览器不必把图和音频重下一遍；
+    // 文件换了（比如替换某个音效）版本号就变，会自动拿到新的，不用再手动加 ?v=
+    const st = await stat(filePath);
+    const etag = `"${st.size.toString(16)}-${Math.floor(st.mtimeMs).toString(16)}"`;
+    if (req.headers["if-none-match"] === etag) {
+      res.writeHead(304, { ETag: etag, "Cache-Control": "no-cache" });
+      return res.end();
+    }
     const buf = await readFile(filePath);
-    send(res, 200, buf, MIME[path.extname(filePath).toLowerCase()] || "application/octet-stream");
+    const type = MIME[path.extname(filePath).toLowerCase()] || "application/octet-stream";
+    res.writeHead(200, { "Content-Type": type, "Cache-Control": "no-cache", ETag: etag });
+    res.end(buf);
   } catch {
     send(res, 500, "Read error", "text/plain; charset=utf-8");
   }

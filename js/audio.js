@@ -23,6 +23,37 @@ export class AudioManager {
     }
   }
 
+  /**
+   * 预热：提前把音频下进浏览器缓存（只下载、不播放，所以不受自动播放限制）。
+   * 不预热的话音效要等下载完才响——那正是"音画不同步"的来源。
+   * kind: "sfx"（一次性音效）/ "ambient"（循环环境音）/ "bgm"（配乐）
+   */
+  warm(names = [], kind = "sfx") {
+    for (const name of names) {
+      if (!name) continue;
+      const key = kind === "bgm" ? `bgm:${name}` : kind === "ambient" ? name : `sfx:${name}`;
+      if (this.layers.has(key) || this.missing.has(key)) continue;
+      const warmed = (this.warmed ||= new Set());
+      if (warmed.has(key)) continue;
+      warmed.add(key);
+      const url = kind === "bgm"
+        ? `assets/audio/bgm-${name}.mp3`
+        : kind === "ambient"
+          ? `assets/audio/${name}.mp3`
+          : `assets/audio/sfx-${name}.mp3`;
+      const el = new Audio();
+      el.preload = "auto";
+      el.volume = 0;
+      // 文件还没放进来（比如缺 sfx-shout.mp3）就记下来，免得每次预热都白发一次 404
+      el.addEventListener("error", () => {
+        this.missing.add(key);
+        warmed.delete(key);
+      });
+      el.src = url;
+      try { el.load(); } catch { /* 忽略 */ }
+    }
+  }
+
   /** 循环播放环境音，例如 rain / wind / steps */
   loop(name) {
     if (!name || this.layers.has(name) || this.missing.has(name)) return;
