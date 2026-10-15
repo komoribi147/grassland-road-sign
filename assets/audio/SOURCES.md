@@ -38,6 +38,15 @@
 还有两条是**自己合成**的，不涉及任何版权：`sfx-heartbeat`（心跳 + 4.3 kHz 耳鸣，正弦合成）、
 `sfx-thump`（低频转场咚，正弦 + 低通）。
 
+### 第二轮修正（听完反馈后换源的四条）
+
+| 文件 | 反馈 | 现在的做法 | 源素材（Freesound，CC0） |
+| --- | --- | --- | --- |
+| `sfx-chew.mp3` | 太脆，像在啃饼干 | 换成"嚼口香糖"那种湿闷的，低通 3.4 kHz + 放慢 8% | [loud-gum-chewing](https://freesound.org/s/613719/) · Pizzazif |
+| `sfx-pour.mp3` | 只有倒水，没有漱口 | 前半倒水、后半咕噜漱口，拼成一条 | [Pouring Water…](https://freesound.org/s/585516/) + [Gargling some water](https://freesound.org/s/218195/) · edhutschek |
+| `sfx-flag.mp3` | 听着像塑料袋 | 换成真正的旗帜布料摩擦 | [Flag Rustle 2, Foley, Med Distance](https://freesound.org/s/870602/) · CHallSmith |
+| `sfx-mumble.mp3` | 应该是"嗯嗯"的低哼 | 一声软哼复制成两声，低通 1.3 kHz、压到 −14 dB | [Man final pain moan](https://freesound.org/s/867174/) · Lord_Bennelengtone |
+
 加工方式：裁剪 → 滤波 → 淡入淡出 → 统一峰值；每条在剧情里的实际音量由步骤里的 `level` 决定。
 加工脚本在工作区 `work/fx-build.mjs`（不进仓库）。
 
