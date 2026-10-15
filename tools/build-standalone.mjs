@@ -7,7 +7,7 @@
 // 为什么不直接双击 index.html？因为浏览器禁止本地网页（file://）加载 js 模块和剧情 JSON。
 // 这个脚本就是把这个限制绕过去：全部内联成一个文件。
 
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -52,8 +52,14 @@ for (const rel of manifest.scenes) {
   files[rel] = scene;
 }
 
-// 音频：单独放一张表，audio.js 里会优先查这张表
-const audioNames = ["rain", "sfx-splash", "sfx-bugle", "sfx-shout"];
+// 音频：自动扫描 assets/audio 下所有 mp3，key 就是文件名（不含扩展名），
+// audio.js 里会优先查这张表。以前这里写死了四个名字，加音效就会漏掉。
+const audioDir = path.join(root, "assets/audio");
+let audioNames = [];
+try {
+  audioNames = (await readdir(audioDir)).filter((f) => f.toLowerCase().endsWith(".mp3"))
+    .map((f) => f.slice(0, -4));
+} catch { /* 没有音频目录 */ }
 const audio = {};
 for (const n of audioNames) {
   const rel = `assets/audio/${n}.mp3`;
@@ -84,15 +90,35 @@ bundle = bundle.split("\n").filter((line) => {
   return true;
 }).join("\n");
 
-// 让音频去找内联的那份，而不是去请求 mp3 文件
-bundle = bundle.replace(
-  "new Audio(`assets/audio/${name}.mp3`)",
-  "new Audio((window.__AUDIO__ && window.__AUDIO__[name]) || `assets/audio/${name}.mp3`)"
-);
-bundle = bundle.replace(
-  "new Audio(`assets/audio/sfx-${name}.mp3`)",
-  "new Audio((window.__AUDIO__ && window.__AUDIO__[\"sfx-\" + name]) || `assets/audio/sfx-${name}.mp3`)"
-);
+// 让音频去找内联的那份，而不是去请求 mp3 文件。
+// audio.js 里有三处拼路径：预热、环境音循环、一次性音效，三处都要改。
+const swaps = [
+  {
+    find: "new Audio(`assets/audio/${name}.mp3`)",
+    to: "new Audio((window.__AUDIO__ && window.__AUDIO__[name]) || `assets/audio/${name}.mp3`)",
+    what: "环境音循环",
+  },
+  {
+    find: "new Audio(`assets/audio/sfx-${name}.mp3`)",
+    to: 'new Audio((window.__AUDIO__ && window.__AUDIO__["sfx-" + name]) || `assets/audio/sfx-${name}.mp3`)',
+    what: "一次性音效",
+  },
+];
+for (const s of swaps) {
+  if (!bundle.includes(s.find)) console.warn(`⚠️ 没找到「${s.what}」的路径写法，单文件版里这段可能还是去请求文件`);
+  bundle = bundle.split(s.find).join(s.to);
+}
+
+// 预热那段是把三种前缀拼成 url，也要换成查表
+const warmOld = /const url = kind === "bgm"[\s\S]*?assets\/audio\/sfx-\$\{name\}\.mp3`;/;
+if (warmOld.test(bundle)) {
+  bundle = bundle.replace(warmOld, () =>
+    'const __pre = kind === "bgm" ? "bgm-" : kind === "ambient" ? "" : "sfx-";\n' +
+    '        const url = (window.__AUDIO__ && window.__AUDIO__[__pre + name]) || `assets/audio/${__pre}${name}.mp3`;'
+  );
+} else {
+  console.warn("⚠️ 没找到「音画预热」的路径写法，单文件版里这段可能还是去请求文件");
+}
 
 // 拦掉剧情 JSON 的网络请求，改成读内存里的数据（图片和音频已经是 data URI，不用管）
 const inline = `
