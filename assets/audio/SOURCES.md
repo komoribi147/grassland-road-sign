@@ -13,6 +13,34 @@
 | `sfx-splash.mp3` | 脚踩进泥地，一次性音效 | 1.96 s | [Walking through Mud](https://freesound.org/people/Breviceps/sounds/508179/) | Breviceps | CC0 1.0（公有领域等效） |
 | `sfx-bugle.mp3` | 军号，一次性音效 | 5.1 s | [File:Attention Bugle Call (US).oga](https://commons.wikimedia.org/wiki/File:Attention_Bugle_Call_(US).oga) | U.S. Army Ceremonial Band | Public domain（美国政府作品） |
 
+## 这一批音效的来源（C 表 24 条 · 2026-10-15）
+
+全部取自 Freesound 的 **CC0** 素材（可商用、免署名），下的是高码率预览 mp3，
+再用 ffmpeg 裁剪、滤波、淡入淡出并统一峰值。原始素材对应关系如下：
+
+| 用在哪几条 | 源素材（Freesound，CC0） | 作者 |
+| --- | --- | --- |
+| sfx-rustle / bandage / cloth-strain / cloth-ring / pack | [foley cloth rustle](https://freesound.org/s/19291/) | martian |
+| sfx-flag | [flag plastic garbage bag flap quick in wind2](https://freesound.org/s/450831/) | kyles |
+| sfx-pour / kettle-empty | [Pouring Water Into Metal Pot or Kettle](https://freesound.org/s/585516/) | ahriik |
+| sfx-stomach | [stomach growl-PiSh_01](https://freesound.org/s/52293/) | XxBirdoxX |
+| sfx-spoon-scrape | [Ceramic Plate and Spoon Scratching While Eating](https://freesound.org/s/799630/) | bilal.techie |
+| sfx-chew | [Eating a cracker (Mouth closed)](https://freesound.org/s/364924/) | Rudmer_Rotteveel |
+| sfx-pant | [Heavy Breathing](https://freesound.org/s/163383/) | Under7dude |
+| sfx-gasp | [Gasp Male](https://freesound.org/s/271245/) | bertiehs |
+| sfx-mumble | [Crowd Mumble 2](https://freesound.org/s/267250/) | BerlinGameScene |
+| sfx-wood-knock | [Knock_on_door.wav](https://freesound.org/s/244325/) | Philip_Daniels |
+| sfx-bird | [Bird Freaking Out](https://freesound.org/s/812026/) | qubodup |
+| sfx-grass-steps | [Walk Wet](https://freesound.org/s/231850/) | alegemaate |
+| sfx-run-splash | [running through a puddle](https://freesound.org/s/249930/) | launemax |
+| sfx-foot-mud / sfx-stick-mud | BenDrain 的泥地单步（见上文第一批记录） | BenDrain |
+
+还有两条是**自己合成**的，不涉及任何版权：`sfx-heartbeat`（心跳 + 4.3 kHz 耳鸣，正弦合成）、
+`sfx-thump`（低频转场咚，正弦 + 低通）。
+
+加工方式：裁剪 → 滤波 → 淡入淡出 → 统一峰值；每条在剧情里的实际音量由步骤里的 `level` 决定。
+加工脚本在工作区 `work/fx-build.mjs`（不进仓库）。
+
 ## 备注
 
 - `rain.mp3`：原文件 45 秒，满足"30 秒以上、可无缝循环、无雷声无音乐"。剧情里由序章和第三幕的
