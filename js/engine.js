@@ -27,6 +27,8 @@ export class StoryEngine {
     this.state = null;
     this.epoch = 0;                      // 重开一次就加一，用来终止旧循环
     this.running = false;
+    this._resolveSelect = null;          // 预选项等待中：语音回答 / 重开收场用
+    this._resolveClick = null;           // 点击等待中：重开收场用
     this._bgFront = true;
     this.reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
@@ -183,6 +185,7 @@ export class StoryEngine {
 
   startNew() {
     this.epoch++;
+    this.abortWaits();
     this.state = this.newState();
     this.enterScene(this.state.sceneId, true);
     return this.run();
@@ -190,6 +193,7 @@ export class StoryEngine {
 
   resume(saved) {
     this.epoch++;
+    this.abortWaits();
     this.state = { ...this.newState(), ...saved };
     if (!this.scenes[this.state.sceneId]) {   // 旧存档指向已经不存在的场景
       this.on.toast?.("这段路的地图变了，从序幕重新开始。");
@@ -354,20 +358,28 @@ export class StoryEngine {
   waitClick() {
     return new Promise((resolve) => {
       const startAt = performance.now();
+      let done = false;
       const cleanup = () => {
         document.removeEventListener("click", onClick);
         document.removeEventListener("keydown", onKey);
         this.ui.dialogue.classList.remove("waiting");
       };
-      const onClick = (e) => {
-        if (e.target.closest?.(".screen, #topbar, .choices, .input-row")) return;
-        if (performance.now() - startAt < 260) return;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        this._resolveClick = null;
         cleanup();
         resolve();
       };
+      this._resolveClick = finish;   // 重开 / 读档时由 abortWaits 收掉
+      const onClick = (e) => {
+        if (e.target.closest?.(".screen, #topbar, .choices, .input-row")) return;
+        if (performance.now() - startAt < 260) return;
+        finish();
+      };
       const onKey = (e) => {
         if (e.target instanceof HTMLInputElement) return;
-        if (e.key === " " || e.key === "Enter") { cleanup(); resolve(); }
+        if (e.key === " " || e.key === "Enter") finish();
       };
       document.addEventListener("click", onClick);
       document.addEventListener("keydown", onKey);
@@ -486,33 +498,43 @@ export class StoryEngine {
     return (ok.length ? ok[ok.length - 1] : items[0]).text;
   }
 
-  /** 预选项回答：点一句，主角说出口，NPC 回应。
-   *  AI 在线时交给大模型接话；离线用选项自带的 reply 台词（信任值也按选项各自算）。 */
+  /** 预选项回答：点一句，主角说出口，NPC 回应。也可以按住语音说自己的话（走 submitSpoken）。
+   *  AI 在线时交给大模型接话；离线用选项自带的 reply 台词（语音回答用步骤的 fallback）。 */
   async selectStep(step) {
     const box = this.ui.choices;
     box.hidden = false;
     box.innerHTML = "";
 
     const picked = await new Promise((resolve) => {
+      this._resolveSelect = resolve;   // 按住语音说的话，从 submitSpoken 走这个口子进来
       step.options.forEach((opt) => {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "choice-btn";
         btn.textContent = this.interpolate(opt.text);
-        btn.addEventListener("click", () => resolve(opt));
+        btn.addEventListener("click", () => { this._resolveSelect = null; resolve(opt); });
         box.appendChild(btn);
       });
     });
 
     box.hidden = true;
     box.innerHTML = "";
-    this.state.picks.push(picked.text);
+    this._resolveSelect = null;
+    if (picked.aborted) return "stop";   // 中途重开：旧循环直接收场
+    const spoken = !!picked.spoken;
+    if (!spoken) this.state.picks.push(picked.text);
     this.state.answers.push(picked.text);
     this.state.turns++;
     this.state.vars[step.key || "answer"] = picked.text;
-    if (picked.set) Object.assign(this.state.vars, picked.set);
+    if (!spoken && picked.set) Object.assign(this.state.vars, picked.set);
     this.remember(step.ai, "player", picked.text);
-    // 选中的话以"我"的口吻说出，直接接下去，不用再点一下
+    if (spoken) {
+      this.state.voiceAnswers = (this.state.voiceAnswers || 0) + 1;
+      if (this.state.voiceAnswers === 1) {
+        this.on.toast?.("这句话是你自己说出口的，他记住了", 3800);
+      }
+    }
+    // 说出口的话以"我"的口吻播出，直接接下去，不用再点一下
     await this.speak({ t: "say", who: PLAYER, text: picked.text, raw: true }, { autoNext: true });
 
     // 先给出"他在想"的停顿，再取大模型回复；没连上就用选项写好的回应
@@ -542,8 +564,13 @@ export class StoryEngine {
       }
     }
     if (!reply) {
-      reply = picked.reply || this.pickFallback(step);
-      aiTrust = picked.trust ?? step.trust ?? 0;
+      if (spoken) {
+        reply = this.pickFallback(step);
+        aiTrust = step.trust ?? 0;
+      } else {
+        reply = picked.reply || this.pickFallback(step);
+        aiTrust = picked.trust ?? step.trust ?? 0;
+      }
     }
 
     await this.speak({ t: "say", who: step.ai, text: reply, raw: true });
@@ -551,9 +578,9 @@ export class StoryEngine {
     if (aiTrust) {
       this.addTrust(aiTrust, this.ai.online
         ? `${this.characters[step.ai]?.display || ""}的反应`
-        : (picked.why || `${this.characters[step.ai]?.display || ""}的反应`));
+        : (spoken ? "你自己说出口的话" : (picked.why || `${this.characters[step.ai]?.display || ""}的反应`)));
     }
-    if (Array.isArray(picked.after) && picked.after.length) {
+    if (!spoken && Array.isArray(picked.after) && picked.after.length) {
       for (const sub of picked.after) {
         const r = await this.play(sub);
         if (r === "moved") return "moved";
@@ -561,6 +588,24 @@ export class StoryEngine {
     }
     if (await this.runAfter(step)) return "moved";
     return this.applyMove(picked);
+  }
+
+  /** 语音回答入口：剧情正停在预选项上时，把这句话当作玩家的回答；没人在等就返回 false。 */
+  submitSpoken(text) {
+    if (!this._resolveSelect) return false;
+    this._resolveSelect({ spoken: true, text });
+    this._resolveSelect = null;
+    return true;
+  }
+
+  /** 重开 / 读档时收掉旧的等待，别让旧循环卡住新游戏 */
+  abortWaits() {
+    if (this._resolveSelect) {
+      this._resolveSelect({ aborted: true, text: "" });
+      this._resolveSelect = null;
+    }
+    this._resolveClick?.();
+    this._resolveClick = null;
   }
 
   applyMove(step) {
@@ -666,7 +711,7 @@ export class StoryEngine {
   }
 
   async run() {
-    if (this.running) return;
+    if (this.running) { this._wantRun = true; return; }
     this.running = true;
     const epoch = this.epoch;
     let guard = 0;
@@ -686,7 +731,11 @@ export class StoryEngine {
       console.error(err);
       this.on.toast?.(`剧情出错：${err.message}`);
     } finally {
-      if (epoch === this.epoch) this.running = false;
+      this.running = false;
+      if (this._wantRun) {              // 中途重开：旧循环收场后，把新游戏跑起来
+        this._wantRun = false;
+        this.run();
+      }
     }
   }
 

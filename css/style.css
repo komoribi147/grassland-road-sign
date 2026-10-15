@@ -149,6 +149,20 @@ button { font-family: var(--font-sans); cursor: pointer; }
 .ghost-btn b { color: var(--accent); font-weight: 600; }
 .ghost-btn.wide { display: block; width: 100%; text-align: left; padding: 12px 14px; border-radius: 10px; font-size: 14px; }
 
+/* 常驻语音按钮：按住说话，松开发送 */
+#btnVoice { display: inline-flex; align-items: center; gap: 6px; touch-action: none; user-select: none; }
+#btnVoice.rec {
+  color: #e0735c;
+  border-color: rgba(200,85,61,0.8);
+  background: rgba(200,85,61,0.16);
+  animation: voicePulse 1.1s ease-in-out infinite;
+}
+#btnVoice.rec #voiceLabel { color: #e0735c; font-size: 12px; letter-spacing: 0.04em; }
+@keyframes voicePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200,85,61,0.35); }
+  50% { box-shadow: 0 0 0 7px rgba(200,85,61,0); }
+}
+
 .primary-btn {
   padding: 12px 34px;
   border: 1px solid rgba(200,85,61,0.7);

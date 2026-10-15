@@ -57,6 +57,9 @@ const checkSteps = (list, sceneId, where) => {
         if (opt.goto) jumpTargets.push({ sceneId, target: opt.goto, tag });
         if (opt.after) checkSteps(opt.after, sceneId, `${tag} 选项.after`);
       }
+      if (!Array.isArray(step.fallback)) {
+        warnings.push(`${tag} 建议写 fallback：玩家按住语音自己说、又没连大模型时，NPC 用这句接话`);
+      }
     }
     if (step.t === "choose") {
       if (!Array.isArray(step.options) || step.options.length < 2) errors.push(`${tag} 至少要有两个选项`);

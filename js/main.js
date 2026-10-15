@@ -202,6 +202,81 @@ $("talkInput").addEventListener("keydown", (e) => {
   if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); sendTalk(); }
 });
 
+// ---------- 语音入口：按住说话，松开发送 ----------
+// 用浏览器自带的语音识别（Chrome / Edge / Safari），不装任何东西、不经过第三方。
+// 剧情弹预选项时：可以点选项，也可以按住麦克风说自己的话。
+// 「开口说话」面板开着时：说的话直接发给当前选中的 NPC。
+const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+async function routeVoice(text) {
+  // 1. 剧情正停在预选项上：这句话就是回答
+  if (engine.submitSpoken(text)) return;
+  // 2. 「开口说话」面板开着：说给当前选中的 NPC
+  if (!$("screenTalk").hidden && talkTarget) {
+    const log = $("talkLog");
+    const pending = document.createElement("div");
+    pending.className = "bubble npc pending";
+    pending.textContent = "……";
+    log.appendChild(pending);
+    log.scrollTop = log.scrollHeight;
+    const out = await engine.freeTalk(talkTarget, text);
+    renderTalkLog();
+    if (out.trust) showToast(`信任 ${out.trust > 0 ? "+" : ""}${out.trust} · ${out.display}的反应`);
+    return;
+  }
+  // 3. 其他时候：不打断剧情，轻轻说一句
+  showToast("这会儿没人在等你说话");
+}
+
+function initVoice() {
+  const btn = $("btnVoice");
+  if (!SpeechRec || !btn) return;   // 浏览器不支持就藏起来，不影响任何人
+  btn.hidden = false;
+
+  const rec = new SpeechRec();
+  rec.lang = "zh-CN";
+  rec.continuous = false;
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+
+  let recording = false;
+  const reset = () => {
+    recording = false;
+    btn.classList.remove("rec");
+    $("voiceLabel").textContent = "";
+  };
+
+  rec.onresult = (e) => {
+    const text = [...e.results].map((r) => r[0].transcript).join("").trim();
+    if (text) routeVoice(text);
+  };
+  rec.onerror = (e) => {
+    if (e.error === "not-allowed" || e.error === "service-not-allowed") {
+      showToast("浏览器没拿到麦克风权限");
+    } else if (e.error !== "aborted" && e.error !== "no-speech") {
+      showToast("没听清，按住再说一次");
+    }
+  };
+  rec.onend = reset;
+
+  btn.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    if (recording || !engine.state) return;
+    try {
+      rec.start();
+      recording = true;
+      btn.classList.add("rec");
+      $("voiceLabel").textContent = "松开发送";
+    } catch { /* 已经在听，忽略 */ }
+  });
+  const stop = () => { if (recording) { try { rec.stop(); } catch { /* 已经停了 */ } } };
+  btn.addEventListener("pointerup", stop);
+  btn.addEventListener("pointercancel", stop);
+  btn.addEventListener("contextmenu", (e) => e.preventDefault());
+}
+
+initVoice();
+
 async function boot() {
   try {
     await engine.load();
