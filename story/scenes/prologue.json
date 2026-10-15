@@ -56,7 +56,7 @@
       "after": [{ "t": "narrate", "text": "（一只草鞋落在你脚边的泥水里。）" }]
     },
     { "t": "say", "who": "he-xiuying", "text": "老李，你脚上那道口子还没好。给他穿我的。" },
-    { "t": "narrate", "text": "（她从背包里翻出一双旧布鞋。）" , "after": [{ "t": "sfx", "name": "pack", "level": 0.35 }]},
+    { "t": "narrate", "text": "（她从背包里翻出一双旧布鞋。）" },
     { "t": "say", "who": "li-changhe", "text": "你那双鞋……你自己做的。留着。" },
     { "t": "say", "who": "he-xiuying", "text": "伤员要紧。" },
     { "t": "narrate", "text": "（她把鞋递过来，没再看你，转身去扶一个伤员。）" },
@@ -64,7 +64,7 @@
       "t": "choose",
       "prompt": "（你伸手，还是缩手？）",
       "options": [
-        { "text": "接过布鞋", "trust": 8, "why": "接住了别人的东西", "replyWho": "he-xiuying", "reply": "穿上。别湿了脚。" },
+        { "text": "接过布鞋", "trust": 8, "why": "接住了别人的东西", "replyWho": "he-xiuying", "reply": "穿上。别湿了脚。", "after": [{ "t": "sfx", "name": "pack", "level": 0.35 }] },
         { "text": "把手缩回去", "trust": -5, "why": "没有接", "reply": "（她把鞋放在地上，转身走开。）" }
       ]
     },
