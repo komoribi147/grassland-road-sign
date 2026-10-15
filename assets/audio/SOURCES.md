@@ -45,7 +45,7 @@
 | `sfx-chew.mp3` | 太脆，像在啃饼干 | 换成"嚼口香糖"那种湿闷的，低通 3.4 kHz + 放慢 8% | [loud-gum-chewing](https://freesound.org/s/613719/) · Pizzazif |
 | `sfx-pour.mp3` | 只有倒水，没有漱口 | 先加过漱口（Gargling some water），**第三轮按反馈又去掉了，只留倒水** | [Pouring Water Into Metal Pot or Kettle](https://freesound.org/s/585516/) · ahriik |
 | `sfx-flag.mp3` | 听着像塑料袋 | 换成真正的旗帜布料摩擦 | [Flag Rustle 2, Foley, Med Distance](https://freesound.org/s/870602/) · CHallSmith |
-| `sfx-mumble.mp3` | 应该是"嗯嗯"的低哼 | 换成一声软哼；**第三轮按反馈去掉了"复制成两声"，只留一遍**，低通 1.3 kHz、压到 −14 dB | [Man final pain moan](https://freesound.org/s/867174/) · Lord_Bennelengtone |
+| `sfx-mumble.mp3` | 应该是"嗯嗯"的低哼 → 再改：**只要音头那一声短促的「嗯」，不要拖音，隔 1 秒再来一次** | 取素材第一个音头的 0.30 秒，低通 1.3 kHz，体积压得很轻；同样内容在 1.0 秒处再放一次（总长 1.33 秒） | [Man final pain moan](https://freesound.org/s/867174/) · Lord_Bennelengtone |
 
 加工方式：裁剪 → 滤波 → 淡入淡出 → 统一峰值；每条在剧情里的实际音量由步骤里的 `level` 决定。
 加工脚本在工作区 `work/fx-build.mjs`（不进仓库）。
