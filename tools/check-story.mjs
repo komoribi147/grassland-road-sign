@@ -114,7 +114,20 @@ for (const src of bgFiles) {
 // 输出
 const sceneCount = Object.keys(scenes).length;
 const stepCount = Object.values(scenes).reduce((n, s) => n + s.steps.length, 0);
+
+// 人物立绘：有就用，没有也不影响跑通（名字要完全一致，见 docs/立绘需求.md）
+const PORTRAITS = [
+  "li-changhe-wary.png", "li-changhe-soft.png", "li-changhe-tired.png",
+  "shitou-scared.png", "shitou-curious.png", "shitou-smile.png",
+  "he-xiuying-calm.png", "he-xiuying-firm.png", "he-xiuying-sad.png",
+];
+let havePortrait = 0;
+for (const f of PORTRAITS) {
+  try { await access(path.join(root, "assets/char", f)); havePortrait++; } catch { /* 还没有 */ }
+}
+
 console.log(`检查完成：${sceneCount} 个场景 / ${stepCount} 个步骤 / ${Object.keys(lore).length} 张史料卡`);
+console.log(`人物立绘：${havePortrait}/${PORTRAITS.length} 张${havePortrait === 0 ? "（还没有，规格和提示词见 docs/立绘需求.md）" : ""}`);
 if (drafts.length) {
   console.log(`\n待团队定稿的补写内容（${drafts.length} 处）：`);
   for (const d of drafts) console.log("  · " + d);

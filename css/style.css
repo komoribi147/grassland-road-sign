@@ -172,6 +172,23 @@ button { font-family: var(--font-sans); cursor: pointer; }
   justify-content: center;
 }
 
+/* 人物立绘：站在对话框左侧。图片不存在时自动不显示，不会留空框 */
+#portrait {
+  position: fixed;
+  left: 2.5vw;
+  bottom: 170px;
+  max-height: 46vh;
+  max-width: 26vw;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.55));
+  animation: portraitIn 0.5s ease;
+}
+@keyframes portraitIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
 .dialogue-inner {
   width: min(880px, 92vw);
   padding: 20px 26px 22px;
@@ -416,6 +433,7 @@ button { font-family: var(--font-sans); cursor: pointer; }
 }
 
 @media (max-width: 620px) {
+  #portrait { display: none; }
   .dialogue-inner { padding: 16px 18px 18px; }
   .text { font-size: 17px; line-height: 1.85; }
   .trust-bar { width: 48px; }

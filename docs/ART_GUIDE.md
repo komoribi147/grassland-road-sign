@@ -101,6 +101,10 @@
 
 ## 四、人物立绘（下一步任务，暂未接入代码）
 
+> 📌 **详细的操作步骤、提示词、免费工具、命名表，都搬到 [立绘需求.md](立绘需求.md) 了。**
+> 代码已经接好：按文件名放进 `assets/char/` 就会自动出现在对话框左侧，一张一张补也行。
+> 下面是形象要点，别画错。
+
 > 提示：AI 每次回话都会带一个情绪（mood），取值只有七个：**警惕、缓和、疲惫、难过、坚定、好奇、平静**。
 > 画立绘时按这七个情绪画，将来接进代码就能自动切表情。下表是三个人各自需要的三个。
 
@@ -108,9 +112,9 @@
 
 | 角色 | 文件名 | 状态 |
 | --- | --- | --- |
-| 老班长 李长河 | `char/li-changhe-wary.png` / `-soft.png` / `-tired.png` | 警惕 / 缓和 / 疲惫 |
-| 石头 | `char/shitou-scared.png` / `-curious.png` / `-smile.png` | 害怕 / 好奇 / 笑（露缺牙） |
-| 何大姐 | `char/he-xiuying-calm.png` / `-firm.png` / `-sad.png` | 平静 / 坚定 / 难过 |
+| 老班长 李长河 | `assets/char/li-changhe-wary.png` / `-soft.png` / `-tired.png` | 警惕 / 缓和 / 疲惫 |
+| 石头 | `assets/char/shitou-scared.png` / `-curious.png` / `-smile.png` | 害怕 / 好奇 / 笑（露缺牙） |
+| 何大姐 | `assets/char/he-xiuying-calm.png` / `-firm.png` / `-sad.png` | 平静 / 坚定 / 难过 |
 
 形象要点（防止画错）：
 

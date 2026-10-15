@@ -8,6 +8,13 @@ import { Save } from "./save.js";
 const $ = (id) => document.getElementById(id);
 const PLAYER = "__player__";
 
+// 情绪 → 立绘文件名后缀。剧本里写中文情绪（和 AI 返回的一致），文件用英文名。
+const MOOD_FILE = {
+  "警惕": "wary", "缓和": "soft", "疲惫": "tired",
+  "害怕": "scared", "好奇": "curious", "笑": "smile",
+  "平静": "calm", "坚定": "firm", "难过": "sad",
+};
+
 export class StoryEngine {
   constructor(hooks = {}) {
     this.on = hooks;                     // { toast, report, stateChange }
@@ -29,7 +36,35 @@ export class StoryEngine {
       trustAddress: $("trustAddress"), trustFill: $("trustFill"),
       dialogue: $("dialogue"), speaker: $("speakerName"),
       text: $("dialogueText"), choices: $("choices"), hint: $("clickHint"),
+      portrait: $("portrait"),
     };
+  }
+
+  /** 显示某个角色的立绘。没有这张图就自动不显示，不会留空框。 */
+  setPortrait(npcId, mood) {
+    const el = this.ui.portrait;
+    if (!el) return;
+    if (!npcId || npcId === PLAYER || !this.characters?.[npcId]) { el.hidden = true; return; }
+    const want = mood || this.characters[npcId].defaultMood || "";
+    const list = [];
+    if (want && MOOD_FILE[want]) list.push(`assets/char/${npcId}-${MOOD_FILE[want]}.png`);
+    list.push(`assets/char/${npcId}.png`);
+
+    const token = (this._portraitToken || 0) + 1;
+    this._portraitToken = token;
+    const tryNext = (i) => {
+      if (token !== this._portraitToken) return;
+      if (i >= list.length) { el.hidden = true; return; }
+      const probe = new Image();
+      probe.onload = () => {
+        if (token !== this._portraitToken) return;
+        el.src = list[i];
+        el.hidden = false;
+      };
+      probe.onerror = () => tryNext(i + 1);
+      probe.src = list[i];
+    };
+    tryNext(0);
   }
 
   // ---------- 读取数据 ----------
@@ -139,6 +174,7 @@ export class StoryEngine {
     }
 
     this.remember(npcId, "npc", out.text, out.mood);
+    this.setPortrait(npcId, out.mood);
     const delta = this.capFreeTrust(out.trust);
     if (delta) this.addTrust(delta, `${display}的反应`);
     this.autosave();
@@ -198,6 +234,7 @@ export class StoryEngine {
     if (!initial) this.state.step = 0;
     this.ui.chapterName.textContent = scene.title || id;
     this.showChapterCard(scene.title);
+    this.setPortrait(null);          // 换幕时收起立绘
     if (scene.bg || scene.tone) this.setBg(scene.bg, scene.tone);
     if (scene.ambient !== undefined) this.setAmbient(scene.ambient);
     this.updateTrust();
@@ -355,6 +392,8 @@ export class StoryEngine {
     this.ui.text.className = tone ? `text ${tone}` : "text";
 
     const text = step.raw ? step.text : this.interpolate(step.text);
+    // 只有真人说话时才换立绘：旁白/心里话保持上一个人的画面，免得一闪一闪
+    if (step.who && step.who !== PLAYER) this.setPortrait(step.who, step.mood);
     if (who && !isNarration) {
       this.state.history.push({ role: isPlayer ? "player" : "npc", name: who, text });
       if (this.state.history.length > 60) this.state.history.shift();
@@ -511,6 +550,7 @@ export class StoryEngine {
         });
         reply = out.text;
         aiTrust = out.trust;
+        this.lastMood = out.mood || "";
       } catch (err) {
         this.lastAiError = String(err.message || err); // 超时或报错，退回剧本兜底台词
       }
@@ -521,6 +561,7 @@ export class StoryEngine {
     }
 
     await this.speak({ t: "say", who: step.ai, text: reply, raw: true });
+    if (this.lastMood) this.setPortrait(step.ai, this.lastMood);
     if (aiTrust) this.addTrust(aiTrust, `${this.characters[step.ai]?.display || ""}的反应`);
     if (await this.runAfter(step)) return "moved";
     return this.applyMove(step);
