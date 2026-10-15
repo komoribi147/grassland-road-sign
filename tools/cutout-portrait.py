@@ -58,9 +58,9 @@ def process(src, dst):
     bg_color = np.median(border, axis=0)
     dist = np.sqrt(((arr - bg_color) ** 2).sum(axis=2))
 
-    ring = dilate(solid_bg, 5) & ~solid_bg          # 轮廓外约 5 像素的一圈
+    ring = dilate(solid_bg, 8) & ~solid_bg          # 轮廓外约 8 像素的一圈
     alpha = np.where(solid_bg, 0, 255).astype(np.uint8)
-    alpha[ring & (dist < 150)] = 0                   # 清掉残留的浅绿
+    alpha[ring & (dist < 175)] = 0                   # 清掉残留的浅绿（细长物件边缘最容易留）
 
     edge = dilate(solid_bg, 2) & ~solid_bg & ~(alpha == 0)
     soft = np.clip(dist * 1.8, 0, 255).astype(np.uint8)
