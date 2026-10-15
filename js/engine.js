@@ -49,8 +49,13 @@ export class StoryEngine {
     if (!npcId || npcId === PLAYER || !this.characters?.[npcId]) { el.hidden = true; return; }
     const want = mood || this.characters[npcId].defaultMood || "";
     const list = [];
-    if (want && MOOD_FILE[want]) list.push(`assets/char/${npcId}-${MOOD_FILE[want]}.png`);
-    list.push(`assets/char/${npcId}.png`);
+    const withExt = (base) => [`${base}.png`, `${base}.webp`];
+    // 先找指定情绪，再找默认情绪，最后把九种情绪都试一遍 ——
+    // 这样"只画了三个表情里的一个"也能显示出来，不会空着。
+    if (want && MOOD_FILE[want]) list.push(...withExt(`assets/char/${npcId}-${MOOD_FILE[want]}`));
+    const rest = Object.values(MOOD_FILE).filter((m) => m !== MOOD_FILE[want]);
+    for (const m of rest) list.push(...withExt(`assets/char/${npcId}-${m}`));
+    list.push(...withExt(`assets/char/${npcId}`));
 
     const token = (this._portraitToken || 0) + 1;
     this._portraitToken = token;
@@ -62,6 +67,9 @@ export class StoryEngine {
         if (token !== this._portraitToken) return;
         el.src = list[i];
         el.hidden = false;
+        // 每个人呼吸的节奏不一样，画面才不像一个模子
+        const seed = [...npcId].reduce((n, c) => n + c.charCodeAt(0), 0);
+        el.style.animationDuration = `0.5s, ${(3.6 + (seed % 17) / 10).toFixed(2)}s`;
       };
       probe.onerror = () => tryNext(i + 1);
       probe.src = list[i];
@@ -355,6 +363,11 @@ export class StoryEngine {
       img.src = src; // 文件不存在时保持渐变底色
     }
     front.classList.add("on");
+    // 背景缓慢推拉：每换一次背景就换一个方向，并且重新开始
+    this._kb = !this._kb;
+    front.classList.remove("kb-a", "kb-b");
+    void front.offsetWidth;
+    front.classList.add(this._kb ? "kb-a" : "kb-b");
     back.classList.remove("on");
     this._bgFront = !this._bgFront;
   }
