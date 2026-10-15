@@ -61,7 +61,7 @@ function buildReportText(r) {
     `他们对你的称呼：${r.address}`,
     `最终信任值：${r.trust}`,
     `你做出的选择：${r.choices} 次`,
-    `你写下的话：${r.words} 字`,
+    `你说出口的话：${r.words} 字`,
     `与他们对答：${r.turns} 轮`,
     `解锁史料卡：${r.lore}/${r.loreTotal}`,
     `用时：约 ${r.minutes} 分钟`,
@@ -304,14 +304,6 @@ document.addEventListener("keydown", (e) => {
 // ---------- 演示模式 ----------
 // 网址后面加 #auto 就会自动播放：展台演示、录制视频时用。
 if (location.hash.includes("auto")) {
-  const canned = [
-    "我不记得了。醒过来就在这儿了。",
-    "能走出去。老班长说能，就能。",
-    "革命胜利了，我请你吃白面馍。",
-    "我记住你了，李长河，河南信阳人。",
-    "何大姐，你那个学生，我替你记着。",
-  ];
-  let idx = 0;
   const speed = Number(location.hash.match(/auto(\d+)/)?.[1] || 1400);
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   boot().then(async () => {
@@ -323,13 +315,6 @@ if (location.hash.includes("auto")) {
       const visible = (el) => el && el.offsetParent !== null;
       const choice = [...document.querySelectorAll("#dialogue .choice-btn")].find(visible);
       if (choice) { choice.click(); continue; }
-      const input = [...document.querySelectorAll("#dialogue .input-row input")].find(visible);
-      if (input) {
-        input.value = canned[idx++ % canned.length];
-        await wait(200);
-        [...document.querySelectorAll("#dialogue .input-row button")].find(visible)?.click();
-        continue;
-      }
       document.querySelector("#dialogue")?.click();
     }
   });

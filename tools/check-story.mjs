@@ -26,7 +26,7 @@ for (const rel of manifest.scenes) {
 if (!scenes[manifest.start]) errors.push(`manifest.start 指向不存在的场景：${manifest.start}`);
 
 const STEP_TYPES = new Set([
-  "say", "narrate", "think", "choose", "action", "input",
+  "say", "narrate", "think", "choose", "action", "select",
   "label", "trust", "var", "bg", "ambient", "sfx", "lore",
   "if", "jump", "goto", "end",
 ]);
@@ -49,8 +49,14 @@ const checkSteps = (list, sceneId, where) => {
     }
     if (step.ai && !characters[step.ai]) errors.push(`${tag} ai=${step.ai} 不在 characters.json 里`);
     if (step.card && !lore[step.card]) errors.push(`${tag} card=${step.card} 不在 lore.json 里`);
-    if (step.t === "input" && !Array.isArray(step.fallback)) {
-      warnings.push(`${tag} 自由回答缺少 fallback 兜底台词（没连大模型时会冷场）`);
+    if (step.t === "select") {
+      if (!Array.isArray(step.options) || step.options.length < 2) errors.push(`${tag} 预选项回答至少要两个选项`);
+      for (const opt of step.options || []) {
+        if (!opt.text) errors.push(`${tag} 有选项缺少 text`);
+        if (!opt.reply) warnings.push(`${tag} 有选项缺少 reply 兜底台词（没连大模型时会冷场）`);
+        if (opt.goto) jumpTargets.push({ sceneId, target: opt.goto, tag });
+        if (opt.after) checkSteps(opt.after, sceneId, `${tag} 选项.after`);
+      }
     }
     if (step.t === "choose") {
       if (!Array.isArray(step.options) || step.options.length < 2) errors.push(`${tag} 至少要有两个选项`);

@@ -1,4 +1,4 @@
-// 剧情引擎：读 story/ 目录下的 JSON，按步骤播放，处理选择、自由回答、信任值、史料卡。
+// 剧情引擎：读 story/ 目录下的 JSON，按步骤播放，处理选择、预选项回答、信任值、史料卡。
 // 剧情作者只需要写 JSON，不需要改这个文件。
 
 import { AiClient } from "./ai.js";
@@ -375,8 +375,8 @@ export class StoryEngine {
     });
   }
 
-  /** 播一句台词 / 旁白，等玩家点击后返回 */
-  async speak(step) {
+  /** 播一句台词 / 旁白，等玩家点击后返回。opts.autoNext 为真时说完自动接下一句，不等点击。 */
+  async speak(step, opts = {}) {
     const isNarration = step.t === "narrate";
     const isThought = step.t === "think";
     const isPlayer = step.who === PLAYER;
@@ -400,6 +400,7 @@ export class StoryEngine {
       if (!isPlayer) this.remember(step.who, "npc", text, step.mood);
     }
     await this.type(text);
+    if (opts.autoNext) return "next";
     this.ui.hint.hidden = false;
     await this.waitClick();
     this.ui.hint.hidden = true;
@@ -485,51 +486,36 @@ export class StoryEngine {
     return (ok.length ? ok[ok.length - 1] : items[0]).text;
   }
 
-  async freeInput(step) {
+  /** 预选项回答：点一句，主角说出口，NPC 回应。
+   *  AI 在线时交给大模型接话；离线用选项自带的 reply 台词（信任值也按选项各自算）。 */
+  async selectStep(step) {
     const box = this.ui.choices;
     box.hidden = false;
     box.innerHTML = "";
 
-    const note = document.createElement("div");
-    note.className = "input-note";
-    note.textContent = "自由输入 · 你想说什么就打什么，不用挑选项";
-    box.appendChild(note);
-
-    const row = document.createElement("div");
-    row.className = "input-row";
-    const input = document.createElement("input");
-    input.type = "text";
-    input.maxLength = 60;
-    input.placeholder = step.hint || "写下你想说的话，按回车";
-    const send = document.createElement("button");
-    send.type = "button";
-    send.textContent = "说";
-    row.append(input, send);
-    box.appendChild(row);
-    input.focus();
-
-    const value = await new Promise((resolve) => {
-      const submit = () => {
-        const v = input.value.trim();
-        if (v) resolve(v);
-      };
-      send.addEventListener("click", submit);
-      input.addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
+    const picked = await new Promise((resolve) => {
+      step.options.forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "choice-btn";
+        btn.textContent = this.interpolate(opt.text);
+        btn.addEventListener("click", () => resolve(opt));
+        box.appendChild(btn);
+      });
     });
 
     box.hidden = true;
     box.innerHTML = "";
-    this.state.vars[step.key || "answer"] = value;
-    this.state.answers.push(value);
+    this.state.picks.push(picked.text);
+    this.state.answers.push(picked.text);
     this.state.turns++;
-    this.state.freeInputs = (this.state.freeInputs || 0) + 1;
-    if (this.state.freeInputs === 1) {
-      this.on.toast?.("这一句是你自己说的，他记住了", 3800);
-    }
-    this.remember(step.ai, "player", value);
-    await this.speak({ t: "say", who: PLAYER, text: value, raw: true });
+    this.state.vars[step.key || "answer"] = picked.text;
+    if (picked.set) Object.assign(this.state.vars, picked.set);
+    this.remember(step.ai, "player", picked.text);
+    // 选中的话以"我"的口吻说出，直接接下去，不用再点一下
+    await this.speak({ t: "say", who: PLAYER, text: picked.text, raw: true }, { autoNext: true });
 
-    // 先给出"他在想"的停顿，再取大模型回复
+    // 先给出"他在想"的停顿，再取大模型回复；没连上就用选项写好的回应
     this.ui.speaker.hidden = false;
     this.ui.speaker.textContent = this.characters[step.ai]?.display || "";
     this.ui.text.className = "text thinking";
@@ -544,7 +530,7 @@ export class StoryEngine {
           situation: this.interpolate(step.situation || "") || this.situationText(),
           trust: this.state.trust,
           address: this.address(),
-          playerText: value,
+          playerText: picked.text,
           memories: this.state.answers.slice(-6),
           history: this.memoryOf(step.ai).slice(-10),
         });
@@ -552,19 +538,29 @@ export class StoryEngine {
         aiTrust = out.trust;
         this.lastMood = out.mood || "";
       } catch (err) {
-        this.lastAiError = String(err.message || err); // 超时或报错，退回剧本兜底台词
+        this.lastAiError = String(err.message || err); // 超时或报错，退回选项写好的回应
       }
     }
     if (!reply) {
-      reply = this.pickFallback(step);
-      aiTrust = step.trust || 0;
+      reply = picked.reply || this.pickFallback(step);
+      aiTrust = picked.trust ?? step.trust ?? 0;
     }
 
     await this.speak({ t: "say", who: step.ai, text: reply, raw: true });
     if (this.lastMood) this.setPortrait(step.ai, this.lastMood);
-    if (aiTrust) this.addTrust(aiTrust, `${this.characters[step.ai]?.display || ""}的反应`);
+    if (aiTrust) {
+      this.addTrust(aiTrust, this.ai.online
+        ? `${this.characters[step.ai]?.display || ""}的反应`
+        : (picked.why || `${this.characters[step.ai]?.display || ""}的反应`));
+    }
+    if (Array.isArray(picked.after) && picked.after.length) {
+      for (const sub of picked.after) {
+        const r = await this.play(sub);
+        if (r === "moved") return "moved";
+      }
+    }
     if (await this.runAfter(step)) return "moved";
-    return this.applyMove(step);
+    return this.applyMove(picked);
   }
 
   applyMove(step) {
@@ -623,8 +619,8 @@ export class StoryEngine {
         return this.choose(step);
       case "action":
         return this.action(step);
-      case "input":
-        return this.freeInput(step);
+      case "select":
+        return this.selectStep(step);
       case "label":
         return "next";
       case "trust":
