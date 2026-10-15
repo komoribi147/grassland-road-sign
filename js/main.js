@@ -322,6 +322,33 @@ $("btnLore").addEventListener("click", () => {
 });
 $("btnMenu").addEventListener("click", () => openScreen("screenMenu"));
 
+// ---------- 音量：菜单里的滑块，拖到多少就记多少 ----------
+
+const VOLUME_KEY = "grassland-road-sign.volume.v1";
+
+function applyVolume(v, persist = true) {
+  const vol = engine.audio.setVolume(v);
+  const pct = Math.round(vol * 100);
+  $("volSlider").value = String(pct);
+  $("volValue").textContent = `${pct}%`;
+  if (persist) {
+    try { localStorage.setItem(VOLUME_KEY, String(vol)); } catch { /* 忽略 */ }
+  }
+  return vol;
+}
+
+$("volSlider").addEventListener("input", (e) => applyVolume(Number(e.target.value) / 100));
+
+// 打开页面就把上次的音量恢复回去
+{
+  let saved = 1;
+  try {
+    const raw = localStorage.getItem(VOLUME_KEY);
+    if (raw != null) saved = Number(raw);
+  } catch { /* 忽略 */ }
+  applyVolume(Number.isFinite(saved) ? saved : 1, false);
+}
+
 // ---------- 回看：翻已经读过的内容，可以搜、可以跳到指定某句 ----------
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));

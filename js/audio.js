@@ -4,13 +4,29 @@ export class AudioManager {
     this.layers = new Map(); // name -> HTMLAudioElement
     this.enabled = true;
     this.volume = 0.5;   // 雨声这类环境音本身偏"轻"，音量给足一点才听得出来
+    this.master = 1;     // 总音量（玩家在菜单里拖的那个），0 到 1
     this.missing = new Set(); // 已经确认缺失的文件，不再重复请求
+  }
+
+  /** 这一层该用多大音量（总音量 × 基准，关了声音就是 0） */
+  _level(base) {
+    return this.enabled ? Math.max(0, Math.min(1, base * this.master)) : 0;
+  }
+
+  /** 玩家拖音量条：0 到 1 */
+  setVolume(v) {
+    const vol = Math.max(0, Math.min(1, Number(v) || 0));
+    this.master = vol;
+    for (const [name, el] of this.layers) {
+      el.volume = this._level(el.loop ? this.volume : Math.min(0.6, this.volume + 0.15));
+    }
+    return vol;
   }
 
   setEnabled(on) {
     this.enabled = on;
     for (const el of this.layers.values()) {
-      el.volume = on ? this.volume : 0;
+      el.volume = this._level(el.loop ? this.volume : Math.min(0.6, this.volume + 0.15));
       if (!on) el.pause();
       else el.play().catch(() => { /* 浏览器要求用户先交互 */ });
     }
@@ -59,7 +75,7 @@ export class AudioManager {
     if (!name || this.layers.has(name) || this.missing.has(name)) return;
     const el = new Audio(`assets/audio/${name}.mp3`);
     el.loop = true;
-    el.volume = this.enabled ? this.volume : 0;
+    el.volume = this._level(this.volume);
     el.addEventListener("error", () => {
       this.missing.add(name);
       this.layers.delete(name);
@@ -79,7 +95,7 @@ export class AudioManager {
   once(name) {
     if (!name || this.missing.has(`sfx:${name}`)) return;
     const el = new Audio(`assets/audio/sfx-${name}.mp3`);
-    el.volume = this.enabled ? Math.min(0.6, this.volume + 0.15) : 0;
+    el.volume = this._level(Math.min(0.6, this.volume + 0.15));
     el.addEventListener("error", () => this.missing.add(`sfx:${name}`));
     el.play().catch(() => { /* 忽略 */ });
   }
