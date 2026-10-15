@@ -8,7 +8,7 @@
   "situation": "黄昏，松潘草地边缘，一直下雨。你刚在泥水里醒过来，是老班长把你叫起来的。石头和何大姐也在旁边。",
   "steps": [
     { "t": "narrate", "text": "1935年8月，松潘草地边缘。黄昏。雨。" },
-    { "t": "narrate", "text": "屏幕从一片模糊的绿色和灰色里亮起来。\n你趴着，嘴里全是泥。雨落在后背上，很轻，很冷，一直没停过。" },
+    { "t": "narrate", "text": "屏幕从一片模糊的绿色和灰色里亮起来。\n你趴着，嘴里全是泥。雨落在后背上，很轻，很冷，一直没停过。" , "after": [{ "t": "sfx", "name": "heartbeat", "level": 0.4 }]},
     { "t": "say", "who": "li-changhe", "text": "醒了？醒了就爬起来。这地方不能躺，躺下就起不来了。" },
     { "t": "narrate", "text": "你抬起头。\n老班长李长河蹲在你面前，手里握着一根探路的木棍。他没有伸手——那根木棍横在你和他之间，是防备。" },
     { "t": "think", "text": "你穿着一身红军的衣服。可你说不清自己是哪个连的，连长是谁，从哪儿来的。" },
@@ -38,9 +38,9 @@
     { "t": "say", "who": "li-changhe", "text": "别往心里去。那孩子……他哥上个月在毛儿盖没了。他现在看谁都像坏人。" },
     { "t": "lore", "card": "maoergai" },
 
-    { "t": "action", "label": "站起来", "hint": "点一下，才算真的站起来" },
+    { "t": "action", "label": "站起来", "hint": "点一下，才算真的站起来" , "after": [{ "t": "sfx", "name": "cloth-ring", "level": 0.45 }]},
     { "t": "narrate", "text": "你撑着地站起来，眼前晃了一下。\n你低头看自己的脚——一只脚上只剩一只草鞋，另一只脚裹着破布，早就湿透了。" },
-    { "t": "say", "who": "li-changhe", "text": "鞋呢？" },
+    { "t": "say", "who": "li-changhe", "text": "鞋呢？" , "after": [{ "t": "sfx", "name": "foot-mud", "level": 0.5 }]},
     {
       "t": "select",
       "key": "answer_shoe",
@@ -56,7 +56,7 @@
       "after": [{ "t": "narrate", "text": "（一只草鞋落在你脚边的泥水里。）" }]
     },
     { "t": "say", "who": "he-xiuying", "text": "老李，你脚上那道口子还没好。给他穿我的。" },
-    { "t": "narrate", "text": "（她从背包里翻出一双旧布鞋。）" },
+    { "t": "narrate", "text": "（她从背包里翻出一双旧布鞋。）" , "after": [{ "t": "sfx", "name": "pack", "level": 0.35 }]},
     { "t": "say", "who": "li-changhe", "text": "你那双鞋……你自己做的。留着。" },
     { "t": "say", "who": "he-xiuying", "text": "伤员要紧。" },
     { "t": "narrate", "text": "（她把鞋递过来，没再看你，转身去扶一个伤员。）" },

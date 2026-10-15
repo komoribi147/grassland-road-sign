@@ -658,8 +658,12 @@ export class StoryEngine {
     switch (step.t) {
       case "say":
       case "narrate":
-      case "think":
-        return this.speak(step);
+      case "think": {
+        const done = await this.speak(step);
+        // 台词也可以挂 after：等玩家点过这一句，再补一个音效（不新增步骤，步号不会错位）
+        if (step.after && await this.runAfter(step)) return "moved";
+        return done;
+      }
       case "choose":
         return this.choose(step);
       case "action":

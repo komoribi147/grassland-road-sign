@@ -11,7 +11,7 @@
     { "t": "narrate", "text": "队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。" },
     { "t": "narrate", "text": "天昏地暗。分不清方向。指南针受潮，失灵了。" },
     { "t": "say", "who": "he-xiuying", "text": "老李，方向不对。我们是不是绕回来了？" },
-    { "t": "narrate", "text": "（老班长蹲在地上，用手指抠泥，闻了闻。）" },
+    { "t": "narrate", "text": "（老班长蹲在地上，用手指抠泥，闻了闻。）" , "after": [{ "t": "sfx", "name": "finger-mud", "level": 0.35 }]},
     { "t": "say", "who": "li-changhe", "text": "不对。这泥是黑的，刚才那个地方泥是黄的。没绕。" },
     { "t": "narrate", "text": "（他站起来，眯着眼看远处。）" },
     { "t": "say", "who": "li-changhe", "text": "往北。看到那棵歪脖子树没有？昨天走过的。" },
@@ -32,12 +32,13 @@
     { "t": "say", "who": "li-changhe", "text": "前面的人给我们留的。我们给后面的人留。这草地，一个人走不出去。但一群人，能。" },
     { "t": "bg", "src": "assets/bg/act3-night-high-ground.jpg", "tone": ["#1e2521", "#080b09"] },
     { "t": "ambient", "name": "" },
-    { "t": "narrate", "text": "夜晚。队伍挤在一块稍微干一点的高地上。火柴还是生不着。伤员在发烧，说胡话。" },
+    { "t": "narrate", "text": "夜晚。队伍挤在一块稍微干一点的高地上。火柴还是生不着。伤员在发烧，说胡话。" , "after": [{ "t": "sfx", "name": "thump", "level": 0.45 }, { "t": "sfx", "name": "mumble", "level": 0.3 }]},
     { "t": "narrate", "text": "石头缩在你旁边，浑身发抖。" },
     { "t": "say", "who": "shitou", "text": "{player}……你说，我们能走出去吗？" },
     {
       "t": "select",
       "key": "answer_walk",
+      "after": [{ "t": "sfx", "name": "rustle", "level": 0.35 }],
       "ai": "shitou",
       "situation": "夜里，草地高地上，十六岁的司号员石头缩在你旁边，小声问你他们能不能走出去。他哥哥上个月在毛儿盖牺牲了。",
       "fallback": ["能。老班长说往北，就走得出去。"],
@@ -48,7 +49,7 @@
         { "text": "你害怕了？", "trust": 1, "why": "戳破了他", "reply": "没……就有点冷。" }
       ]
     },
-    { "t": "say", "who": "shitou", "text": "我昨天晚上梦见我娘了。她给我烙饼，白面的。我一口咬下去——醒了，嘴里全是草。" },
+    { "t": "say", "who": "shitou", "text": "我昨天晚上梦见我娘了。她给我烙饼，白面的。我一口咬下去——醒了，嘴里全是草。" , "after": [{ "t": "sfx", "name": "stomach", "level": 0.3 }]},
     { "t": "narrate", "text": "（沉默。）" },
     { "t": "say", "who": "shitou", "text": "{player}，你说……革命胜利了，是不是天天吃白面馍？" },
     {
@@ -66,7 +67,7 @@
     },
     { "t": "narrate", "text": "（石头笑了，露出缺了的那颗门牙。）" },
     { "t": "say", "who": "shitou", "text": "那我得活着走出去。我娘还等我呢。" },
-    { "t": "narrate", "text": "何大姐在另一边给伤员喂水。她自己的嘴唇干裂，但水壶先给伤员。" },
+    { "t": "narrate", "text": "何大姐在另一边给伤员喂水。她自己的嘴唇干裂，但水壶先给伤员。" , "after": [{ "t": "sfx", "name": "kettle-empty", "level": 0.4 }]},
     {
       "t": "choose",
       "prompt": "（要不要走过去？）",
@@ -166,7 +167,7 @@
         { "text": "谢谢你说这些。", "trust": 4, "why": "知道这话的分量", "reply": "不说这个了。石头烧得厉害，我去看看。" }
       ]
     },
-    { "t": "narrate", "text": "老班长突然在旁边开口。他其实一直没睡着。" },
+    { "t": "narrate", "text": "老班长突然在旁边开口。他其实一直没睡着。" , "after": [{ "t": "sfx", "name": "rustle", "level": 0.3 }]},
     { "t": "say", "who": "li-changhe", "text": "何大姐。" },
     { "t": "say", "who": "he-xiuying", "text": "嗯？" },
     { "t": "say", "who": "li-changhe", "text": "革命胜利了，女同志能上学吗？" },

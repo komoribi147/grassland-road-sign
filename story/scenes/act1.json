@@ -11,13 +11,13 @@
     { "t": "narrate", "text": "几十个红军战士背靠背坐着，浑身湿透。有人在拧衣服，水哗哗地流。有人靠在别人肩上就睡着了——不确定是睡着，还是别的。" },
     { "t": "narrate", "text": "篝火生不起来，火柴全湿了。\n炊事班这边，老班长把黑锅架在几块石头上，锅里煮着一小把青稞面，汤稀得能照见人影。" },
     { "t": "lore", "card": "kouliang" },
-    { "t": "say", "who": "shitou", "text": "老班长……今天能多给我一口不？我……我不多要，就一口。" },
+    { "t": "say", "who": "shitou", "text": "老班长……今天能多给我一口不？我……我不多要，就一口。" , "after": [{ "t": "sfx", "name": "stomach", "level": 0.4 }]},
     { "t": "say", "who": "li-changhe", "text": "一人一勺。伤员两勺。这是规矩。" },
     { "t": "say", "who": "shitou", "text": "我知道……我就是问问。" },
     { "t": "say", "who": "he-xiuying", "text": "石头。你那勺已经盛了。伤员还没喝。" },
     { "t": "narrate", "text": "（石头缩回去。）" },
     { "t": "say", "who": "shitou", "text": "……我知道了。" },
-    { "t": "narrate", "text": "老班长盛汤。第一碗给伤员，第二碗给石头，第三碗递给你。锅里还剩一点底子。" },
+    { "t": "narrate", "text": "老班长盛汤。第一碗给伤员，第二碗给石头，第三碗递给你。锅里还剩一点底子。" , "after": [{ "t": "sfx", "name": "spoon-scrape", "level": 0.5 }]},
     { "t": "say", "who": "li-changhe", "text": "你喝。" },
     {
       "t": "select",
@@ -33,7 +33,7 @@
       ],
       "after": [{ "t": "narrate", "text": "（他说这话的时候，把自己那只碗往身后挪了挪。）" }]
     },
-    { "t": "narrate", "text": "老班长背过身，蹲在一边，从口袋里摸出什么东西往嘴里塞。" },
+    { "t": "narrate", "text": "老班长背过身，蹲在一边，从口袋里摸出什么东西往嘴里塞。" , "after": [{ "t": "sfx", "name": "rustle", "level": 0.35 }]},
     {
       "t": "choose",
       "prompt": "（你要不要走近看看？）",
@@ -44,7 +44,7 @@
     },
 
     { "t": "label", "name": "observe" },
-    { "t": "narrate", "text": "你走近。他在嚼草根，嘴角有绿色的汁液。" },
+    { "t": "narrate", "text": "你走近。他在嚼草根，嘴角有绿色的汁液。" , "after": [{ "t": "sfx", "name": "chew", "level": 0.6 }]},
     {
       "t": "select",
       "key": "answer_root",
@@ -74,7 +74,7 @@
     { "t": "say", "who": "he-xiuying", "text": "你又吃草根。" },
     { "t": "say", "who": "li-changhe", "text": "就嚼两口。" },
     { "t": "say", "who": "he-xiuying", "text": "上回你说的“就嚼两口”，第二天吐了一宿。你是炊事班长，你倒了，全连喝西北风。" },
-    { "t": "narrate", "text": "（她从水壶里倒出一点水，递过去。）" },
+    { "t": "narrate", "text": "（她从水壶里倒出一点水，递过去。）" , "after": [{ "t": "sfx", "name": "pour", "level": 0.45 }]},
     { "t": "say", "who": "he-xiuying", "text": "漱口。" },
     { "t": "say", "who": "li-changhe", "text": "中。听你的，何大姐。" },
     { "t": "narrate", "text": "（他接过水。何大姐站起来要走，停了一下。）" },

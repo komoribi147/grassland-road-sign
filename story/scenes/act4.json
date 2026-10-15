@@ -9,7 +9,7 @@
   "steps": [
     { "t": "narrate", "text": "第四天清晨。雨停了。天边有一道亮光。" },
     { "t": "narrate", "text": "你醒来，发现自己身上盖着老班长那件破棉袄。\n老班长不在旁边。" },
-    { "t": "say", "who": "shitou", "text": "河！河——！看到河了——！" },
+    { "t": "say", "who": "shitou", "text": "河！河——！看到河了——！" , "after": [{ "t": "sfx", "name": "bird", "level": 0.50 }]},
     { "t": "narrate", "text": "画面拉远。前方，草地尽头，一条河在晨光中发亮。班佑河。" },
     { "t": "lore", "card": "bangyou" },
     { "t": "say", "who": "he-xiuying", "text": "走出去了……我们走出去了……" },
@@ -18,16 +18,16 @@
     { "t": "say", "who": "__player__", "text": "老班长呢？" },
     { "t": "narrate", "text": "石头愣住。何大姐愣住。所有人回头。" },
     { "t": "bg", "src": "assets/bg/act4-signpost.jpg", "tone": ["#4c5044", "#14170f"] },
-    { "t": "narrate", "text": "画面慢慢摇回去。\n身后那片草地上，雨后的水洼映着天光。几十步外，一块稍微高一点的草甸子上，老班长坐在那里。背对着你们，面朝来路。像路标一样。" },
+    { "t": "narrate", "text": "画面慢慢摇回去。\n身后那片草地上，雨后的水洼映着天光。几十步外，一块稍微高一点的草甸子上，老班长坐在那里。背对着你们，面朝来路。像路标一样。" , "after": [{ "t": "sfx", "name": "thump", "level": 0.45 }]},
     { "t": "say", "who": "shitou", "text": "老班长！老班长！我们走出去了！看到河了！" },
     { "t": "narrate", "text": "（他跑到跟前，停住了。）" },
     { "t": "say", "who": "shitou", "text": "老班长……？" },
     { "t": "narrate", "text": "画面定格。\n他手里攥着一根木棍，木棍上绑着那条红布。红布在晨风里轻轻飘。他的脸朝着来时的方向——那是后面部队要来的方向。" },
-    { "t": "action", "label": "走近老班长", "hint": "走得慢一点" },
+    { "t": "action", "label": "走近老班长", "hint": "走得慢一点" , "after": [{ "t": "sfx", "name": "grass-steps", "level": 0.45 }]},
     { "t": "narrate", "text": "画面不给正脸。\n你只看见他的脚——两只脚都光着。那只草鞋，穿在你脚上。" },
     { "t": "say", "who": "he-xiuying", "text": "他……他昨晚把油布全盖伤员身上了。他自己……坐在这儿，说眯一会儿……" },
     { "t": "narrate", "text": "（沉默。雨后的草地很安静，只有风声。）" },
-    { "t": "narrate", "text": "何大姐蹲下来，从药箱里拿出最后一块绷带。手停住了。然后她把绷带放回去，只是轻轻把它按平。", "draft": true },
+    { "t": "narrate", "text": "何大姐蹲下来，从药箱里拿出最后一块绷带。手停住了。然后她把绷带放回去，只是轻轻把它按平。", "draft": true , "after": [{ "t": "sfx", "name": "bandage", "level": 0.4 }]},
     { "t": "goto", "scene": "epilogue" }
   ]
 }
