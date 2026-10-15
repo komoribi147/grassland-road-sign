@@ -38,7 +38,6 @@
     {
       "t": "select",
       "key": "answer_walk",
-      "after": [{ "t": "sfx", "name": "rustle", "level": 0.35 }],
       "ai": "shitou",
       "situation": "夜里，草地高地上，十六岁的司号员石头缩在你旁边，小声问你他们能不能走出去。他哥哥上个月在毛儿盖牺牲了。",
       "fallback": ["能。老班长说往北，就走得出去。"],
