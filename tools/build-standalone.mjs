@@ -90,7 +90,7 @@ const stripModule = (src) => src
   .replace(/^export\s+(class|const|function|let)\s/gm, "$1 ");
 
 const parts = [];
-for (const f of ["js/save.js", "js/audio.js", "js/ai.js", "js/engine.js", "js/main.js"]) {
+for (const f of ["js/save.js", "js/audio.js", "js/ai.js", "js/sheet-geometry.js", "js/engine.js", "js/main.js"]) {
   parts.push(`/* ===== ${f} ===== */\n` + stripModule(await read(f)));
 }
 let bundle = parts.join("\n\n");

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>草地上的路标 · 沉浸式叙事</title>
 <meta name="description" content="1935年8月，松潘草地。我从泥水里醒来，记不起自己的番号，只能跟着他们走。" />
-<link rel="stylesheet" href="css/style.css?v=20261016-clarity" />
+<link rel="stylesheet" href="css/style.css?v=20261016-crop" />
 </head>
 <body data-mode="title">
 
@@ -95,6 +95,10 @@
         <button class="ghost-btn" id="btnReplayNext" type="button">下一条</button>
         <span class="replay-pos" id="replayPos"></span>
       </div>
+      <div class="replay-shot" id="replayShot" hidden>
+        <div class="replay-frame"><canvas id="replayCanvas" class="replay-canvas" aria-hidden="true"></canvas></div>
+        <span class="replay-shot-note" id="replayShotNote"></span>
+      </div>
       <div class="replay-list" id="replayList"></div>
       <div class="replay-act">
         <span class="replay-pick" id="replayPick">选中一条，就能从这里重新走</span>
@@ -176,6 +180,6 @@
   <!-- 换幕时的章节卡 -->
   <div class="chapter-card" id="chapterCard" hidden><span id="chapterCardText"></span></div>
 
-  <script type="module" src="js/main.js?v=20261016-clarity"></script>
+  <script type="module" src="js/main.js?v=20261016-crop"></script>
 </body>
 </html>

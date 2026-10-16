@@ -1,5 +1,5 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261016-clarity";
+import { StoryEngine } from "./engine.js?v=20261016-crop";
 import { Save } from "./save.js";
 
 const $ = (id) => document.getElementById(id);
@@ -390,12 +390,38 @@ function updateReplayPick() {
   if (!l) {
     go.disabled = true;
     $("replayPick").textContent = "选中一条，就能从这里重新走";
+    paintReplayShot(null);
     return;
   }
   go.disabled = false;
   const head = l.kind === "n" ? "" : `${l.who}：`;
   const text = l.text.length > 26 ? l.text.slice(0, 26) + "…" : l.text;
   $("replayPick").textContent = `当前：${l.scene}:${l.step}　${head}${text}`;
+  paintReplayShot(l);
+}
+
+/**
+ * 这句当时配的是哪张画面：用和舞台一样的裁切画在小框里。
+ * 以前回看只记了文字，所以翻到的句子和屏幕上那张画面对不上。
+ */
+let replayShotSeq = 0;
+async function paintReplayShot(entry) {
+  const box = $("replayShot");
+  if (!box) return;
+  const visual = entry && entry.visual;
+  const seq = ++replayShotSeq;
+  if (!visual || (!visual.sheet && !visual.src)) {
+    box.hidden = true;
+    return;
+  }
+  box.hidden = false;
+  const sheetNo = visual.sheet && /sheet-(\d+)/.exec(visual.sheet);
+  $("replayShotNote").textContent = sheetNo
+    ? `分镜 ${sheetNo[1]} · 第 ${Number(visual.panel) + 1} 格`
+    : "独立画面";
+  try {
+    await engine.paintPreview($("replayCanvas"), visual, () => seq === replayShotSeq);
+  } catch { /* 图还没下好，或者文件缺失，留空即可 */ }
 }
 
 /** 只列已经走到过的句子；term 为空 = 全部 */
@@ -456,7 +482,7 @@ $("replayQ").addEventListener("keydown", (e) => {
 });
 $("btnReplayPrev").addEventListener("click", () => focusReplay(replayIdx - 1));
 $("btnReplayNext").addEventListener("click", () => focusReplay(replayIdx + 1));
-$("btnReplayGo").addEventListener("click", () => {
+$("btnReplayGo").addEventListener("click", async () => {
   const l = replayLog()[replayIdx];
   if (!l) return;
   const go = $("btnReplayGo");
@@ -471,7 +497,7 @@ $("btnReplayGo").addEventListener("click", () => {
   replayArmed = false;
   go.textContent = "从这句重新走";
   closeScreens();
-  engine.rewindTo(l.scene, l.step);
+  await engine.rewindTo(l.scene, l.step);
 });
 
 $("btnSave").addEventListener("click", () => {

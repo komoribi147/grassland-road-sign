@@ -4,9 +4,68 @@
 import { AiClient } from "./ai.js";
 import { AudioManager } from "./audio.js";
 import { Save } from "./save.js";
+import { frameOf, guttersFromProfiles, panelBoxes } from "./sheet-geometry.js";
 
 const $ = (id) => document.getElementById(id);
 const PLAYER = "__player__";
+
+/**
+ * 量一张分镜图的格线：缩到一半读一次像素，靠"格线又暗又匀"把它找出来。
+ * 分镜并不是严格均分（实测横线最多偏 38 px），按均分切会把下一格的开头带进画面。
+ * 环境不支持（没有 canvas、或读到跨域图）返回 null，由调用方退回均分。
+ */
+function measureSheet(img) {
+  const width = img.naturalWidth;
+  const height = img.naturalHeight;
+  if (!width || !height) return null;
+  const sampleWidth = Math.max(8, Math.round(width / 2));
+  const sampleHeight = Math.max(8, Math.round(height / 2));
+  const canvas = document.createElement("canvas");
+  canvas.width = sampleWidth;
+  canvas.height = sampleHeight;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return null;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(img, 0, 0, sampleWidth, sampleHeight);
+  const px = ctx.getImageData(0, 0, sampleWidth, sampleHeight).data;
+
+  const rowMean = new Float64Array(sampleHeight);
+  const rowFlat = new Float64Array(sampleHeight);
+  const colMean = new Float64Array(sampleWidth);
+  const colFlat = new Float64Array(sampleWidth);
+  const rowSum = new Float64Array(sampleHeight);
+  const colSum = new Float64Array(sampleWidth);
+  const rowMin = new Float64Array(sampleHeight).fill(255);
+  const rowMax = new Float64Array(sampleHeight);
+  const colMin = new Float64Array(sampleWidth).fill(255);
+  const colMax = new Float64Array(sampleWidth);
+
+  for (let y = 0; y < sampleHeight; y++) {
+    const base = y * sampleWidth * 4;
+    let sum = 0;
+    for (let x = 0; x < sampleWidth; x++) {
+      const i = base + x * 4;
+      const v = px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114;
+      sum += v;
+      colSum[x] += v;
+      if (v < rowMin[y]) rowMin[y] = v;
+      if (v > rowMax[y]) rowMax[y] = v;
+      if (v < colMin[x]) colMin[x] = v;
+      if (v > colMax[x]) colMax[x] = v;
+    }
+    rowSum[y] = sum;
+  }
+  for (let y = 0; y < sampleHeight; y++) {
+    rowMean[y] = rowSum[y] / sampleWidth;
+    rowFlat[y] = rowMax[y] - rowMin[y];
+  }
+  for (let x = 0; x < sampleWidth; x++) {
+    colMean[x] = colSum[x] / sampleHeight;
+    colFlat[x] = colMax[x] - colMin[x];
+  }
+  return panelBoxes(guttersFromProfiles(rowMean, rowFlat, colMean, colFlat), width, height);
+}
 
 export class StoryEngine {
   constructor(hooks = {}) {
@@ -38,6 +97,7 @@ export class StoryEngine {
     this._visualToken = 0;
     this._bgToken = 0;
     this._imageCache = new Map();
+    this._sheetBoxes = new Map();   // 分镜图 -> 量好的每格取景框（一轮游戏只量一次）
     this._activeVisual = null;
     this._activeImage = null;
     window.addEventListener("resize", () => {
@@ -92,36 +152,65 @@ export class StoryEngine {
     tryNext(0);
   }
 
-  /** 单图或六格分镜都铺满舞台；分镜额外裁掉格线与邻格。 */
-  paintVisual(img, visual) {
-    const canvas = this.ui.visual;
-    if (!canvas) return;
-    const rect = canvas.parentElement.getBoundingClientRect();
+  /** 这一格的取景框：整张分镜图只量一次，之后反复用 */
+  _boxesFor(img, visual) {
+    if (!visual || visual.src) return null;
+    const key = visual.sheet;
+    if (this._sheetBoxes.has(key)) return this._sheetBoxes.get(key);
+    let boxes = null;
+    try {
+      boxes = measureSheet(img);
+    } catch { /* 读不了像素（比如跨域）就退回均分 */ }
+    if (!boxes) boxes = panelBoxes(null, img.naturalWidth, img.naturalHeight);
+    this._sheetBoxes.set(key, boxes);
+    return boxes;
+  }
+
+  /** 把一格画面铺满目标 canvas：等比放大到铺满，超出的居中裁掉 */
+  _drawVisual(canvas, img, visual) {
+    if (!canvas) return false;
+    // canvas 自己有 hidden 时量出来是 0，所以量它的容器
+    const rect = (canvas.parentElement || canvas).getBoundingClientRect();
+    if (rect.width < 2 || rect.height < 2) return false;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const width = Math.max(1, Math.round(rect.width * dpr));
     const height = Math.max(1, Math.round(rect.height * dpr));
     if (canvas.width !== width) canvas.width = width;
     if (canvas.height !== height) canvas.height = height;
-    const panelWidth = visual.src ? img.naturalWidth : img.naturalWidth / 2;
-    const panelHeight = visual.src ? img.naturalHeight : img.naturalHeight / 3;
-    const col = visual.src ? 0 : visual.panel % 2;
-    const row = visual.src ? 0 : Math.floor(visual.panel / 2);
-    const insetX = visual.src ? 0 : Math.max(5, panelWidth * 0.012);
-    const insetY = visual.src ? 0 : Math.max(5, panelHeight * 0.025);
-    const sx = col * panelWidth + insetX;
-    const sy = row * panelHeight + insetY;
-    const sourceWidth = panelWidth - 2 * insetX;
-    const sourceHeight = panelHeight - 2 * insetY;
+
+    const frame = frameOf(visual, this._boxesFor(img, visual), img.naturalWidth, img.naturalHeight);
     const ctx = canvas.getContext("2d");
+    if (!ctx) return false;
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
-    const cover = Math.max(width / sourceWidth, height / sourceHeight);
-    const cropWidth = Math.min(sourceWidth, width / cover);
-    const cropHeight = Math.min(sourceHeight, height / cover);
-    ctx.drawImage(img, sx + (sourceWidth - cropWidth) / 2, sy + (sourceHeight - cropHeight) / 2,
+    const cover = Math.max(width / frame.w, height / frame.h);
+    const cropWidth = Math.min(frame.w, width / cover);
+    const cropHeight = Math.min(frame.h, height / cover);
+    ctx.drawImage(img, frame.x + (frame.w - cropWidth) / 2, frame.y + (frame.h - cropHeight) / 2,
       cropWidth, cropHeight, 0, 0, width, height);
+    return true;
+  }
+
+  /** 舞台上的画面 */
+  paintVisual(img, visual) {
+    const canvas = this.ui.visual;
+    if (!canvas) return;
+    if (!this._drawVisual(canvas, img, visual)) return;
     canvas.hidden = false;
     canvas.parentElement.classList.add("showing-visual");
+  }
+
+  /**
+   * 回看里的小预览：跟舞台用同一套取景，所见即当时那张。
+   * stillWanted 用来判断"玩家是不是已经翻到别的句子了"——图下得慢的时候，
+   * 先发起的那次不能把后一次盖回去，否则又会文字和画面对不上。
+   */
+  async paintPreview(canvas, visual, stillWanted) {
+    const source = visual && (visual.src || visual.sheet);
+    if (!canvas || !source) return false;
+    const img = await this.loadImage(source);
+    if (stillWanted && !stillWanted()) return false;
+    return this._drawVisual(canvas, img, visual);
   }
 
   async renderVisual(visual, description = "") {
@@ -303,9 +392,9 @@ export class StoryEngine {
   /**
    * 从某一句重新走：把进度指回那里，并把信任值回退到"那一步之前"的状态。
    * 这一步自己的增量会在重走时重新加回来，所以不会重复累加。
-   * 同一幕里往回退时，背景与环境音也会退回到当时的样子。
+   * 同一幕里往回退时，画面、背景与环境音也会退回到当时的样子。
    */
-  rewindTo(sceneId, step) {
+  async rewindTo(sceneId, step) {
     const scene = this.scenes[sceneId];
     if (!scene || !scene.steps[step]) return false;
 
@@ -315,6 +404,7 @@ export class StoryEngine {
       if (log[i].scene === sceneId && log[i].step === step) { idx = i; break; }
     }
     if (idx < 0) return false;
+    const target = log[idx];     // 重走之后这一句会重新记一遍，它的画面要从这里取
 
     // 1) 信任值：把这一步及之后加过的分扣掉
     const order = Object.keys(this.scenes);
@@ -346,6 +436,11 @@ export class StoryEngine {
     this.state.step = step;
     this.updateTrust();
     this.autosave();
+
+    // 2.5) 画面也退回当时那张。不然"从这句重新走"之后画面还停在跳走前那一张，
+    //      台词和画面对不上——这正是回看那个 bug。
+    const shot = target.visual || null;
+    await this.renderVisual(shot, shot ? target.text : "");
 
     // 3) 从这里重新跑
     this.epoch++;
@@ -605,6 +700,8 @@ export class StoryEngine {
       who: who || "",
       kind: "s",
       text,
+      // 这一句当时配的是哪张画面：回看要能对上，重走也要能回到当时那张
+      visual: this._activeVisual ? { ...this._activeVisual } : null,
     });
     if (log.length > 400) log.shift();
     // 只有人物说话时才换立绘。
