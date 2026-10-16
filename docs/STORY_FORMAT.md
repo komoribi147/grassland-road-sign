@@ -37,7 +37,7 @@
 ```
 页面只显示对应分镜，不朗读或显示 `description`。这段文字供编剧、美术和无障碍说明使用，尽量从“我”的眼睛来写。每张分镜图为两列三行六格，`panel` 按从左到右、从上到下编号 `0`～`5`；每个画面与动作占独立一格，不能复用。画面本身不要写文字。
 
-独立的整张画面也可以写成 `"visual": { "src": "assets/storyboards/epilogue-scarves.png" }`。它同样会铺满屏幕，适合有服装细节需要看清的场景。
+独立的整张画面也可以写成 `"visual": { "src": "assets/storyboards/epilogue-scarves.jpg" }`。它同样会铺满屏幕，适合有服装细节需要看清的场景。
 
 ### 2. 台词
 ```json

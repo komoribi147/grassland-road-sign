@@ -108,8 +108,9 @@ export class StoryEngine {
   }
 
   /** 下载并解码一次；分镜、背景和立绘切换时复用同一张已就绪的图。
-   *  网络挂起（既不成也不报错，移动网络常见）时 25 秒当失败，别让剧情无限等下去。 */
-  loadImage(src) {
+   *  网络挂起（既不成也不报错，移动网络常见）时按超时当失败，别让剧情无限等下去。
+   *  超时可调：后台预取用短超时好尽快重试，轮到播出时用默认的 25 秒。 */
+  loadImage(src, timeoutMs = 25000) {
     if (this._imageCache.has(src)) return this._imageCache.get(src);
     const loaded = new Promise((resolve, reject) => {
       const img = new Image();
@@ -117,7 +118,7 @@ export class StoryEngine {
       const timer = setTimeout(() => {
         this._imageCache.delete(src);
         reject(new Error(`图片加载超时：${src}`));
-      }, 25000);
+      }, timeoutMs);
       img.onload = async () => {
         clearTimeout(timer);
         try { await img.decode?.(); } catch { /* onload 已确认图片可用 */ }
@@ -719,13 +720,30 @@ export class StoryEngine {
       }
       if (scene.ambient) this.audio.warm([scene.ambient], "ambient");
       this.audio.warm(sfx, "sfx");
-      for (const src of new Set(images)) {
-        this.loadImage(src).catch(() => {});
-      }
+      this._prefetchImages(images);
       // 顺手把分镜的取景框量出来：量一次要读一遍像素，放在预热阶段做，
       // 真轮到这张画面时就不用现场算了
       for (const src of new Set(sheets)) this._warmGeometry(src);
     }
+  }
+
+  /**
+   * 幕内图片预取：按出场顺序排队（并发 3，先出场先占带宽，不再是十几张一起抢），
+   * 失败或超时自动重试。移动网络请求容易挂起，重试几次比一次失败就放弃强得多；
+   * 预取用 12 秒短超时，好尽快重试，轮到播出时才用完整的 25 秒。
+   */
+  _prefetchImages(srcs) {
+    const queue = [...new Set(srcs)];
+    const worker = async () => {
+      while (queue.length) {
+        const src = queue.shift();
+        for (let attempt = 0; attempt < 3; attempt++) {
+          try { await this.loadImage(src, 12000); break; }
+          catch { if (attempt < 2) await new Promise((r) => setTimeout(r, 1200 * (attempt + 1))); }
+        }
+      }
+    };
+    Promise.all(Array.from({ length: 3 }, worker)).catch(() => {});
   }
 
   /** 预热阶段把某张分镜的格线量好并记下来 */

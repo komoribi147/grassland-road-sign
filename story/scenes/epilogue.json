@@ -9,7 +9,7 @@
   "steps": [
     { "t": "visual", "description": "画面虚化。", "visual": {"sheet":"assets/storyboards/sheet-14.jpg","panel":5} },
     { "t": "visual", "description": "雨停了。泥地变成了草甸，草甸上有一条小路，路边立着一块碑。", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":0} },
-    { "t": "visual", "description": "今天的松潘草地。几个小学生站在碑前，红领巾的结系在胸前，一个一个念碑文。", "visual": {"src":"assets/storyboards/epilogue-scarves.png"} },
+    { "t": "visual", "description": "今天的松潘草地。几个小学生站在碑前，红领巾的结系在胸前，一个一个念碑文。", "visual": {"src":"assets/storyboards/epilogue-scarves.jpg"} },
     { "t": "visual", "description": "孩子的念诵声叠在一起，听不清名字，只听得出年份。", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":2} },
     { "t": "visual", "description": "一个苍老的女声，很慢，很轻——", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":3} },
     { "t": "say", "who": "he-xiuying-old", "text": "他让我当医生。我当了。在延安，白求恩国际和平医院。后来我教了三百多个护士。每一个学生入学的第一天，我都会跟他们说一句话——你们知道吗，草地上有个老兵。他说，革命胜利了，女同志能上学。" },
