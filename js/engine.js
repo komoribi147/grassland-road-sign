@@ -107,17 +107,24 @@ export class StoryEngine {
     });
   }
 
-  /** 下载并解码一次；分镜、背景和立绘切换时复用同一张已就绪的图。 */
+  /** 下载并解码一次；分镜、背景和立绘切换时复用同一张已就绪的图。
+   *  网络挂起（既不成也不报错，移动网络常见）时 25 秒当失败，别让剧情无限等下去。 */
   loadImage(src) {
     if (this._imageCache.has(src)) return this._imageCache.get(src);
     const loaded = new Promise((resolve, reject) => {
       const img = new Image();
       img.decoding = "async";
+      const timer = setTimeout(() => {
+        this._imageCache.delete(src);
+        reject(new Error(`图片加载超时：${src}`));
+      }, 25000);
       img.onload = async () => {
+        clearTimeout(timer);
         try { await img.decode?.(); } catch { /* onload 已确认图片可用 */ }
         resolve(img);
       };
       img.onerror = () => {
+        clearTimeout(timer);
         this._imageCache.delete(src);
         reject(new Error(`图片加载失败：${src}`));
       };
@@ -227,25 +234,32 @@ export class StoryEngine {
       return;
     }
     canvas.setAttribute("aria-label", `我看见：${(description || "草地上的景象").replaceAll("你", "我")}`);
-    let img;
-    try { img = await this.loadImage(source); }
-    catch {
-      if (token === this._visualToken) this.on.toast?.("画面暂时无法加载");
-      return;
+    // 图没下好之前，这一格的故事内容先用描述文字撑着；点击照常推进，不等图
+    this.ui.visualHint.textContent = description ? `${description}（画面加载中…）` : "画面加载中…";
+    try {
+      const img = await this.loadImage(source);
+      if (token !== this._visualToken) return;   // 玩家已经点到下一格了，晚到的图别画上来
+      this._activeVisual = visual;
+      this._activeImage = img;
+      this.paintVisual(img, visual);
+      this.ui.visualHint.textContent = "点击画面继续";
+    } catch {
+      if (token !== this._visualToken) return;
+      this.on.toast?.("画面暂时无法加载");
+      this.ui.visualHint.textContent = description ? `${description}（点击继续）` : "点击继续";
     }
-    if (token !== this._visualToken) return;
-    this._activeVisual = visual;
-    this._activeImage = img;
-    this.paintVisual(img, visual);
   }
 
   async visualBeat(step) {
     this.ui.dialogue.hidden = true;
     this.ui.visualHint.hidden = false;
     this.setPortrait(null);
-    await this.renderVisual(step.visual, step.description);
+    // 不 await：画面在后台下载，下好就淡入；点击随时能推进，慢网不再卡住剧情
+    this.renderVisual(step.visual, step.description);
     await this.waitClick();
+    this._visualToken++;   // 这一格已经翻过去了：晚到的图别再画上来
     this.ui.visualHint.hidden = true;
+    this.ui.visualHint.textContent = "点击画面继续";
     return "next";
   }
 
@@ -965,7 +979,7 @@ export class StoryEngine {
   async action(step) {
     this.ui.dialogue.hidden = false;
     this.ui.visualHint.hidden = true;
-    if (step.visual) await this.renderVisual(step.visual, step.label);
+    if (step.visual) this.renderVisual(step.visual, step.label);   // 不 await：动作按钮先出来，图下好再淡入
     const box = this.ui.choices;
     box.hidden = false;
     box.innerHTML = "";
