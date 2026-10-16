@@ -216,6 +216,7 @@ button { font-family: var(--font-sans); cursor: pointer; }
   transition: all 0.25s ease;
 }
 .primary-btn:hover { background: rgba(200,85,61,0.32); }
+#btnRetry { margin-top: 14px; }
 
 /* ---------- 对话区 ---------- */
 

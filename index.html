@@ -162,6 +162,20 @@
     </div>
   </section>
 
+  <!-- 剧情数据加载失败：停下来等人重试，别让玩家对着没反应的页面猜 -->
+  <section class="screen panel" id="screenError" hidden>
+    <div class="panel-box small">
+      <div class="panel-head">
+        <h2>剧情数据没有下下来</h2>
+      </div>
+      <div class="about-body">
+        <p>可能是网络不好。数据下不下来的时候，剧情就推不动，所以这里停下来等你。</p>
+        <p class="small" id="errorDetail"></p>
+        <button class="primary-btn" id="btnRetry" type="button">再试一次</button>
+      </div>
+    </div>
+  </section>
+
   <!-- 结尾学习报告 -->
   <section class="screen panel" id="screenReport" hidden>
     <div class="panel-box">

@@ -3,7 +3,7 @@ import { StoryEngine } from "./engine.js?v=20261016-mix";
 import { Save } from "./save.js";
 
 const $ = (id) => document.getElementById(id);
-const screens = ["screenTitle", "screenLore", "screenReplay", "screenMenu", "screenAbout", "screenReport", "screenTalk"];
+const screens = ["screenTitle", "screenLore", "screenReplay", "screenMenu", "screenAbout", "screenReport", "screenTalk", "screenError"];
 
 const engine = new StoryEngine({
   toast: showToast,
@@ -277,15 +277,24 @@ function initVoice() {
 
 initVoice();
 
+// 音画预热由引擎的 warmScene 负责（当前幕+下一幕渐进预热），这里不重复预载。
+
+let booting = false;
 async function boot() {
+  if (booting) { showToast("剧情数据还在路上，马上就好"); return; }   // 别让重复点击变成重复下载
+  booting = true;
   try {
     await engine.load();
+    $("screenError").hidden = true;
+    renderLoreCount();
+    $("btnResume").hidden = !Save.read();
   } catch (err) {
-    showToast(`剧情数据读取失败：${err.message}`);
-    return;
+    // 数据下不下来就停下来等人，别让人对着一个点了没反应的页面猜
+    $("errorDetail").textContent = String(err.message || err);
+    openScreen("screenError");
+  } finally {
+    booting = false;
   }
-  renderLoreCount();
-  $("btnResume").hidden = !Save.read();
 
   engine.ai.check().then((online) => {
     const chars = engine.ai.characters || {};
@@ -302,11 +311,13 @@ async function boot() {
 // ---------- 按钮 ----------
 
 $("btnStart").addEventListener("click", () => {
+  if (!engine.ready) { boot(); return; }   // 数据没准备好：先重新加载，别让玩家点了个寂寞
   closeScreens();
   engine.startNew();
 });
 
 $("btnResume").addEventListener("click", () => {
+  if (!engine.ready) { boot(); return; }
   const saved = Save.read();
   if (!saved) return;
   closeScreens();
@@ -590,6 +601,11 @@ $("btnRestart").addEventListener("click", () => {
   Save.clear();
   closeScreens();
   engine.startNew();
+});
+
+$("btnRetry").addEventListener("click", () => {
+  $("errorDetail").textContent = "正在重新下载…";
+  boot();
 });
 
 $("btnReportClose").addEventListener("click", () => {

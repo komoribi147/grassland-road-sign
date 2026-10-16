@@ -250,18 +250,79 @@ export class StoryEngine {
   }
 
   // ---------- 读取数据 ----------
+  // 剧情数据总共只有约 42KB，第一次下载成功后整包缓存进 localStorage。
+  // 之后打开（断网、github.io 被限速都行）立刻就能玩，剧情推进不再依赖网络；
+  // 后台会再静默刷新一次，编剧更新剧情后玩家最多晚一次打开就能拿到。
+
+  static DATA_KEY = "gsr.data.v1";
+
+  /** 剧情数据是否已经可用（拿来挡“点了开始却没反应”的情况） */
+  get ready() {
+    return !!(this.manifest && Object.keys(this.scenes).length);
+  }
 
   async load() {
+    const cached = this._readCache();
+    if (cached) {
+      this._applyData(cached);
+      this._warmAll();
+      this._refresh(false);   // 后台静默更新，失败不打扰正在玩的人
+      return;
+    }
+    await this._refresh(true);  // 第一次打开必须联网，失败往上抛给 boot 弹重试页
+  }
+
+  _readCache() {
+    try {
+      const data = JSON.parse(localStorage.getItem(StoryEngine.DATA_KEY));
+      if (!data?.manifest?.scenes?.length || !data.characters || !data.scenes?.length) return null;
+      return data;
+    } catch { return null; }
+  }
+
+  /** 下载全部剧情数据并应用；每个请求失败自动重试一次。required 为真时重试仍失败就抛错。 */
+  async _refresh(required) {
     const j = async (path) => {
-      const res = await fetch(path, { cache: "no-store" });
-      if (!res.ok) throw new Error(`读取 ${path} 失败（HTTP ${res.status}）`);
-      return res.json();
+      let last;
+      for (let i = 0; i < 2; i++) {
+        try {
+          const res = await fetch(path);
+          if (!res.ok) throw new Error(`读取 ${path} 失败（HTTP ${res.status}）`);
+          return await res.json();
+        } catch (err) {
+          last = err;
+          await new Promise((r) => setTimeout(r, 600));
+        }
+      }
+      throw last;
     };
-    this.manifest = await j("story/manifest.json");
-    this.characters = await j("story/characters.json");
-    this.lore = await j("story/lore.json");
-    const list = await Promise.all(this.manifest.scenes.map(j));
-    for (const scene of list) this.scenes[scene.id] = scene;
+    try {
+      const manifest = await j("story/manifest.json");
+      const [characters, lore, sceneList] = await Promise.all([
+        j("story/characters.json"),
+        j("story/lore.json"),
+        Promise.all(manifest.scenes.map(j)),
+      ]);
+      const data = { manifest, characters, lore, scenes: sceneList };
+      this._applyData(data);
+      try { localStorage.setItem(StoryEngine.DATA_KEY, JSON.stringify(data)); } catch { /* 隐私模式写不进去就算了 */ }
+      this._warmAll();
+    } catch (err) {
+      if (required) throw err;   // 没有缓存可用，交给 boot 弹重试页
+      // 有缓存：静默失败，继续用缓存数据玩
+    }
+  }
+
+  _applyData(data) {
+    this.manifest = data.manifest;
+    this.characters = data.characters;
+    this.lore = data.lore;
+    this.scenes = {};
+    for (const scene of data.scenes) this.scenes[scene.id] = scene;
+  }
+
+  /** 数据就位后预热立绘和首幕的图与声音（沿用团队的渐进预热体系） */
+  _warmAll() {
     this.warmScene(this.manifest.start);
     for (const id of Object.keys(this.characters)) {
       this.loadImage(`assets/char/${id}.png`).catch(() => {});
@@ -372,6 +433,7 @@ export class StoryEngine {
   }
 
   startNew() {
+    if (!this.ready) { this.on.toast?.("剧情数据还没准备好，请稍等重试"); return; }
     this.epoch++;
     this.abortWaits();
     this.state = this.newState();
