@@ -14,7 +14,7 @@
   "present": ["li-changhe", "shitou", "he-xiuying"],
   "situation": "第三天夜里，队伍走散了，只剩下你们几个和三个伤员。",
   "steps": [
-    { "t": "narrate", "text": "第三天。雨又下起来了，比之前更大。" },
+    { "t": "visual", "description": "我看见雨又大起来，前方的路被雾吞没。", "visual": { "sheet": "assets/storyboards/sheet-09.jpg", "panel": 2 } },
     { "t": "say", "who": "li-changhe", "text": "往北。看到那棵歪脖子树没有？" }
   ]
 }
@@ -30,10 +30,11 @@
 
 ## 九种积木
 
-### 1. 旁白
+### 1. 画面（替代旁白）
 ```json
-{ "t": "narrate", "text": "雨落在后背上，很轻，很冷。" }
+{ "t": "visual", "description": "雨落在我的袖子上。", "visual": { "sheet": "assets/storyboards/sheet-01.jpg", "panel": 1 } }
 ```
+页面只显示对应分镜，不朗读或显示 `description`。这段文字供编剧、美术和无障碍说明使用，尽量从“我”的眼睛来写。每张分镜图为两列三行六格，`panel` 按从左到右、从上到下编号 `0`～`5`；每个画面与动作占独立一格，不能复用。画面本身不要写文字。
 
 ### 2. 台词
 ```json
@@ -41,9 +42,9 @@
 ```
 `who` 只能是 `story/characters.json` 里有的：`li-changhe`（老班长）、`shitou`（石头）、`he-xiuying`（何大姐）、`he-xiuying-old`（晚年的何秀英）、`__player__`（玩家自己）。
 
-### 3. 心里话
+### 3. 无声的心理画面
 ```json
-{ "t": "think", "text": "你说不清自己是哪个连的。" }
+{ "t": "visual", "description": "我低头看着自己沾满泥的军装，记不起番号。", "visual": { "sheet": "assets/storyboards/sheet-01.jpg", "panel": 3 } }
 ```
 
 ### 4. 让玩家选（动作）
@@ -55,12 +56,12 @@
 {
   "t": "choose",
   "options": [
-    { "text": "接过布鞋", "trust": 8, "why": "接住了别人的东西" },
-    { "text": "把手缩回去", "trust": -5, "why": "没有接" }
+    { "text": "接过布鞋", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 0 }, "trust": 8, "why": "接住了别人的东西" },
+    { "text": "把手缩回去", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 1 }, "trust": -5, "why": "没有接" }
   ]
 }
 ```
-`trust` 是信任值变化；`goto` 可选，写了就跳到别的地方。
+`trust` 是信任值变化；`goto` 可选，写了就跳到别的地方。每个动作选项都要有自己的画面。
 
 ### 5. 玩家台词（预选项，可接大模型）
 
@@ -85,14 +86,14 @@
 - `situation`：**必须写清楚此刻发生了什么**，大模型靠这句话不出戏。
 - `fallback`（建议写）：玩家**不点选项、按住麦克风说了自己的话**时，没连大模型的话 NPC 用这句接话，写法 `"fallback": ["嗯。那我要走到那天。"]`，也支持分档 `[{ "minTrust": 80, "text": "……" }]`。
 - `trust`：语音回答离线兜底时的信任值变化。
-- `after` 可选：回复完之后再补几句旁白，写法是 `"after": [{ "t": "narrate", "text": "……" }]`；单个选项内部也可以有自己的 `after`。
+- `after` 可选：回复完之后再补一个画面或音效，写法是 `"after": [{ "t": "visual", "description": "我看见……", "visual": { "sheet": "assets/storyboards/sheet-05.jpg", "panel": 0 } }]`；单个选项内部也可以有自己的 `after`。
 - 写作纪律：候选台词要像那个年代的人说话——短、有犹豫、不喊口号，不用 1949 年之后的词汇。
 
 ### 6. 必须点一下的动作
 ```json
-{ "t": "action", "label": "站起来", "hint": "点一下，才算真的站起来" }
+{ "t": "action", "label": "站起来", "hint": "点一下，才算真的站起来", "visual": { "sheet": "assets/storyboards/sheet-02.jpg", "panel": 2 } }
 ```
-用来制造"我得动手"的感觉，比如站起来、递木棍、插木棍、走近老班长。
+用来制造"我得动手"的感觉，比如站起来、递木棍、插木棍、走近老班长。按钮出现时，对应动作画面也出现。
 
 ### 7. 给信任值 / 记变量
 ```json
@@ -128,7 +129,7 @@
 ## 改完必须做的两件事
 
 ```bash
-node tools/check-story.mjs     # 自检：跳转、人物、史料卡编号
+node tools/check-story.mjs     # 自检：跳转、人物、史料卡、分镜格
 ```
 
 再打开网页，从头点到你改的地方看一眼。
@@ -139,4 +140,4 @@ node tools/check-story.mjs     # 自检：跳转、人物、史料卡编号
 2. 不用 1949 年之后的词汇。
 3. 史实不能编。虚构人物可以，时间地点战役不行。
 
-标了 `"draft": true` 的步骤，是程序同学代笔的过渡句，需要主笔编剧确认或改写。`node tools/check-story.mjs` 会把它们列出来。
+标了 `"draft": true` 的步骤，是待主笔确认的画面描述。`node tools/check-story.mjs` 会把它们列出来。

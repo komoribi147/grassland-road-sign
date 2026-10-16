@@ -7,13 +7,13 @@
   "present": ["li-changhe", "shitou", "he-xiuying"],
   "situation": "第三天夜里，队伍走散了，只剩下老班长、石头、何大姐、三个伤员和你，挤在一小块稍微干一点的高地上。",
   "steps": [
-    { "t": "narrate", "text": "第三天。雨又下起来了，比之前更大。" },
-    { "t": "narrate", "text": "队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。" },
-    { "t": "narrate", "text": "天昏地暗。分不清方向。指南针受潮，失灵了。" },
+    { "t": "visual", "description": "第三天。雨又下起来了，比之前更大。", "visual": {"sheet":"assets/storyboards/sheet-09.jpg","panel":2} },
+    { "t": "visual", "description": "队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。", "visual": {"sheet":"assets/storyboards/sheet-09.jpg","panel":3} },
+    { "t": "visual", "description": "天昏地暗。分不清方向。指南针受潮，失灵了。", "visual": {"sheet":"assets/storyboards/sheet-09.jpg","panel":4} },
     { "t": "say", "who": "he-xiuying", "text": "老李，方向不对。我们是不是绕回来了？" },
-    { "t": "narrate", "text": "（老班长蹲在地上，用手指抠泥，闻了闻。）" , "after": [{ "t": "sfx", "name": "finger-mud", "level": 0.35 }]},
+    { "t": "visual", "description": "（老班长蹲在地上，用手指抠泥，闻了闻。）", "visual": {"sheet":"assets/storyboards/sheet-09.jpg","panel":5} , "after": [{ "t": "sfx", "name": "finger-mud", "level": 0.35 }]},
     { "t": "say", "who": "li-changhe", "text": "不对。这泥是黑的，刚才那个地方泥是黄的。没绕。" },
-    { "t": "narrate", "text": "（他站起来，眯着眼看远处。）" },
+    { "t": "visual", "description": "（他站起来，眯着眼看远处。）", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":0} },
     { "t": "say", "who": "li-changhe", "text": "往北。看到那棵歪脖子树没有？昨天走过的。" },
     {
       "t": "select",
@@ -28,12 +28,12 @@
         { "text": "我们真没绕圈？", "trust": 3, "why": "把方向放在心上", "reply": "没绕。每走过一个地方，我就记一个记号。你看——" }
       ]
     },
-    { "t": "narrate", "text": "画面拉远。\n身后泥泞的草地上，每隔几十步就有一根木棍，有的绑着布条，有的绑着草鞋，有的只是插着一根树枝。" },
+    { "t": "visual", "description": "画面拉远。\n身后泥泞的草地上，每隔几十步就有一根木棍，有的绑着布条，有的绑着草鞋，有的只是插着一根树枝。", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":1} },
     { "t": "say", "who": "li-changhe", "text": "前面的人给我们留的。我们给后面的人留。这草地，一个人走不出去。但一群人，能。" },
     { "t": "bg", "src": "assets/bg/act3-night-high-ground.jpg", "tone": ["#1e2521", "#080b09"] },
     { "t": "ambient", "name": "" },
-    { "t": "narrate", "text": "夜晚。队伍挤在一块稍微干一点的高地上。火柴还是生不着。伤员在发烧，说胡话。" , "after": [{ "t": "sfx", "name": "thump", "level": 0.45 }, { "t": "sfx", "name": "mumble", "level": 0.3 }]},
-    { "t": "narrate", "text": "石头缩在你旁边，浑身发抖。" },
+    { "t": "visual", "description": "夜晚。队伍挤在一块稍微干一点的高地上。火柴还是生不着。伤员在发烧，说胡话。", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":2} , "after": [{ "t": "sfx", "name": "thump", "level": 0.45 }, { "t": "sfx", "name": "mumble", "level": 0.3 }]},
+    { "t": "visual", "description": "石头缩在你旁边，浑身发抖。", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":3} },
     { "t": "say", "who": "shitou", "text": "{player}……你说，我们能走出去吗？" },
     {
       "t": "select",
@@ -49,7 +49,7 @@
       ]
     },
     { "t": "say", "who": "shitou", "text": "我昨天晚上梦见我娘了。她给我烙饼，白面的。我一口咬下去——醒了，嘴里全是草。" , "after": [{ "t": "sfx", "name": "stomach", "level": 0.3 }]},
-    { "t": "narrate", "text": "（沉默。）" },
+    { "t": "visual", "description": "（沉默。）", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":4} },
     { "t": "say", "who": "shitou", "text": "{player}，你说……革命胜利了，是不是天天吃白面馍？" },
     {
       "t": "select",
@@ -64,15 +64,15 @@
         { "text": "问这个干什么，馋了？", "trust": 1, "why": "逗他", "reply": "……你不馋？" }
       ]
     },
-    { "t": "narrate", "text": "（石头笑了，露出缺了的那颗门牙。）" },
+    { "t": "visual", "description": "（石头笑了，露出缺了的那颗门牙。）", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":5} },
     { "t": "say", "who": "shitou", "text": "那我得活着走出去。我娘还等我呢。" },
-    { "t": "narrate", "text": "何大姐在另一边给伤员喂水。她自己的嘴唇干裂，但水壶先给伤员。" , "after": [{ "t": "sfx", "name": "kettle-empty", "level": 0.4 }]},
+    { "t": "visual", "description": "何大姐在另一边给伤员喂水。她自己的嘴唇干裂，但水壶先给伤员。", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":0} , "after": [{ "t": "sfx", "name": "kettle-empty", "level": 0.4 }]},
     {
       "t": "choose",
-      "prompt": "（要不要走过去？）",
+      "prompt": "我要走过去吗？",
       "options": [
-        { "text": "走过去，站在何大姐旁边", "trust": 4, "goto": "act3:water" },
-        { "text": "留在原地，让她一个人待着", "trust": 0, "goto": "act3:after_water" }
+        { "text": "走过去，站在何大姐旁边", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 4 }, "trust": 4, "goto": "act3:water" },
+        { "text": "留在原地，让她一个人待着", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 5 }, "trust": 0, "goto": "act3:after_water" }
       ]
     },
 
@@ -90,13 +90,13 @@
         { "text": "壶里还有水吗？", "trust": 1, "why": "问得直接", "reply": "最后一口，刚喂了。" }
       ],
       "after": [
-        { "t": "narrate", "text": "（她把水壶摇了摇，空的。）" },
+        { "t": "visual", "description": "（她把水壶摇了摇，空的。）", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":1} },
         { "t": "say", "who": "he-xiuying", "text": "明天得找水。" }
       ]
     },
 
     { "t": "label", "name": "after_water" },
-    { "t": "narrate", "text": "老班长把叫你到一边。" },
+    { "t": "visual", "description": "老班长把我叫到一边。", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":2} },
     { "t": "say", "who": "li-changhe", "text": "{player}。你读过书，你跟我说——革命胜利了，是啥样？" },
     {
       "t": "select",
@@ -111,11 +111,11 @@
         { "text": "我还没想过。您想过吗？", "trust": 2, "why": "把话还给他", "reply": "想。天天想。想着，饿得就没那么厉害了。" }
       ]
     },
-    { "t": "narrate", "text": "（他睁开眼，看了看你，又看了看睡着的石头。）" },
+    { "t": "visual", "description": "（他睁开眼，看了看你，又看了看睡着的石头。）", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":3} },
     { "t": "say", "who": "li-changhe", "text": "你替我记住。李长河，河南信阳人，1930年参加红军。" },
     { "t": "say", "who": "__player__", "text": "您说这个干什么？" },
     { "t": "say", "who": "li-changhe", "text": "没什么。睡吧。" },
-    { "t": "narrate", "text": "过了一会儿，何大姐走过来，坐在你旁边。这是她第一次主动靠近你。" },
+    { "t": "visual", "description": "过了一会儿，何大姐走过来，坐在你旁边。这是她第一次主动靠近你。", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":4} },
     { "t": "say", "who": "he-xiuying", "text": "老李跟你说他家的事了？" },
     {
       "t": "select",
@@ -131,9 +131,9 @@
       ]
     },
     { "t": "say", "who": "he-xiuying", "text": "后来参加红军，他说，打天下，让天下闺女都不遭那个罪。" },
-    { "t": "narrate", "text": "（沉默。）" },
+    { "t": "visual", "description": "（沉默。）", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":5} },
     { "t": "say", "who": "he-xiuying", "text": "他从来没跟别人说过。我是听卫生部的老同志讲的。" },
-    { "t": "narrate", "text": "（她转头看着你。）" },
+    { "t": "visual", "description": "（她转头看着你。）", "visual": {"sheet":"assets/storyboards/sheet-12.jpg","panel":0} },
     { "t": "say", "who": "he-xiuying", "text": "他让你记住他的名字。你记住了吗？" },
     {
       "t": "select",
@@ -148,9 +148,9 @@
         { "text": "记住了。……为什么这么问？", "trust": 2, "why": "多问了一句", "reply": "不为什么。记住就好。" }
       ]
     },
-    { "t": "narrate", "text": "（她站起来要走。）" },
+    { "t": "visual", "description": "（她站起来要走。）", "visual": {"sheet":"assets/storyboards/sheet-12.jpg","panel":1} },
     { "t": "say", "who": "he-xiuying", "text": "我叫何秀英。江西瑞金人。1931年参加红军。" },
-    { "t": "narrate", "text": "（她停了一下，声音更轻了。）" },
+    { "t": "visual", "description": "（她停了一下，声音更轻了。）", "visual": {"sheet":"assets/storyboards/sheet-12.jpg","panel":2} },
     { "t": "say", "who": "he-xiuying", "text": "我男人……在湘江没的。他走之前说，革命胜利了，让我去念书。他教我认了三百多个字，我就学了三百多个。后面的……没人教了。" },
     { "t": "lore", "card": "xiangjiang" },
     {
@@ -166,11 +166,11 @@
         { "text": "谢谢你说这些。", "trust": 4, "why": "知道这话的分量", "reply": "不说这个了。石头烧得厉害，我去看看。" }
       ]
     },
-    { "t": "narrate", "text": "老班长突然在旁边开口。他其实一直没睡着。" , "after": [{ "t": "sfx", "name": "rustle", "level": 0.3 }]},
+    { "t": "visual", "description": "老班长突然在旁边开口。他其实一直没睡着。", "visual": {"sheet":"assets/storyboards/sheet-12.jpg","panel":3} , "after": [{ "t": "sfx", "name": "rustle", "level": 0.3 }]},
     { "t": "say", "who": "li-changhe", "text": "何大姐。" },
     { "t": "say", "who": "he-xiuying", "text": "嗯？" },
     { "t": "say", "who": "li-changhe", "text": "革命胜利了，女同志能上学吗？" },
-    { "t": "narrate", "text": "（他学着她的语气，把她之前问过的话，重复了一遍。）" },
+    { "t": "visual", "description": "（他学着她的语气，把她之前问过的话，重复了一遍。）", "visual": {"sheet":"assets/storyboards/sheet-12.jpg","panel":4} },
     { "t": "say", "who": "he-xiuying", "text": "能。" },
     { "t": "say", "who": "li-changhe", "text": "那你得当医生。" },
     { "t": "say", "who": "he-xiuying", "text": "我当。" },

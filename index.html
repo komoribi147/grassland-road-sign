@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>草地上的路标 · 沉浸式叙事</title>
-<meta name="description" content="1935年8月，松潘草地。一个不记得自己番号的人，跟着一支队伍往外走。" />
+<meta name="description" content="1935年8月，松潘草地。我从泥水里醒来，记不起自己的番号，只能跟着他们走。" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body data-mode="title">
@@ -13,6 +13,7 @@
   <div id="stage">
     <div class="bg-layer" id="bgA"></div>
     <div class="bg-layer" id="bgB"></div>
+    <canvas id="storyVisual" class="story-visual" role="img" aria-label="剧情画面" hidden></canvas>
     <div class="rain" id="rain" hidden></div>
     <div class="vignette"></div>
   </div>
@@ -47,13 +48,14 @@
       <div class="click-hint" id="clickHint" hidden>点击继续</div>
     </div>
   </main>
+  <div id="visualHint" class="visual-hint" hidden>点击画面继续</div>
 
   <!-- 标题页 -->
   <section class="screen" id="screenTitle">
     <div class="title-card">
       <p class="eyebrow">1935 · 松潘草地</p>
       <h1>草地上的路标</h1>
-      <p class="subtitle">一个不记得自己番号的人，跟着一支队伍往外走。</p>
+      <p class="subtitle">我从泥水里醒来，记不起自己的番号，只能跟着他们走。</p>
       <div class="title-actions">
         <button class="primary-btn" id="btnStart" type="button">开始</button>
         <button class="ghost-btn" id="btnResume" type="button" hidden>继续上次</button>
@@ -147,7 +149,7 @@
         <button class="ghost-btn" data-close="screenAbout" type="button">关闭</button>
       </div>
       <div class="about-body">
-        <p>《草地上的路标》是一件以长征过草地为背景的沉浸式叙事作品。你不扮演英雄，你是一个在泥水里醒来、说不清自己番号的人。</p>
+        <p>《草地上的路标》是一件以长征过草地为背景的沉浸式叙事作品。我从泥水里醒来，说不清自己的番号，只能跟着这支队伍往外走。</p>
         <p>作品以剧本为骨、以大模型为血肉：NPC 会观察你、记住你、根据你的回答改变对你的称呼。我们不写战争，写人。</p>
         <p class="small">河南工业大学 · 讯飞杯参赛作品（AI + 教育）</p>
       </div>

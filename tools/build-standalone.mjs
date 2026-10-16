@@ -32,6 +32,7 @@ const files = {
   "story/characters.json": characters,
   "story/lore.json": lore,
 };
+const storyboardPaths = new Set();
 
 // 背景图：直接换成 data URI，塞进每一幕的 bg / bg 步骤里
 let imgCount = 0;
@@ -45,11 +46,24 @@ for (const rel of manifest.scenes) {
         imgCount++;
       } else if (typeof v === "object") {
         await swap(v);
+      } else if (k === "sheet" && typeof v === "string" && v.startsWith("assets/storyboards/")) {
+        storyboardPaths.add(v);
       }
     }
   };
   await swap(scene);
   files[rel] = scene;
+}
+
+// 分镜格在剧情里会反复引用同一张图：每张只内联一次，避免单文件膨胀几十倍。
+const storyboards = {};
+for (const rel of storyboardPaths) storyboards[rel] = await toDataURI(rel);
+
+// 本地单文件也带上人物立绘；网上版仍按普通文件路径加载。
+const portraits = {};
+for (const name of (await readdir(path.join(root, "assets/char"))).filter((f) => /\.(png|webp)$/i.test(f))) {
+  const rel = `assets/char/${name}`;
+  portraits[rel] = await toDataURI(rel);
 }
 
 // 音频：自动扫描 assets/audio 下所有 mp3，key 就是文件名（不含扩展名），
@@ -123,6 +137,8 @@ if (warmOld.test(bundle)) {
 // 拦掉剧情 JSON 的网络请求，改成读内存里的数据（图片和音频已经是 data URI，不用管）
 const inline = `
 window.__AUDIO__ = ${JSON.stringify(audio)};
+window.__STORYBOARDS__ = ${JSON.stringify(storyboards)};
+window.__PORTRAITS__ = ${JSON.stringify(portraits)};
 const __FILES__ = ${JSON.stringify(files)};
 const __origFetch = window.fetch.bind(window);
 window.fetch = function (url, opts) {
@@ -149,5 +165,5 @@ html = html.replace("<title>", "<title>（单文件版）");
 await writeFile(outPath, html, "utf8");
 const kb = Math.round(Buffer.byteLength(html, "utf8") / 1024);
 console.log(`已生成：${outPath}`);
-console.log(`大小：${kb} KB（内联了 ${imgCount} 张背景图、${Object.keys(audio).length} 个音频文件）`);
+console.log(`大小：${kb} KB（内联了 ${imgCount} 张背景图、${storyboardPaths.size} 张分镜图、${Object.keys(portraits).length} 张立绘、${Object.keys(audio).length} 个音频文件）`);
 console.log("这个文件双击就能玩，可以直接发给别人。");

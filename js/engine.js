@@ -39,13 +39,22 @@ export class StoryEngine {
       dialogue: $("dialogue"), speaker: $("speakerName"),
       text: $("dialogueText"), choices: $("choices"), hint: $("clickHint"),
       portrait: $("portrait"),
+      visual: $("storyVisual"), visualHint: $("visualHint"),
     };
+    this._portraitToken = 0;
+    this._visualToken = 0;
+    this._activeVisual = null;
+    this._activeImage = null;
+    window.addEventListener("resize", () => {
+      if (this._activeVisual && this._activeImage) this.paintVisual(this._activeImage, this._activeVisual);
+    });
   }
 
   /** 显示某个角色的立绘。没有这张图就自动不显示，不会留空框。 */
   setPortrait(npcId, mood) {
     const el = this.ui.portrait;
     if (!el) return;
+    const token = ++this._portraitToken;
     if (!npcId || npcId === PLAYER || !this.characters?.[npcId]) { el.hidden = true; return; }
     const want = mood || this.characters[npcId].defaultMood || "";
     const list = [];
@@ -57,24 +66,84 @@ export class StoryEngine {
     for (const m of rest) list.push(...withExt(`assets/char/${npcId}-${m}`));
     list.push(...withExt(`assets/char/${npcId}`));
 
-    const token = (this._portraitToken || 0) + 1;
-    this._portraitToken = token;
     const tryNext = (i) => {
       if (token !== this._portraitToken) return;
       if (i >= list.length) { el.hidden = true; return; }
       const probe = new Image();
       probe.onload = () => {
         if (token !== this._portraitToken) return;
-        el.src = list[i];
+        el.src = window.__PORTRAITS__?.[list[i]] || list[i];
         el.hidden = false;
         // 每个人呼吸的节奏不一样，画面才不像一个模子
         const seed = [...npcId].reduce((n, c) => n + c.charCodeAt(0), 0);
         el.style.animationDuration = `0.5s, ${(3.6 + (seed % 17) / 10).toFixed(2)}s`;
       };
       probe.onerror = () => tryNext(i + 1);
-      probe.src = list[i];
+      probe.src = window.__PORTRAITS__?.[list[i]] || list[i];
     };
     tryNext(0);
+  }
+
+  /** 从六格分镜图中取出当前一格；窄屏保留整格画面。 */
+  paintVisual(img, visual) {
+    const canvas = this.ui.visual;
+    if (!canvas) return;
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const width = Math.max(1, Math.round(rect.width * dpr));
+    const height = Math.max(1, Math.round(rect.height * dpr));
+    canvas.width = width;
+    canvas.height = height;
+    const panelWidth = img.naturalWidth / 2;
+    const panelHeight = img.naturalHeight / 3;
+    const col = visual.panel % 2;
+    const row = Math.floor(visual.panel / 2);
+    const sx = col * panelWidth;
+    const sy = row * panelHeight;
+    const ctx = canvas.getContext("2d");
+    const cover = Math.max(width / panelWidth, height / panelHeight);
+    const cropWidth = width / cover;
+    const cropHeight = height / cover;
+    ctx.filter = "blur(18px) brightness(0.4)";
+    ctx.drawImage(img, sx + (panelWidth - cropWidth) / 2, sy + (panelHeight - cropHeight) / 2,
+      cropWidth, cropHeight, 0, 0, width, height);
+    ctx.filter = "none";
+    const contain = Math.min(width / panelWidth, height / panelHeight);
+    const displayWidth = panelWidth * contain;
+    const displayHeight = panelHeight * contain;
+    ctx.drawImage(img, sx, sy, panelWidth, panelHeight,
+      (width - displayWidth) / 2, (height - displayHeight) / 2, displayWidth, displayHeight);
+    canvas.hidden = false;
+  }
+
+  async renderVisual(visual, description = "") {
+    const canvas = this.ui.visual;
+    const token = ++this._visualToken;
+    this._activeVisual = visual || null;
+    this._activeImage = null;
+    canvas.hidden = true;
+    if (!visual?.sheet) return;
+    canvas.setAttribute("aria-label", `我看见：${(description || "草地上的景象").replaceAll("你", "我")}`);
+    const img = new Image();
+    const loaded = await new Promise((resolve) => {
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = window.__STORYBOARDS__?.[visual.sheet] || visual.sheet;
+    });
+    if (token !== this._visualToken) return;
+    if (!loaded) { this.on.toast?.("画面暂时无法加载"); return; }
+    this._activeImage = img;
+    this.paintVisual(img, visual);
+  }
+
+  async visualBeat(step) {
+    this.ui.dialogue.hidden = true;
+    this.ui.visualHint.hidden = false;
+    this.setPortrait(null);
+    await this.renderVisual(step.visual, step.description);
+    await this.waitClick();
+    this.ui.visualHint.hidden = true;
+    return "next";
   }
 
   // ---------- 读取数据 ----------
@@ -161,6 +230,7 @@ export class StoryEngine {
     let out = null;
     if (this.ai.online) {
       try {
+        const previous = this.memoryOf(npcId).slice(0, -1);
         out = await this.ai.reply({
           npc: npcId,
           mode: "free",
@@ -168,8 +238,8 @@ export class StoryEngine {
           trust: this.state.trust,
           address: this.address(),
           playerText: text,
-          memories: this.state.answers.slice(-6),
-          history: this.memoryOf(npcId).slice(-10),
+          memories: previous.filter((m) => m.role === "player").slice(-6).map((m) => m.text),
+          history: previous.slice(-10),
         });
       } catch (err) {
         this.lastAiError = String(err.message || err);
@@ -303,6 +373,7 @@ export class StoryEngine {
     this.ui.chapterName.textContent = scene.title || id;
     this.showChapterCard(scene.title);
     this.setPortrait(null);          // 换幕时收起立绘
+    this.renderVisual(null);
     if (scene.bg || scene.tone) this.setBg(scene.bg, scene.tone);
     if (scene.ambient !== undefined) this.setAmbient(scene.ambient);
     this.updateTrust();
@@ -325,16 +396,20 @@ export class StoryEngine {
       for (const s of scene.steps || []) {
         if (s.t === "sfx" && s.name) sfx.push(s.name);
         if (s.t === "bg" && s.src) images.push(s.src);
+        if (s.visual?.sheet) images.push(s.visual.sheet);
         for (const sub of s.after || []) if (sub.t === "sfx" && sub.name) sfx.push(sub.name);
+        for (const sub of s.after || []) if (sub.visual?.sheet) images.push(sub.visual.sheet);
         for (const o of s.options || []) {
+          if (o.visual?.sheet) images.push(o.visual.sheet);
           for (const sub of o.after || []) if (sub.t === "sfx" && sub.name) sfx.push(sub.name);
+          for (const sub of o.after || []) if (sub.visual?.sheet) images.push(sub.visual.sheet);
         }
       }
       if (scene.ambient) this.audio.warm([scene.ambient], "ambient");
       this.audio.warm(sfx, "sfx");
-      for (const src of images) {
+      for (const src of new Set(images)) {
         const img = new Image();     // 只为把图下进缓存，不插入页面
-        img.src = src;
+        img.src = window.__STORYBOARDS__?.[src] || src;
       }
     }
   }
@@ -348,6 +423,7 @@ export class StoryEngine {
     this.ui.choices.hidden = true;
     this.ui.choices.innerHTML = "";
     this.ui.hint.hidden = true;
+    this.ui.visualHint.hidden = true;
   }
 
   setBg(src, tone) {
@@ -489,10 +565,10 @@ export class StoryEngine {
     });
   }
 
-  /** 播一句台词 / 旁白，等玩家点击后返回。opts.autoNext 为真时说完自动接下一句，不等点击。 */
+  /** 播一句人物台词，等玩家点击后返回。 */
   async speak(step, opts = {}) {
-    const isNarration = step.t === "narrate";
-    const isThought = step.t === "think";
+    this.ui.dialogue.hidden = false;
+    this.ui.visualHint.hidden = true;
     const isPlayer = step.who === PLAYER;
     const who = isPlayer
       ? "我"
@@ -502,8 +578,7 @@ export class StoryEngine {
 
     this.ui.speaker.hidden = !who;
     this.ui.speaker.textContent = who;
-    const tone = isNarration ? "narration" : isThought ? "thought" : isPlayer ? "who" : "";
-    this.ui.text.className = tone ? `text ${tone}` : "text";
+    this.ui.text.className = isPlayer ? "text who" : "text";
 
     const text = step.raw ? step.text : this.interpolate(step.text);
     // 回看用：把这一句记下来（幕 + 步号 + 说话人 + 文本），按快了也能回去看
@@ -512,13 +587,13 @@ export class StoryEngine {
       scene: this.state.sceneId,
       step: this.state.step,
       who: who || "",
-      kind: isNarration ? "n" : isThought ? "t" : "s",
+      kind: "s",
       text,
     });
     if (log.length > 400) log.shift();
-    // 只有真人说话时才换立绘：旁白/心里话保持上一个人的画面，免得一闪一闪
+    // 只有人物说话时才换立绘。
     if (step.who && step.who !== PLAYER) this.setPortrait(step.who, step.mood);
-    if (who && !isNarration) {
+    if (who) {
       this.state.history.push({ role: isPlayer ? "player" : "npc", name: who, text });
       if (this.state.history.length > 60) this.state.history.shift();
       if (!isPlayer) this.remember(step.who, "npc", text, step.mood);
@@ -532,6 +607,8 @@ export class StoryEngine {
   }
 
   async choose(step) {
+    this.ui.dialogue.hidden = false;
+    this.ui.visualHint.hidden = true;
     const box = this.ui.choices;
     box.hidden = false;
     box.innerHTML = "";
@@ -556,17 +633,21 @@ export class StoryEngine {
     box.innerHTML = "";
     this.state.picks.push(picked.text);
     this.state.history.push({ role: "player", name: "我", text: picked.text });
+    if (picked.visual) await this.visualBeat({ visual: picked.visual, description: picked.text });
     if (picked.set) Object.assign(this.state.vars, picked.set);
     if (picked.trust) this.addTrust(picked.trust, picked.why);
     if (picked.reply) {
       const who = picked.replyWho || step.replyWho;
-      await this.speak(who ? { t: "say", who, text: picked.reply } : { t: "narrate", text: picked.reply });
+      if (who) await this.speak({ t: "say", who, text: picked.reply });
     }
     if (await this.runAfter(picked)) return "moved";
     return this.applyMove(picked);
   }
 
   async action(step) {
+    this.ui.dialogue.hidden = false;
+    this.ui.visualHint.hidden = true;
+    if (step.visual) await this.renderVisual(step.visual, step.label);
     const box = this.ui.choices;
     box.hidden = false;
     box.innerHTML = "";
@@ -592,7 +673,7 @@ export class StoryEngine {
     return this.applyMove(step);
   }
 
-  /** 执行步骤里的 after 追加内容（用于"回复之后再补一句旁白"） */
+  /** 执行步骤里的 after 追加内容。 */
   async runAfter(step) {
     if (!Array.isArray(step.after)) return false;
     for (const sub of step.after) {
@@ -613,6 +694,8 @@ export class StoryEngine {
   /** 预选项回答：点一句，主角说出口，NPC 回应。也可以按住语音说自己的话（走 submitSpoken）。
    *  AI 在线时交给大模型接话；离线用选项自带的 reply 台词（语音回答用步骤的 fallback）。 */
   async selectStep(step) {
+    this.ui.dialogue.hidden = false;
+    this.ui.visualHint.hidden = true;
     const box = this.ui.choices;
     box.hidden = false;
     box.innerHTML = "";
@@ -659,14 +742,15 @@ export class StoryEngine {
     let aiTrust = 0;
     if (this.ai.online) {
       try {
+        const previous = this.memoryOf(step.ai).slice(0, -1);
         const out = await this.ai.reply({
           npc: step.ai,
           situation: this.interpolate(step.situation || "") || this.situationText(),
           trust: this.state.trust,
           address: this.address(),
           playerText: picked.text,
-          memories: this.state.answers.slice(-6),
-          history: this.memoryOf(step.ai).slice(-10),
+          memories: previous.filter((m) => m.role === "player").slice(-6).map((m) => m.text),
+          history: previous.slice(-10),
         });
         reply = out.text;
         aiTrust = out.trust;
@@ -768,9 +852,12 @@ export class StoryEngine {
 
   async play(step) {
     switch (step.t) {
-      case "say":
-      case "narrate":
-      case "think": {
+      case "visual": {
+        const done = await this.visualBeat(step);
+        if (step.after && await this.runAfter(step)) return "moved";
+        return done;
+      }
+      case "say": {
         const done = await this.speak(step);
         // 台词也可以挂 after：等玩家点过这一句，再补一个音效（不新增步骤，步号不会错位）
         if (step.after && await this.runAfter(step)) return "moved";

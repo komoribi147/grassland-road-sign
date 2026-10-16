@@ -7,13 +7,13 @@
   "present": [],
   "situation": "很多年以后，今天的松潘草地。",
   "steps": [
-    { "t": "narrate", "text": "画面虚化。" },
-    { "t": "narrate", "text": "雨停了。泥地变成了草甸，草甸上有一条小路，路边立着一块碑。" },
-    { "t": "narrate", "text": "今天的松潘草地。几个系着红领巾的小学生站在碑前，一个一个念碑文。" },
-    { "t": "narrate", "text": "孩子的念诵声叠在一起，听不清名字，只听得出年份。" },
-    { "t": "narrate", "text": "一个苍老的女声，很慢，很轻——" },
+    { "t": "visual", "description": "画面虚化。", "visual": {"sheet":"assets/storyboards/sheet-14.jpg","panel":5} },
+    { "t": "visual", "description": "雨停了。泥地变成了草甸，草甸上有一条小路，路边立着一块碑。", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":0} },
+    { "t": "visual", "description": "今天的松潘草地。几个系着红领巾的小学生站在碑前，一个一个念碑文。", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":1} },
+    { "t": "visual", "description": "孩子的念诵声叠在一起，听不清名字，只听得出年份。", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":2} },
+    { "t": "visual", "description": "一个苍老的女声，很慢，很轻——", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":3} },
     { "t": "say", "who": "he-xiuying-old", "text": "他让我当医生。我当了。在延安，白求恩国际和平医院。后来我教了三百多个护士。每一个学生入学的第一天，我都会跟他们说一句话——你们知道吗，草地上有个老兵。他说，革命胜利了，女同志能上学。" },
-    { "t": "narrate", "text": "声音停了。风从草地上过来。" },
+    { "t": "visual", "description": "声音停了。风从草地上过来。", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":4} },
     { "t": "say", "who": "he-xiuying-old", "text": "他让我记住。我记了一辈子。" },
     { "t": "end", "title": "走出草地", "text": "他让我记住。我记了一辈子。" }
   ]

@@ -354,7 +354,7 @@ $("volSlider").addEventListener("input", (e) => applyVolume(Number(e.target.valu
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 let replayIdx = -1;
 let replayArmed = false;   // 「从这句重新走」要点两次：改动会回退进度与信任值
-const replayLog = () => (engine.state && engine.state.log) || [];
+const replayLog = () => ((engine.state && engine.state.log) || []).filter((entry) => entry.kind === "s");
 
 function updateReplayPos() {
   const n = replayLog().length;

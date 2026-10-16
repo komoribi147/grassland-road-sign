@@ -26,13 +26,27 @@ for (const rel of manifest.scenes) {
 if (!scenes[manifest.start]) errors.push(`manifest.start 指向不存在的场景：${manifest.start}`);
 
 const STEP_TYPES = new Set([
-  "say", "narrate", "think", "choose", "action", "select",
+  "say", "visual", "choose", "action", "select",
   "label", "trust", "var", "bg", "ambient", "sfx", "lore",
   "if", "jump", "goto", "end",
 ]);
 
 const jumpTargets = [];
 const bgFiles = new Set();
+const visualFiles = new Set();
+const visualPanels = new Set();
+
+const checkVisual = (visual, tag) => {
+  if (!visual || !/^assets\/storyboards\/sheet-\d\d\.jpg$/.test(visual.sheet) ||
+      !Number.isInteger(visual.panel) || visual.panel < 0 || visual.panel > 5) {
+    errors.push(`${tag} 缺少有效分镜图与格子编号`);
+    return;
+  }
+  const key = `${visual.sheet}#${visual.panel}`;
+  if (visualPanels.has(key)) errors.push(`${tag} 分镜格重复使用：${key}`);
+  visualPanels.add(key);
+  visualFiles.add(visual.sheet);
+};
 
 const checkSteps = (list, sceneId, where) => {
   if (!Array.isArray(list)) {
@@ -43,7 +57,8 @@ const checkSteps = (list, sceneId, where) => {
     const tag = `${sceneId} ${where}[${i}]`;
     if (!step || typeof step !== "object") return errors.push(`${tag} 不是对象`);
     if (!STEP_TYPES.has(step.t)) errors.push(`${tag} 未知类型 t=${step.t}`);
-    if (step.draft) drafts.push(`${tag} —— ${step.text || step.label || step.prompt || ""}`.slice(0, 90));
+    if (step.t === "visual" || step.t === "action") checkVisual(step.visual, tag);
+    if (step.draft) drafts.push(`${tag} —— ${step.description || step.text || step.label || step.prompt || ""}`.slice(0, 90));
     if (step.who && step.who !== "__player__" && !characters[step.who]) {
       warnings.push(`${tag} who=${step.who} 不在 characters.json 里（会按原样显示）`);
     }
@@ -65,7 +80,12 @@ const checkSteps = (list, sceneId, where) => {
       if (!Array.isArray(step.options) || step.options.length < 2) errors.push(`${tag} 至少要有两个选项`);
       for (const opt of step.options || []) {
         if (!opt.text) errors.push(`${tag} 有选项缺少 text`);
+        checkVisual(opt.visual, `${tag} 选项 ${opt.text || ""}`);
+        if (opt.reply && !(opt.replyWho || step.replyWho)) {
+          errors.push(`${tag} 选项 ${opt.text || ""} 的回复缺少说话人，不能显示旁白`);
+        }
         if (opt.goto) jumpTargets.push({ sceneId, target: opt.goto, tag });
+        if (opt.after) checkSteps(opt.after, sceneId, `${tag} 选项.after`);
       }
     }
     if (step.t === "if") {
@@ -119,6 +139,10 @@ for (const src of bgFiles) {
   try { await access(path.join(root, src)); }
   catch { warnings.push(`缺少背景图：${src}（页面会先用渐变底色，不影响流程）`); }
 }
+for (const src of visualFiles) {
+  try { await access(path.join(root, src)); }
+  catch { errors.push(`缺少分镜图：${src}`); }
+}
 
 // 输出
 const sceneCount = Object.keys(scenes).length;
@@ -140,6 +164,7 @@ for (const f of PORTRAITS) {
 }
 
 console.log(`检查完成：${sceneCount} 个场景 / ${stepCount} 个步骤 / ${Object.keys(lore).length} 张史料卡`);
+console.log(`画面分镜：${visualPanels.size} 格 / ${visualFiles.size} 张图`);
 console.log(`人物立绘：${havePortrait}/${PORTRAITS.length} 张${havePortrait === 0 ? "（还没有，规格和提示词见 docs/立绘需求.md）" : ""}`);
 if (drafts.length) {
   console.log(`\n待团队定稿的补写内容（${drafts.length} 处）：`);
