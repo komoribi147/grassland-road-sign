@@ -102,6 +102,7 @@ export class StoryEngine {
     this._visualToken = 0;
     this._bgToken = 0;
     this._imageCache = new Map();
+    this._imageDeadlines = new Map();  // 下载中的宽限期:预热用短超时开始,播出时放宽
     this._sheetBoxes = new Map();   // 分镜图 -> 量好的每格取景框（一轮游戏只量一次）
     this._activeVisual = null;
     this._activeImage = null;
@@ -117,21 +118,35 @@ export class StoryEngine {
    *  超时可调：后台预取用短超时好尽快重试，轮到播出时用默认的 25 秒；
    *  请求被掐断（卡顿时浏览器会这么干）则重试一次。 */
   loadImage(src, timeoutMs = 25000, attempt = 0) {
+    // 预热用 12s 短超时先下；轮到真播出时把期限放宽——慢网下图还没下完，
+    // 短超时会先把共享的这条 promise 烧断，播出拿到的就是一条已经失败的 promise
+    //（「第一幕后没有画面」的根因）。只延长、不缩短。
+    const live = this._imageDeadlines.get(src);
+    if (live && live.deadline - performance.now() < timeoutMs) {
+      clearTimeout(live.timer);
+      live.deadline = performance.now() + timeoutMs;
+      live.timer = setTimeout(live.fail, timeoutMs);
+    }
     if (this._imageCache.has(src)) return this._imageCache.get(src);
     const loaded = new Promise((resolve, reject) => {
       const img = new Image();
       img.decoding = "async";
-      const timer = setTimeout(() => {
+      const fail = () => {
         this._imageCache.delete(src);
+        this._imageDeadlines.delete(src);
         reject(new Error(`图片加载超时：${src}`));
-      }, timeoutMs);
+      };
+      const dead = { deadline: performance.now() + timeoutMs, timer: setTimeout(fail, timeoutMs), fail };
+      this._imageDeadlines.set(src, dead);
       img.onload = async () => {
-        clearTimeout(timer);
+        clearTimeout(dead.timer);
+        this._imageDeadlines.delete(src);
         try { await img.decode?.(); } catch { /* onload 已确认图片可用 */ }
         resolve(img);
       };
       img.onerror = () => {
-        clearTimeout(timer);
+        clearTimeout(dead.timer);
+        this._imageDeadlines.delete(src);
         this._imageCache.delete(src);
         // 卡顿的时候浏览器会把还在排队的请求掐掉，这种失败重试一次就好了
         if (attempt < 1) {
