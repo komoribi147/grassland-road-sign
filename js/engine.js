@@ -425,14 +425,15 @@ export class StoryEngine {
     let bg = scene.bg;
     let tone = scene.tone;
     let amb = scene.ambient;
+    let ambLevel = scene.ambientLevel;
     for (let i = 0; i < step; i++) {
       const s = scene.steps[i];
       if (s.t === "bg") { bg = s.src; tone = s.tone; }
-      if (s.t === "ambient") amb = s.name || "";
+      if (s.t === "ambient") { amb = s.name || ""; ambLevel = s.level; }
     }
     if (this.state.sceneId !== sceneId) this.enterScene(sceneId, false);
     if (bg || tone) this.setBg(bg, tone);
-    if (amb !== undefined) this.setAmbient(amb);
+    if (amb !== undefined) this.setAmbient(amb, ambLevel);
     this.state.sceneId = sceneId;
     this.state.step = step;
     this.updateTrust();
@@ -489,6 +490,7 @@ export class StoryEngine {
     let bg;
     let tone;
     let amb;
+    let ambLevel;
     let guard = 0;
 
     while (guard++ < 6000) {
@@ -510,7 +512,7 @@ export class StoryEngine {
           if (!this.state.lore.includes(s.card)) this.state.lore.push(s.card);
           break;
         case "bg": bg = s.src; tone = s.tone; break;
-        case "ambient": amb = s.name; break;
+        case "ambient": amb = s.name; ambLevel = s.level; break;
         case "goto": {
           const to = this._resolveMove(s.scene);
           if (to) { index = to.index; at = to.step; continue; }
@@ -535,7 +537,7 @@ export class StoryEngine {
 
     if (this.state.sceneId !== sceneId) this.enterScene(sceneId, false);
     if (bg || tone) this.setBg(bg, tone);
-    if (amb !== undefined) this.setAmbient(amb);
+    if (amb !== undefined) this.setAmbient(amb, ambLevel);
     this.state.sceneId = sceneId;
     this.state.step = step;
     this.updateTrust();
@@ -604,7 +606,7 @@ export class StoryEngine {
     this.setPortrait(null);          // 换幕时收起立绘
     this.renderVisual(null);
     if (scene.bg || scene.tone) this.setBg(scene.bg, scene.tone);
-    if (scene.ambient !== undefined) this.setAmbient(scene.ambient);
+    if (scene.ambient !== undefined) this.setAmbient(scene.ambient, scene.ambientLevel);
     this.updateTrust();
     this.warmScene(id);   // 提前把这一幕和下一幕的图和声音下下来
   }
@@ -698,13 +700,14 @@ export class StoryEngine {
     this._bgFront = !this._bgFront;
   }
 
-  setAmbient(name) {
+  /** 切环境音。level（0～1）可选：指定这一层多响，不传就用素材自己的基准（雨声 0.7） */
+  setAmbient(name, level) {
     const want = name || "";
     if (this._ambient !== want) {
       if (this._ambient) this.audio.stop(this._ambient);
-      if (want) this.audio.loop(want);
       this._ambient = want;
     }
+    if (want) this.audio.loop(want, level);
     this.ui.rain.hidden = want !== "rain";
 
     // 浏览器有时候会拦下自动播放。真被拦了就明确告诉玩家一句话，
@@ -1135,7 +1138,7 @@ export class StoryEngine {
         this.setBg(step.src, step.tone);
         return "next";
       case "ambient":
-        this.setAmbient(step.name);
+        this.setAmbient(step.name, step.level);
         return "next";
       case "sfx":
         this.audio.once(step.name);

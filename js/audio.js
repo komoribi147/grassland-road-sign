@@ -1,4 +1,14 @@
 // 环境音管理：文件放在 assets/audio/ 下，缺失时静默跳过，不影响剧情。
+
+/**
+ * 每个素材自己的基准音量（0～1），比统一的默认值更细。
+ * 雨声是 45 秒的公有领域录音，本身录得偏轻，压在 0.5 里几乎听不见，所以单独给足。
+ * 想再调就改这里的数字；剧本里的 `level` 优先于这张表。
+ */
+const AMBIENT_LEVEL = {
+  rain: 0.7,
+};
+
 export class AudioManager {
   constructor() {
     this.layers = new Map(); // name -> HTMLAudioElement
@@ -13,20 +23,28 @@ export class AudioManager {
     return this.enabled ? Math.max(0, Math.min(1, base * this.master)) : 0;
   }
 
+  /** 这一层的基准音量：剧本/表里写了就用它，没写就用默认（环境音 0.5） */
+  _baseFor(el) {
+    return Number.isFinite(el.baseLevel) ? el.baseLevel : this.volume;
+  }
+
+  /** 按各自基准重新算一遍所有在播的音量（拖总音量条、开关声音时用） */
+  _applyLevels() {
+    for (const el of this.layers.values()) el.volume = this._level(this._baseFor(el));
+  }
+
   /** 玩家拖音量条：0 到 1 */
   setVolume(v) {
     const vol = Math.max(0, Math.min(1, Number(v) || 0));
     this.master = vol;
-    for (const [name, el] of this.layers) {
-      el.volume = this._level(el.loop ? this.volume : Math.min(0.6, this.volume + 0.15));
-    }
+    this._applyLevels();
     return vol;
   }
 
   setEnabled(on) {
     this.enabled = on;
+    this._applyLevels();
     for (const el of this.layers.values()) {
-      el.volume = this._level(el.loop ? this.volume : Math.min(0.6, this.volume + 0.15));
       if (!on) el.pause();
       else el.play().catch(() => { /* 浏览器要求用户先交互 */ });
     }
@@ -70,18 +88,32 @@ export class AudioManager {
     }
   }
 
-  /** 循环播放环境音，例如 rain / wind / steps */
-  loop(name) {
-    if (!name || this.layers.has(name) || this.missing.has(name)) return;
+  /**
+   * 循环播放环境音，例如 rain / wind / steps。
+   * level（0～1）传了就用它当这一层的基准，没传就用素材表 / 默认值。
+   * 已经在放的层不重头来，只调音量。
+   */
+  loop(name, level) {
+    if (!name || this.missing.has(name)) return;
+    const playing = this.layers.get(name);
+    if (playing) {
+      if (Number.isFinite(level)) {
+        playing.baseLevel = level;
+        playing.volume = this._level(level);
+      }
+      return playing;
+    }
     const el = new Audio(`assets/audio/${name}.mp3`);
     el.loop = true;
-    el.volume = this._level(this.volume);
+    el.baseLevel = Number.isFinite(level) ? level : AMBIENT_LEVEL[name] ?? this.volume;
+    el.volume = this._level(el.baseLevel);
     el.addEventListener("error", () => {
       this.missing.add(name);
       this.layers.delete(name);
     });
     el.play().catch(() => { /* 等用户第一次点击后再播 */ });
     this.layers.set(name, el);
+    return el;
   }
 
   stop(name) {
