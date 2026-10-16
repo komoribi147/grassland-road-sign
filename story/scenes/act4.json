@@ -21,7 +21,6 @@
     { "t": "visual", "description": "画面慢慢摇回去。\n身后那片草地上，雨后的水洼映着天光。几十步外，一块稍微高一点的草甸子上，老班长坐在那里。背对着你们，面朝来路。像路标一样。", "visual": {"sheet":"assets/storyboards/sheet-13.jpg","panel":4} , "after": [{ "t": "sfx", "name": "thump", "level": 0.45 }]},
     { "t": "say", "who": "shitou", "text": "老班长！老班长！我们走出去了！看到河了！" },
     { "t": "say", "who": "shitou", "text": "老班长……？" },
-    { "t": "visual", "description": "画面定格。\n他手里攥着一根木棍，木棍上绑着那条红布。红布在晨风里轻轻飘。他的脸朝着来时的方向——那是后面部队要来的方向。", "visual": {"src":"assets/bg/act4-signpost.jpg"} },
     { "t": "action", "label": "走近老班长", "visual": {"sheet":"assets/storyboards/sheet-14.jpg","panel":1}, "hint": "走得慢一点" , "after": [{ "t": "sfx", "name": "grass-steps", "level": 0.45 }]},
     { "t": "visual", "description": "画面不给正脸。\n你只看见他的脚——两只脚都光着。那只草鞋，穿在你脚上。", "visual": {"sheet":"assets/storyboards/sheet-14.jpg","panel":2} },
     { "t": "say", "who": "he-xiuying", "text": "他……他昨晚把油布全盖伤员身上了。他自己……坐在这儿，说眯一会儿……" },

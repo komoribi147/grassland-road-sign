@@ -39,9 +39,8 @@ const visualPanels = new Set();
 const checkVisual = (visual, tag) => {
   let key;
   let file;
-  // 独立画面：storyboards 下的画，或者直接用一张现成画面（例如"老班长坐下的背影"这张背景图）
   if (visual?.src && !visual.sheet && visual.panel === undefined &&
-      /^assets\/[A-Za-z0-9._/-]+\.(png|jpg|jpeg|webp)$/.test(visual.src)) {
+      /^assets\/storyboards\/[a-z0-9-]+\.(png|jpg|webp)$/.test(visual.src)) {
     key = visual.src;
     file = visual.src;
   } else if (visual?.sheet && !visual.src &&
