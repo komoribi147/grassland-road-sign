@@ -284,6 +284,7 @@ export class StoryEngine {
       history: [],
       log: [],        // 回看用：走到过的每一句（场景 + 步号 + 谁 + 文本）
       trustLog: [],   // 回看用：每一笔信任值变化发生在哪一句（回退时按它扣回去）
+      seen: {},       // 回看用：走到过哪些步骤（没走到的在回看里是灰的）
       memory: {},     // 每个 NPC 一份独立的对话记忆
       freeTrust: {},  // 自由对话带来的信任值，按幕封顶，防止刷分
       startedAt: Date.now(),
@@ -401,12 +402,10 @@ export class StoryEngine {
     if (!scene || !scene.steps[step]) return false;
 
     const log = this.state.log || [];
-    let idx = -1;
-    for (let i = log.length - 1; i >= 0; i--) {
-      if (log[i].scene === sceneId && log[i].step === step) { idx = i; break; }
-    }
-    if (idx < 0) return false;
-    const target = log[idx];     // 重走之后这一句会重新记一遍，它的画面要从这里取
+    // 目标可以是任何一步（画面、选择点都行），不要求它是记过日志的台词；
+    // 那一句的画面、以及日志要砍到哪里，都按"谁在前面"来算。
+    const targetRank = this.rank(sceneId, step);
+    const target = log.findLast((e) => e.scene === sceneId && e.step === step) || null;
 
     // 1) 信任值：把这一步及之后加过的分扣掉
     const order = Object.keys(this.scenes);
@@ -420,7 +419,7 @@ export class StoryEngine {
     }
     this.state.trust = Math.max(0, Math.min(100, Math.round((this.state.trust || 0) - rollback)));
     this.state.trustLog = keep;
-    this.state.log = log.slice(0, idx);
+    this.state.log = log.filter((e) => this.rank(e.scene, e.step) < targetRank);
 
     // 2) 背景与环境音退回到当时那一句的样子
     let bg = scene.bg;
@@ -441,13 +440,109 @@ export class StoryEngine {
 
     // 2.5) 画面也退回当时那张。不然"从这句重新走"之后画面还停在跳走前那一张，
     //      台词和画面对不上——这正是回看那个 bug。
-    const shot = target.visual || null;
-    await this.renderVisual(shot, shot ? target.text : "");
+    // 目标自己会重演（画面步骤会自己画出来），只有"台词"这种需要把当时的画面补回来
+    if (target) await this.renderVisual(target.visual || null, target.text || "");
 
     // 3) 从这里重新跑
     this.epoch++;
     this.abortWaits();
     this.on.toast?.(`回到 ${sceneId}:${step} —— 从这里接着走${rollback ? `（信任值回退 ${rollback}）` : ""}`);
+    return this.run();
+  }
+
+  /**
+   * 跳到剧本里的某一步：往回跳 = 从这句重新走（会回退信任值）；
+   * 往后跳 = 快进（见 fastForwardTo）。回看面板两个方向都用这个口子。
+   */
+  async jumpTo(sceneId, step) {
+    if (!this.scenes[sceneId]?.steps?.[step]) return false;
+    if (this.rank(sceneId, step) < this.rank(this.state.sceneId, this.state.step)) {
+      return this.rewindTo(sceneId, step);
+    }
+    return this.fastForwardTo(sceneId, step);
+  }
+
+  /** 把 "场景:标签" / "场景" 解析成（第几幕, 第几步） */
+  _resolveMove(target) {
+    const ids = Object.keys(this.scenes);
+    const [sceneId, label] = String(target || "").split(":");
+    const index = ids.indexOf(sceneId);
+    if (index < 0) return null;
+    if (label) {
+      const at = this.findLabel(this.scenes[sceneId], label);
+      return { index, step: at >= 0 ? at + 1 : 0 };
+    }
+    return { index, step: 0 };
+  }
+
+  /**
+   * 往后跳到某一步：中间那些步骤"快进"过去——只结算它们的状态影响
+   * （信任值、变量、史料卡、换幕/环境音），不显示画面、不等点击、也不替玩家做选择。
+   * 这样往后跳不会把状态跳乱，跳过的地方在回看里仍然是灰的（确实没看过）。
+   */
+  async fastForwardTo(sceneId, step) {
+    const ids = Object.keys(this.scenes);
+    const target = this.rank(sceneId, step);
+    let index = ids.indexOf(this.state.sceneId);
+    if (index < 0) return false;
+    let at = this.state.step + 1;      // 当前这一步已经演过了，从下一步开始算
+    let bg;
+    let tone;
+    let amb;
+    let guard = 0;
+
+    while (guard++ < 6000) {
+      const id = ids[index];
+      if (!id) break;
+      if (id === sceneId && at >= step) break;
+      const scene = this.scenes[id];
+      const s = (scene.steps || [])[at];
+      if (!s) {                        // 这一幕走完了，进下一幕
+        if (id === sceneId) break;      // 目标就在这一幕，只是没走到那儿
+        index += 1;
+        at = 0;
+        continue;
+      }
+      switch (s.t) {
+        case "trust": this.addTrust(s.delta || 0, s.why); break;
+        case "var": Object.assign(this.state.vars, s.set || {}); break;
+        case "lore":
+          if (!this.state.lore.includes(s.card)) this.state.lore.push(s.card);
+          break;
+        case "bg": bg = s.src; tone = s.tone; break;
+        case "ambient": amb = s.name; break;
+        case "goto": {
+          const to = this._resolveMove(s.scene);
+          if (to) { index = to.index; at = to.step; continue; }
+          break;
+        }
+        case "jump": {
+          const to = this.findLabel(scene, s.label);
+          if (to >= 0) { at = to; continue; }
+          break;
+        }
+        case "if":
+          if (this.check(s.cond)) {
+            const to = this._resolveMove(s.goto);
+            if (to) { index = to.index; at = to.step; continue; }
+          }
+          break;
+        default:
+          break;                       // 台词/画面/选项：快进不演
+      }
+      at += 1;
+    }
+
+    if (this.state.sceneId !== sceneId) this.enterScene(sceneId, false);
+    if (bg || tone) this.setBg(bg, tone);
+    if (amb !== undefined) this.setAmbient(amb);
+    this.state.sceneId = sceneId;
+    this.state.step = step;
+    this.updateTrust();
+    this.autosave();
+    this.epoch++;
+    this.abortWaits();
+    this.on.toast?.(`已跳到 ${sceneId}:${step} —— 中间的内容按快进处理，没有替你做选择`);
     return this.run();
   }
 
@@ -475,6 +570,27 @@ export class StoryEngine {
 
   findLabel(scene, name) {
     return scene.steps.findIndex((s) => s.t === "label" && s.name === name);
+  }
+
+  // ---------- 回看用：走到过哪一步 ----------
+
+  /** 幕号 × 10000 + 步号，用来比较"谁在前面" */
+  rank(sceneId, step) {
+    const i = Object.keys(this.scenes).indexOf(sceneId);
+    return (i < 0 ? 9999 : i) * 10000 + (Number(step) || 0);
+  }
+
+  /** 记下走到的这一步。key 用步号；选项用 "步号:o序号" */
+  markSeen(key = String(this.state.step)) {
+    const seen = (this.state.seen ||= {});
+    (seen[this.state.sceneId] ||= {})[String(key)] = true;
+  }
+
+  hasSeen(sceneId, key) {
+    const seen = this.state?.seen;
+    if (seen && seen[sceneId]) return !!seen[sceneId][String(key)];
+    // 老存档没有这一栏：按"走到哪算哪"推断
+    return this.rank(sceneId, String(key).split(":")[0]) <= this.rank(this.state?.sceneId, this.state?.step ?? -1);
   }
 
   enterScene(id, initial = false) {
@@ -767,6 +883,7 @@ export class StoryEngine {
 
     box.hidden = true;
     box.innerHTML = "";
+    this.markSeen(`${this.state.step}:o${step.options.indexOf(picked)}`);
     this.state.picks.push(picked.text);
     this.state.history.push({ role: "player", name: "我", text: picked.text });
     if (picked.visual) await this.visualBeat({ visual: picked.visual, description: picked.text });
@@ -853,6 +970,7 @@ export class StoryEngine {
     this._resolveSelect = null;
     if (picked.aborted) return "stop";   // 中途重开：旧循环直接收场
     const spoken = !!picked.spoken;
+    if (!spoken && step.options.includes(picked)) this.markSeen(`${this.state.step}:o${step.options.indexOf(picked)}`);
     if (!spoken) this.state.picks.push(picked.text);
     this.state.answers.push(picked.text);
     this.state.turns++;
@@ -1061,6 +1179,7 @@ export class StoryEngine {
         if (!scene) break;
         const step = scene.steps[this.state.step];
         if (!step) { this.finish({}); break; }
+        this.markSeen();
         const result = await this.play(step);
         if (result === "stop") break;
         if (result === "next") this.state.step++;

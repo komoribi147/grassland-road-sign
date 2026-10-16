@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>草地上的路标 · 沉浸式叙事</title>
 <meta name="description" content="1935年8月，松潘草地。我从泥水里醒来，记不起自己的番号，只能跟着他们走。" />
-<link rel="stylesheet" href="css/style.css?v=20261016-gutter" />
+<link rel="stylesheet" href="css/style.css?v=20261016-script" />
 </head>
 <body data-mode="title">
 
@@ -32,7 +32,7 @@
         <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 14c1.66 0 3-1.34 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm-6-3a6 6 0 0 0 12 0h-2a4 4 0 0 1-8 0H6Zm6 8a7.2 7.2 0 0 1-7-7H3a9 9 0 0 0 8 8.94V22h2v-2.06A9 9 0 0 0 21 12h-2a7.2 7.2 0 0 1-7 7Z"/></svg><span id="voiceLabel"></span>
       </button>
       <button class="ghost-btn" id="btnTalk" type="button">开口说话</button>
-      <button class="ghost-btn" id="btnReplay" type="button" title="翻看已经读过的内容，可以搜、可以跳到某一句">回看</button>
+      <button class="ghost-btn" id="btnReplay" type="button" title="整份剧本都能翻：可以搜、可以跳到某一句（往回或往后）">回看</button>
       <button class="ghost-btn" id="btnLore" type="button">史料卡 <b id="loreCount">0</b></button>
       <button class="ghost-btn" id="btnMenu" type="button">菜单</button>
     </div>
@@ -86,8 +86,9 @@
         <button class="ghost-btn" data-close="screenReplay" type="button">关闭</button>
       </div>
       <p class="panel-note">
-        这里是你走到过的每一句。搜一句话，或直接输入 <b>act3:47</b>／<b>47</b> 定位；
-        也可以用「上一条 / 下一条」逐句翻。按快了漏看的地方，回来补一眼。
+        这里是整份剧本：台词、画面、动作和选择点。<b>▸</b> 是你现在这一句，灰的是还没走到的地方。
+        搜一句话，或直接输入 <b>act3:47</b>／<b>47</b> 定位，也可以用「上一条 / 下一条」逐句翻。
+        选中一条就能跳过去——往回跳会回退进度和信任值，往后跳会把中间的内容快进掉（不替你做选择）。
       </p>
       <div class="replay-bar">
         <input id="replayQ" class="replay-input" type="search" placeholder="搜一句，或 act3:47 / 47" autocomplete="off" />
@@ -101,7 +102,7 @@
       </div>
       <div class="replay-list" id="replayList"></div>
       <div class="replay-act">
-        <span class="replay-pick" id="replayPick">选中一条，就能从这里重新走</span>
+        <span class="replay-pick" id="replayPick">选中一条，就能跳过去</span>
         <button class="ghost-btn danger" id="btnReplayGo" type="button" disabled>从这句重新走</button>
       </div>
     </div>
@@ -180,6 +181,6 @@
   <!-- 换幕时的章节卡 -->
   <div class="chapter-card" id="chapterCard" hidden><span id="chapterCardText"></span></div>
 
-  <script type="module" src="js/main.js?v=20261016-gutter"></script>
+  <script type="module" src="js/main.js?v=20261016-script"></script>
 </body>
 </html>

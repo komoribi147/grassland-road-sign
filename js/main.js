@@ -1,5 +1,5 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261016-gutter";
+import { StoryEngine } from "./engine.js?v=20261016-script";
 import { Save } from "./save.js";
 
 const $ = (id) => document.getElementById(id);
@@ -349,22 +349,77 @@ $("volSlider").addEventListener("input", (e) => applyVolume(Number(e.target.valu
   applyVolume(Number.isFinite(saved) ? saved : 1, false);
 }
 
-// ---------- 回看：翻已经读过的内容，可以搜、可以跳到指定某句 ----------
+// ---------- 回看：整份剧本都能翻，往前能回看、往后能跳过去 ----------
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 let replayIdx = -1;
-let replayArmed = false;   // 「从这句重新走」要点两次：改动会回退进度与信任值
-const replayLog = () => ((engine.state && engine.state.log) || []).filter((entry) => entry.kind === "s");
+let replayArmed = false;   // 跳转要点两次：往回走会回退进度与信任值，往后走会快进
+let allEntries = [];       // 整份剧本（每次打开重新摊平）
+let viewEntries = [];      // 当前列表里真正显示的那些（搜过之后就是子集）
+
+const whoOf = (who) => (!who ? "" : who === "__player__" ? "我" : engine.characters?.[who]?.display || who);
+
+/**
+ * 把整份剧本摊平成一张表：台词、画面、动作、选择点的提问和每个选项。
+ * 以前只列"已经读过"的句子，现在没走到的地方也在表里（显示成灰的），
+ * 这样既能往回翻，也能直接跳到后文。
+ */
+function scriptEntries() {
+  const out = [];
+  for (const scene of Object.values(engine.scenes || {})) {
+    (scene.steps || []).forEach((s, i) => {
+      const at = { scene: scene.id, step: i, key: String(i) };
+      if (s.t === "say" && s.text) {
+        out.push({ ...at, kind: "say", who: whoOf(s.who), text: engine.interpolate(s.text) });
+      } else if (s.t === "visual") {
+        out.push({ ...at, kind: "shot", label: "画面", text: s.description || "（画面）", visual: s.visual });
+      } else if (s.t === "action") {
+        out.push({ ...at, kind: "action", label: "动作", text: s.label || "（动作）", visual: s.visual });
+      } else if (s.t === "choose" || s.t === "select") {
+        if (s.prompt) out.push({ ...at, kind: "prompt", label: "提问", text: engine.interpolate(s.prompt) });
+        (s.options || []).forEach((o, oi) => {
+          out.push({ ...at, kind: "option", label: "选", key: `${i}:o${oi}`, text: engine.interpolate(o.text), visual: o.visual });
+        });
+      }
+    });
+  }
+  return out;
+}
+
+/** 你现在在哪一句：当前位置之前最后一条非选项 */
+function currentEntryIndex() {
+  if (!engine.state) return -1;
+  const here = engine.rank(engine.state.sceneId, engine.state.step);
+  let best = -1;
+  allEntries.forEach((l, i) => {
+    if (l.kind !== "option" && engine.rank(l.scene, l.step) <= here) best = i;
+  });
+  return best;
+}
+
+/** 这一条配的是哪张画面：读过的用当时记下的，没读到的按剧本往前找最近一处画面 */
+function pictureFor(entry) {
+  if (!entry) return null;
+  if (entry.visual) return entry.visual;
+  const logged = ((engine.state && engine.state.log) || [])
+    .find((l) => l.scene === entry.scene && l.step === entry.step && l.visual);
+  if (logged) return logged.visual;
+  const steps = engine.scenes?.[entry.scene]?.steps || [];
+  for (let i = Math.min(entry.step, steps.length - 1); i >= 0; i--) {
+    if (steps[i].visual) return steps[i].visual;
+  }
+  return null;
+}
 
 function updateReplayPos() {
-  const n = replayLog().length;
+  const n = viewEntries.length;
   $("replayPos").textContent = n ? `${replayIdx + 1} / ${n}` : "";
 }
 
 function focusReplay(i, scroll = true) {
   const rows = [...$("replayList").querySelectorAll(".rl-row")];
   if (!rows.length) return;
-  const max = replayLog().length - 1;
+  const max = viewEntries.length - 1;
   replayIdx = Math.max(0, Math.min(max, i));
   rows.forEach((el) => el.classList.toggle("on", Number(el.dataset.i) === replayIdx));
   const el = $("replayList").querySelector(`.rl-row[data-i="${replayIdx}"]`);
@@ -381,23 +436,26 @@ function scrollListToCenter(list, row) {
   list.scrollTo({ top: Math.max(0, list.scrollTop + delta), behavior: "smooth" });
 }
 
-/** 底部那条：显示当前选中句，并决定「从这句重新走」能不能点 */
+/** 底部那条：显示选中哪一句、这一句在前面还是后面，决定按钮怎么写 */
 function updateReplayPick() {
   const go = $("btnReplayGo");
-  const l = replayLog()[replayIdx];
+  const l = viewEntries[replayIdx];
   replayArmed = false;
-  go.textContent = "从这句重新走";
+  const ahead = l && engine.rank(l.scene, l.step) > engine.rank(engine.state?.sceneId, engine.state?.step ?? 0);
+  go.textContent = ahead ? "跳到这一句" : "从这句重新走";
   if (!l) {
     go.disabled = true;
-    $("replayPick").textContent = "选中一条，就能从这里重新走";
+    $("replayPick").textContent = "选中一条，就能跳过去";
     paintReplayShot(null);
     return;
   }
   go.disabled = false;
-  const head = l.kind === "n" ? "" : `${l.who}：`;
-  const text = l.text.length > 26 ? l.text.slice(0, 26) + "…" : l.text;
-  $("replayPick").textContent = `当前：${l.scene}:${l.step}　${head}${text}`;
-  paintReplayShot(l);
+  const head = l.kind === "say" ? `${esc(l.who)}：` : `${l.label}：`;
+  const text = l.text.length > 24 ? l.text.slice(0, 24) + "…" : l.text;
+  const seen = engine.hasSeen(l.scene, l.key);
+  $("replayPick").textContent = `${ahead ? "往后" : "已读过"}　${l.scene}:${l.step}　${head}${text}`
+    + (seen ? "" : "（还没走到）");
+  paintReplayShot(l, pictureFor(l));
 }
 
 /**
@@ -405,10 +463,9 @@ function updateReplayPick() {
  * 以前回看只记了文字，所以翻到的句子和屏幕上那张画面对不上。
  */
 let replayShotSeq = 0;
-async function paintReplayShot(entry) {
+async function paintReplayShot(entry, visual) {
   const box = $("replayShot");
   if (!box) return;
-  const visual = entry && entry.visual;
   const seq = ++replayShotSeq;
   if (!visual || (!visual.sheet && !visual.src)) {
     box.hidden = true;
@@ -424,46 +481,61 @@ async function paintReplayShot(entry) {
   } catch { /* 图还没下好，或者文件缺失，留空即可 */ }
 }
 
-/** 只列已经走到过的句子；term 为空 = 全部 */
-function renderReplay(term = "", focusLast = true) {
+/** 渲染列表：term 为空 = 整份剧本；默认把光标停在"你现在这一句"上 */
+function renderReplay(term = "", toCurrent = true) {
   const q = String(term || "").trim().toLowerCase();
-  const list = replayLog();
-  const rows = list.map((l, i) => ({ l, i }))
-    .filter(({ l }) => !q || `${l.text} ${l.who} ${l.scene}:${l.step}`.toLowerCase().includes(q));
-  $("replayList").innerHTML = rows.length
-    ? rows.map(({ l, i }) => `<div class="rl-row${i === replayIdx ? " on" : ""}" data-i="${i}" title="跳到这一句">
-        <span class="rl-idx">${l.scene}:${l.step}</span>
-        <span><span class="rl-who">${l.kind === "n" ? "" : esc(l.who) + "："}</span><span class="rl-text${l.kind === "n" ? " narration" : ""}">${esc(l.text)}</span></span>
-      </div>`).join("")
-    : `<p class="panel-note">${list.length ? "没有匹配的句子。" : "还没开始读。走几句剧情再回来。"}</p>`;
+  allEntries = scriptEntries();
+  viewEntries = allEntries.filter((l) => !q
+    || `${l.text} ${l.who || ""} ${l.label || ""} ${l.scene}:${l.step}`.toLowerCase().includes(q));
+  const mark = (l) => `${l.scene}:${l.step}:${l.key}`;
+  const cur = currentEntryIndex();
+  const curKey = cur >= 0 ? mark(allEntries[cur]) : "";
+
+  $("replayList").innerHTML = viewEntries.length
+    ? viewEntries.map((l, i) => {
+      const key = mark(l);
+      const cls = ["rl-row"];
+      if (i === replayIdx) cls.push("on");
+      if (l.kind === "option") cls.push("option");
+      if (!engine.hasSeen(l.scene, l.key)) cls.push("unread");
+      if (key === curKey) cls.push("cur");
+      const head = l.kind === "say"
+        ? `<span class="rl-who">${esc(l.who)}：</span>`
+        : `<span class="rl-kind">${esc(l.label || "画面")}</span>`;
+      return `<div class="${cls.join(" ")}" data-i="${i}" title="${esc(l.text)}">`
+        + `<span class="rl-idx">${key === curKey ? "▸ " : ""}${l.scene}:${l.step}</span>`
+        + `<span>${head}<span class="rl-text">${esc(l.text)}</span></span></div>`;
+    }).join("")
+    : `<p class="panel-note">${allEntries.length ? "没有匹配的内容。" : "剧本还没读进来。"}</p>`;
   $("replayList").querySelectorAll(".rl-row").forEach((el) => {
     el.addEventListener("click", () => focusReplay(Number(el.dataset.i)));
   });
-  if (rows.length) {
-    replayIdx = focusLast ? rows[rows.length - 1].i : rows[0].i;
-    focusReplay(replayIdx);
+  if (viewEntries.length) {
+    const at = toCurrent && curKey ? viewEntries.findIndex((l) => mark(l) === curKey) : 0;
+    focusReplay(at >= 0 ? at : 0);
   } else {
     replayIdx = -1;
     updateReplayPos();
   }
 }
 
-/** 输入 act3:47 / 47 / 任意关键词，把光标移过去 */
+/** 输入 act3:47 / 47 / 任意关键词，把光标移过去（整份剧本里找，不只是读过的） */
 function replayJump(raw) {
   const t = String(raw || "").trim();
   if (!t) return false;
-  const list = replayLog();
+  allEntries = scriptEntries();
   const m = t.match(/^([a-z0-9]+)\s*:\s*(\d+)$/i);
-  let idx = -1;
-  if (m) idx = list.findIndex((l) => l.scene.toLowerCase() === m[1].toLowerCase() && l.step === Number(m[2]));
-  else if (/^\d+$/.test(t)) idx = list.findLastIndex((l) => l.step === Number(t));
-  else idx = list.findIndex((l) => `${l.text} ${l.who}`.includes(t));
-  if (idx < 0) {
-    $("replayPos").textContent = "还没读到这一句";
+  let hit = null;
+  if (m) hit = allEntries.find((l) => l.scene.toLowerCase() === m[1].toLowerCase() && l.step === Number(m[2]));
+  else if (/^\d+$/.test(t)) hit = allEntries.findLast((l) => l.step === Number(t));
+  else hit = allEntries.find((l) => `${l.text} ${l.who || ""}`.includes(t));
+  if (!hit) {
+    $("replayPos").textContent = "剧本里没有这一句";
     return false;
   }
   renderReplay("", false);          // 先展开全部，保证那一行在列表里
-  focusReplay(idx);
+  const at = viewEntries.findIndex((l) => l.scene === hit.scene && l.step === hit.step && l.key === hit.key);
+  focusReplay(at >= 0 ? at : 0);
   return true;
 }
 
@@ -471,9 +543,9 @@ $("btnReplay").addEventListener("click", () => {
   $("replayQ").value = "";
   replayIdx = -1;
   openScreen("screenReplay");
-  renderReplay("", true);           // 打开时停在最后一条（刚看过的那句）
+  renderReplay("", true);           // 打开时停在"你现在这一句"
 });
-$("replayQ").addEventListener("input", (e) => renderReplay(e.target.value, true));
+$("replayQ").addEventListener("input", (e) => renderReplay(e.target.value, false));
 $("replayQ").addEventListener("keydown", (e) => {
   if (e.key !== "Enter") return;
   const v = e.target.value.trim();
@@ -483,21 +555,24 @@ $("replayQ").addEventListener("keydown", (e) => {
 $("btnReplayPrev").addEventListener("click", () => focusReplay(replayIdx - 1));
 $("btnReplayNext").addEventListener("click", () => focusReplay(replayIdx + 1));
 $("btnReplayGo").addEventListener("click", async () => {
-  const l = replayLog()[replayIdx];
+  const l = viewEntries[replayIdx];
   if (!l) return;
   const go = $("btnReplayGo");
+  const ahead = engine.rank(l.scene, l.step) > engine.rank(engine.state?.sceneId, engine.state?.step ?? 0);
   if (!replayArmed) {
     replayArmed = true;
-    go.textContent = "真的回到这里？（会回退进度和信任值）";
+    go.textContent = ahead ? "真的跳过去？（中间的内容会快进）" : "真的回到这里？（会回退进度和信任值）";
     setTimeout(() => {
-      if (replayArmed) { replayArmed = false; go.textContent = "从这句重新走"; }
+      if (replayArmed) {
+        replayArmed = false;
+        go.textContent = ahead ? "跳到这一句" : "从这句重新走";
+      }
     }, 6000);
     return;
   }
   replayArmed = false;
-  go.textContent = "从这句重新走";
   closeScreens();
-  await engine.rewindTo(l.scene, l.step);
+  await engine.jumpTo(l.scene, l.step);
 });
 
 $("btnSave").addEventListener("click", () => {

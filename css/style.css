@@ -464,6 +464,23 @@ button { font-family: var(--font-sans); cursor: pointer; }
 .rl-text { color: var(--ink-dim); white-space: pre-wrap; line-height: 1.85; }
 .rl-text.narration { font-style: italic; color: var(--ink-faint); }
 
+/* 回看里除了台词，还有画面 / 动作 / 提问 / 选项 */
+.rl-kind {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 5px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+.rl-row.option { padding-left: 26px; }
+.rl-row.option .rl-idx { opacity: 0.5; }
+.rl-row.unread .rl-text, .rl-row.unread .rl-who, .rl-row.unread .rl-kind { opacity: 0.5; }
+.rl-row.cur { border-color: rgba(232, 228, 218, 0.28); }
+.rl-row.cur .rl-idx { color: var(--accent); }
+
 .replay-act {
   display: flex;
   align-items: center;
