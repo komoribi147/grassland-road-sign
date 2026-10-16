@@ -10,7 +10,8 @@ const $ = (id) => document.getElementById(id);
 const PLAYER = "__player__";
 
 /**
- * 量一张分镜图的格线：缩到一半读一次像素，靠"格线又暗又匀"把它找出来。
+ * 量一张分镜图的格线：读一遍像素，找"整条一个颜色"的线——
+ * 不看它亮还是暗（实测 sheet-06/07/09/10/11 的格线是白线，其余是暗线）。
  * 分镜并不是严格均分（实测横线最多偏 38 px），按均分切会把下一格的开头带进画面。
  * 环境不支持（没有 canvas、或读到跨域图）返回 null，由调用方退回均分。
  */
@@ -18,53 +19,54 @@ function measureSheet(img) {
   const width = img.naturalWidth;
   const height = img.naturalHeight;
   if (!width || !height) return null;
-  const sampleWidth = Math.max(8, Math.round(width / 2));
-  const sampleHeight = Math.max(8, Math.round(height / 2));
   const canvas = document.createElement("canvas");
-  canvas.width = sampleWidth;
-  canvas.height = sampleHeight;
+  canvas.width = width;
+  canvas.height = height;
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
   if (!ctx) return null;
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
-  ctx.drawImage(img, 0, 0, sampleWidth, sampleHeight);
-  const px = ctx.getImageData(0, 0, sampleWidth, sampleHeight).data;
+  ctx.drawImage(img, 0, 0);
+  const px = ctx.getImageData(0, 0, width, height).data;
+  const rows = lineStats(px, width, height, "row");
+  const cols = lineStats(px, width, height, "col");
+  return panelBoxes(
+    guttersFromProfiles(rows.mean, rows.spread, cols.mean, cols.spread, width, height),
+    width,
+    height,
+  );
+}
 
-  const rowMean = new Float64Array(sampleHeight);
-  const rowFlat = new Float64Array(sampleHeight);
-  const colMean = new Float64Array(sampleWidth);
-  const colFlat = new Float64Array(sampleWidth);
-  const rowSum = new Float64Array(sampleHeight);
-  const colSum = new Float64Array(sampleWidth);
-  const rowMin = new Float64Array(sampleHeight).fill(255);
-  const rowMax = new Float64Array(sampleHeight);
-  const colMin = new Float64Array(sampleWidth).fill(255);
-  const colMax = new Float64Array(sampleWidth);
-
-  for (let y = 0; y < sampleHeight; y++) {
-    const base = y * sampleWidth * 4;
+/**
+ * 每条线的平均亮度与稳健极差（p92-p8）。
+ * 稳健极差用来判断"这条线是不是整条一个颜色"——格线是，画面内容不是；
+ * 交叉点只占极少数像素，用百分位就能把它甩掉，换成最大最小差就会被它带偏。
+ * 沿线的采样点数最多 160 个，够了。
+ */
+function lineStats(px, width, height, axis) {
+  const count = axis === "row" ? height : width;
+  const along = axis === "row" ? width : height;
+  const step = Math.max(1, Math.floor(along / 160));
+  const mean = new Float64Array(count);
+  const spread = new Float64Array(count);
+  const buf = new Float64Array(Math.ceil(along / step));
+  for (let i = 0; i < count; i++) {
+    let n = 0;
     let sum = 0;
-    for (let x = 0; x < sampleWidth; x++) {
-      const i = base + x * 4;
-      const v = px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114;
+    for (let j = 0; j < along; j += step) {
+      const x = axis === "row" ? j : i;
+      const y = axis === "row" ? i : j;
+      const p = (y * width + x) * 4;
+      const v = px[p] * 0.299 + px[p + 1] * 0.587 + px[p + 2] * 0.114;
+      buf[n++] = v;
       sum += v;
-      colSum[x] += v;
-      if (v < rowMin[y]) rowMin[y] = v;
-      if (v > rowMax[y]) rowMax[y] = v;
-      if (v < colMin[x]) colMin[x] = v;
-      if (v > colMax[x]) colMax[x] = v;
     }
-    rowSum[y] = sum;
+    const view = buf.subarray(0, n);
+    view.sort();
+    mean[i] = sum / n;
+    spread[i] = view[Math.min(n - 1, Math.floor(n * 0.92))] - view[Math.floor(n * 0.08)];
   }
-  for (let y = 0; y < sampleHeight; y++) {
-    rowMean[y] = rowSum[y] / sampleWidth;
-    rowFlat[y] = rowMax[y] - rowMin[y];
-  }
-  for (let x = 0; x < sampleWidth; x++) {
-    colMean[x] = colSum[x] / sampleHeight;
-    colFlat[x] = colMax[x] - colMin[x];
-  }
-  return panelBoxes(guttersFromProfiles(rowMean, rowFlat, colMean, colFlat), width, height);
+  return { mean, spread };
 }
 
 export class StoryEngine {
@@ -503,17 +505,22 @@ export class StoryEngine {
       if (!scene) continue;
       const sfx = [];
       const images = [];
+      const sheets = [];   // 只需要分镜才量格线（背景图不分格）
       if (scene.bg) images.push(scene.bg);
       for (const s of scene.steps || []) {
         if (s.t === "sfx" && s.name) sfx.push(s.name);
         if (s.t === "bg" && s.src) images.push(s.src);
         if (s.visual?.sheet || s.visual?.src) images.push(s.visual.sheet || s.visual.src);
+        if (s.visual?.sheet) sheets.push(s.visual.sheet);
         for (const sub of s.after || []) if (sub.t === "sfx" && sub.name) sfx.push(sub.name);
         for (const sub of s.after || []) if (sub.visual?.sheet || sub.visual?.src) images.push(sub.visual.sheet || sub.visual.src);
+        for (const sub of s.after || []) if (sub.visual?.sheet) sheets.push(sub.visual.sheet);
         for (const o of s.options || []) {
           if (o.visual?.sheet || o.visual?.src) images.push(o.visual.sheet || o.visual.src);
+          if (o.visual?.sheet) sheets.push(o.visual.sheet);
           for (const sub of o.after || []) if (sub.t === "sfx" && sub.name) sfx.push(sub.name);
           for (const sub of o.after || []) if (sub.visual?.sheet || sub.visual?.src) images.push(sub.visual.sheet || sub.visual.src);
+          for (const sub of o.after || []) if (sub.visual?.sheet) sheets.push(sub.visual.sheet);
         }
       }
       if (scene.ambient) this.audio.warm([scene.ambient], "ambient");
@@ -521,7 +528,23 @@ export class StoryEngine {
       for (const src of new Set(images)) {
         this.loadImage(src).catch(() => {});
       }
+      // 顺手把分镜的取景框量出来：量一次要读一遍像素，放在预热阶段做，
+      // 真轮到这张画面时就不用现场算了
+      for (const src of new Set(sheets)) this._warmGeometry(src);
     }
+  }
+
+  /** 预热阶段把某张分镜的格线量好并记下来 */
+  _warmGeometry(src) {
+    if (this._sheetBoxes.has(src)) return;
+    this.loadImage(src).then((img) => {
+      if (this._sheetBoxes.has(src)) return;
+      let boxes = null;
+      try {
+        boxes = measureSheet(img);
+      } catch { /* 读不了像素就退回均分 */ }
+      this._sheetBoxes.set(src, boxes || panelBoxes(null, img.naturalWidth, img.naturalHeight));
+    }).catch(() => { /* 图缺失，显示时再处理 */ });
   }
 
   /** 剧情进行中显示对话区与顶栏；结束时收起 */

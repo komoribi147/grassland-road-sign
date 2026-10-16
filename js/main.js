@@ -1,5 +1,5 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261016-crop";
+import { StoryEngine } from "./engine.js?v=20261016-gutter";
 import { Save } from "./save.js";
 
 const $ = (id) => document.getElementById(id);
