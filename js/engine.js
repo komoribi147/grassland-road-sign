@@ -9,6 +9,9 @@ import { frameOf, guttersFromProfiles, panelBoxes } from "./sheet-geometry.js";
 const $ = (id) => document.getElementById(id);
 const PLAYER = "__player__";
 
+/** 本次打开的标记：剧情数据每次都强制取最新的一份（见 _refresh） */
+const SNAPSHOT = Date.now().toString(36);
+
 /**
  * 量一张分镜图的格线：读一遍像素，找"整条一个颜色"的线——
  * 不看它亮还是暗（实测 sheet-06/07/09/10/11 的格线是白线，其余是暗线）。
@@ -102,6 +105,8 @@ export class StoryEngine {
     this._sheetBoxes = new Map();   // 分镜图 -> 量好的每格取景框（一轮游戏只量一次）
     this._activeVisual = null;
     this._activeImage = null;
+    // "这一步该配哪张画面"——图还没到、甚至到不了的时候也记着，台词和回看都靠它
+    this._wantedVisual = null;
     window.addEventListener("resize", () => {
       if (this._activeVisual && this._activeImage) this.paintVisual(this._activeImage, this._activeVisual);
     });
@@ -109,8 +114,9 @@ export class StoryEngine {
 
   /** 下载并解码一次；分镜、背景和立绘切换时复用同一张已就绪的图。
    *  网络挂起（既不成也不报错，移动网络常见）时按超时当失败，别让剧情无限等下去。
-   *  超时可调：后台预取用短超时好尽快重试，轮到播出时用默认的 25 秒。 */
-  loadImage(src, timeoutMs = 25000) {
+   *  超时可调：后台预取用短超时好尽快重试，轮到播出时用默认的 25 秒；
+   *  请求被掐断（卡顿时浏览器会这么干）则重试一次。 */
+  loadImage(src, timeoutMs = 25000, attempt = 0) {
     if (this._imageCache.has(src)) return this._imageCache.get(src);
     const loaded = new Promise((resolve, reject) => {
       const img = new Image();
@@ -127,6 +133,11 @@ export class StoryEngine {
       img.onerror = () => {
         clearTimeout(timer);
         this._imageCache.delete(src);
+        // 卡顿的时候浏览器会把还在排队的请求掐掉，这种失败重试一次就好了
+        if (attempt < 1) {
+          setTimeout(() => { this.loadImage(src, timeoutMs, attempt + 1).then(resolve, reject); }, 400);
+          return;
+        }
         reject(new Error(`图片加载失败：${src}`));
       };
       img.src = window.__STORYBOARDS__?.[src] || window.__PORTRAITS__?.[src] || src;
@@ -227,6 +238,9 @@ export class StoryEngine {
     const canvas = this.ui.visual;
     const token = ++this._visualToken;
     const source = visual?.src || visual?.sheet;
+    // 先记下"这一步该配哪张"，再等图：慢网/卡顿时图会晚一大截才到，
+    // 台词和回看得拿到正确的那张，不能等画上去才算数（_activeVisual 是画上去之后才有值）。
+    this._wantedVisual = source ? visual : null;
     if (!source) {
       this._activeVisual = null;
       this._activeImage = null;
@@ -239,13 +253,19 @@ export class StoryEngine {
     this.ui.visualHint.textContent = description ? `${description}（画面加载中…）` : "画面加载中…";
     try {
       const img = await this.loadImage(source);
-      if (token !== this._visualToken) return;   // 玩家已经点到下一格了，晚到的图别画上来
+      if (token !== this._visualToken) return;   // 已经翻到别的画面去了，晚到的图别画上来
       this._activeVisual = visual;
       this._activeImage = img;
       this.paintVisual(img, visual);
       this.ui.visualHint.textContent = "点击画面继续";
     } catch {
       if (token !== this._visualToken) return;
+      // 图确实下不来（重试也没成）：把上一张收掉。留着它会变成"画面比内容慢一步"，
+      // 玩家看到的是上一格，回看也会跟着对不上。
+      this._activeVisual = null;
+      this._activeImage = null;
+      canvas.hidden = true;
+      canvas.parentElement.classList.remove("showing-visual");
       this.on.toast?.("画面暂时无法加载");
       this.ui.visualHint.textContent = description ? `${description}（点击继续）` : "点击继续";
     }
@@ -258,10 +278,43 @@ export class StoryEngine {
     // 不 await：画面在后台下载，下好就淡入；点击随时能推进，慢网不再卡住剧情
     this.renderVisual(step.visual, step.description);
     await this.waitClick();
-    this._visualToken++;   // 这一格已经翻过去了：晚到的图别再画上来
+    // 这里不给 _visualToken 加一：图晚到也要画上来——后面几句台词都配这张画面，
+    // 丢掉它屏幕就停在上一格，回看和屏幕还会各说各话。真翻到别的画面时，
+    // 那一次 renderVisual 自己会把这次顶掉（token 已经管住了先后）。
     this.ui.visualHint.hidden = true;
     this.ui.visualHint.textContent = "点击画面继续";
     return "next";
+  }
+
+  /**
+   * 某一步在屏幕上该配哪张画面。回看的预览和"往回跳/往后跳"两个方向都走它，
+   * 三处才不会各说各话：
+   *   1) 这一步自己带画面（画面/动作步骤、选项）就用它；
+   *   2) 读过的这一步：用日志里当时记下的那张（选项、after 里换过的画面都算数）；
+   *   3) 没读过的（往后跳）：按剧本往前找最近一处画面——真演到那一刻也是这张。
+   */
+  pictureAt(sceneId, step, entry = null) {
+    if (entry?.visual) return entry.visual;
+    const def = this.scenes?.[sceneId]?.steps?.[step];
+    if (def?.visual && (def.t === "visual" || def.t === "action")) return def.visual;
+    const logged = (this.state?.log || []).findLast((l) => l.scene === sceneId
+      && l.step === step && l.visual && this.sameStory(l));
+    if (logged) return logged.visual;
+    const steps = this.scenes?.[sceneId]?.steps || [];
+    for (let i = Math.min(Number(step) || 0, steps.length - 1); i >= 0; i--) {
+      const v = steps[i]?.visual;
+      if (v && steps[i].t !== "say") return v;   // 台词自己不带画面
+    }
+    return null;
+  }
+
+  /**
+   * 这条日志是不是这一版剧本记下的。
+   * 日志按「幕:步号」记画面，剧本一改（删掉或插入一步）步号就整体挪位，
+   * 上一版留下的日志套到新剧本上就会让回看显示"上一个版本"的图。
+   */
+  sameStory(entry) {
+    return !!this.storyHash && entry?.storyHash === this.storyHash;
   }
 
   // ---------- 读取数据 ----------
@@ -301,7 +354,10 @@ export class StoryEngine {
       let last;
       for (let i = 0; i < 2; i++) {
         try {
-          const res = await fetch(path);
+          // 每次打开都带一个本次会话的随机戳：绕开浏览器缓存与 CDN 缓存。
+          // 不带的话，刚部署完还可能拿到上一版的剧本——回看里就会出现"上一个版本"
+          // 的句子和画面。剧情数据一共 42KB，重新下一次的代价可以忽略。
+          const res = await fetch(`${path}?t=${SNAPSHOT}`, { cache: "no-store" });
           if (!res.ok) throw new Error(`读取 ${path} 失败（HTTP ${res.status}）`);
           return await res.json();
         } catch (err) {
@@ -319,21 +375,27 @@ export class StoryEngine {
         Promise.all(manifest.scenes.map(j)),
       ]);
       const data = { manifest, characters, lore, scenes: sceneList };
-      this._applyData(data);
+      // 玩家正玩着的时候不换剧本：步号会整体挪位，正走在的那一步会变成别的句子。
+      // 这版新数据先存进缓存，下次打开就是新的。
+      const swapping = !!this.state && this.storyHash
+        && this.storyHashOf(manifest, sceneList) !== this.storyHash;
+      if (!swapping) this._applyData(data);
       try { localStorage.setItem(StoryEngine.DATA_KEY, JSON.stringify(data)); } catch { /* 隐私模式写不进去就算了 */ }
-      this._warmAll();
+      if (!swapping) this._warmAll();
     } catch (err) {
       if (required) throw err;   // 没有缓存可用，交给 boot 弹重试页
       // 有缓存：静默失败，继续用缓存数据玩
     }
   }
 
+  /** 数据就位（新下到的或缓存里的都一样）后，顺手记下它是哪一版剧本 */
   _applyData(data) {
     this.manifest = data.manifest;
     this.characters = data.characters;
     this.lore = data.lore;
     this.scenes = {};
     for (const scene of data.scenes) this.scenes[scene.id] = scene;
+    this.storyHash = this.storyHashOf(data.manifest, data.scenes);
   }
 
   /** 数据就位后预热立绘和首幕的图与声音（沿用团队的渐进预热体系） */
@@ -342,6 +404,17 @@ export class StoryEngine {
     for (const id of Object.keys(this.characters)) {
       this.loadImage(`assets/char/${id}.png`).catch(() => {});
     }
+  }
+
+  /** 剧本内容的短指纹：存档里的日志只认同一版剧本记下的 */
+  storyHashOf(manifest, scenes = this.scenes) {
+    const text = JSON.stringify([manifest?.scenes || [], scenes]);
+    let h = 0x811c9dc5;
+    for (let i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h.toString(16).padStart(8, "0");
   }
 
   // ---------- 状态 ----------
@@ -364,6 +437,7 @@ export class StoryEngine {
       memory: {},     // 每个 NPC 一份独立的对话记忆
       freeTrust: {},  // 自由对话带来的信任值，按幕封顶，防止刷分
       startedAt: Date.now(),
+      storyHash: this.storyHash,   // 这一档是拿哪一版剧本记的
     };
   }
 
@@ -465,8 +539,34 @@ export class StoryEngine {
       this.state.sceneId = this.manifest.start;
       this.state.step = 0;
     }
+    // 剧本改过了（步号会整体挪位）：上一版留下的日志、信任值坐标都不能再用，
+    // 否则回看会把新剧本的句子配上旧剧本的画面。进度本身留着。
+    if (saved.storyHash !== this.storyHash) {
+      this.state.log = [];
+      this.state.trustLog = [];
+      this.rebuildSeen();              // "走到过哪一步"按位置重建，读过的部分不会整片变灰
+      this.state.storyHash = this.storyHash;
+      this.on.toast?.("剧本更新过了，回看按新版重新记一遍");
+    }
     this.enterScene(this.state.sceneId, true);
     return this.run();
+  }
+
+  /**
+   * 剧本改过之后，细到每一步的"看没看过"已经不可信（步号挪位了），
+   * 但"当前位置之前的都走过"这层意思还成立——按它重建，回看里读过的部分不会整片变灰。
+   */
+  rebuildSeen() {
+    const order = Object.keys(this.scenes);
+    const upto = order.indexOf(this.state.sceneId);
+    const seen = {};
+    order.slice(0, upto + 1).forEach((id, i) => {
+      const steps = this.scenes[id].steps || [];
+      const last = i < upto ? steps.length - 1 : Number(this.state.step) || 0;
+      seen[id] = {};
+      for (let k = 0; k <= last; k++) seen[id][String(k)] = true;
+    });
+    this.state.seen = seen;
   }
 
   /**
@@ -516,14 +616,11 @@ export class StoryEngine {
     this.updateTrust();
     this.autosave();
 
-    // 2.5) 画面也退回当时那张。不然"从这句重新走"之后画面还停在跳走前那一张，
-    //      台词和画面对不上——这正是回看那个 bug。
-    // 目标自己会重演（画面步骤会自己画出来），只有"台词"这种需要把当时的画面补回来
-    if (target) await this.renderVisual(target.visual || null, target.text || "");
-
-    // 3) 从这里重新跑
+    // 3) 先收掉旧循环，再把画面退回当时那张，最后才跑新的。
+    //    不补这一步的话，"从这句重新走"之后画面还停在跳走前那一张，台词和画面对不上。
     this.epoch++;
     this.abortWaits();
+    await this.renderVisual(this.pictureAt(sceneId, step, target), target?.text || "");
     this.on.toast?.(`回到 ${sceneId}:${step} —— 从这里接着走${rollback ? `（信任值回退 ${rollback}）` : ""}`);
     return this.run();
   }
@@ -621,6 +718,9 @@ export class StoryEngine {
     this.autosave();
     this.epoch++;
     this.abortWaits();
+    // 往后的落点也要补上画面：快进不演中间的步骤，画面会一直停在跳走前那张，
+    // 落点若是台词，就成了"台词是新的、画面还是旧的"。落点自带画面时它会自己重演。
+    await this.renderVisual(this.pictureAt(sceneId, step), "");
     this.on.toast?.(`已跳到 ${sceneId}:${step} —— 中间的内容按快进处理，没有替你做选择`);
     return this.run();
   }
@@ -937,7 +1037,10 @@ export class StoryEngine {
       kind: "s",
       text,
       // 这一句当时配的是哪张画面：回看要能对上，重走也要能回到当时那张
-      visual: this._activeVisual ? { ...this._activeVisual } : null,
+      // （用"该配哪张"而不是"画上去的那张"：图还在路上时，后者是上一格）
+      visual: this._wantedVisual ? { ...this._wantedVisual } : null,
+      // 记下是哪一版剧本（剧本一改步号就挪位，别的版本记的日志不能再用）
+      storyHash: this.storyHash,
     });
     if (log.length > 400) log.shift();
     // 只有人物说话时才换立绘。

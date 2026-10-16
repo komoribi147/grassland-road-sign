@@ -144,7 +144,7 @@ window.__PORTRAITS__ = ${JSON.stringify(portraits)};
 const __FILES__ = ${JSON.stringify(files)};
 const __origFetch = window.fetch.bind(window);
 window.fetch = function (url, opts) {
-  const key = String(url).replace(/^\\.\\//, "");
+  const key = String(url).split("?")[0].replace(/^\\.\\//, "");   // 引擎会带 ?t=… 的随机戳，这里按路径取
   if (Object.prototype.hasOwnProperty.call(__FILES__, key)) {
     return Promise.resolve(new Response(JSON.stringify(__FILES__[key]), {
       headers: { "Content-Type": "application/json" },

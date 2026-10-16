@@ -1,5 +1,5 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261017-img";
+import { StoryEngine } from "./engine.js?v=20261017-shot";
 import { Save } from "./save.js";
 
 const $ = (id) => document.getElementById(id);
@@ -408,18 +408,14 @@ function currentEntryIndex() {
   return best;
 }
 
-/** 这一条配的是哪张画面：读过的用当时记下的，没读到的按剧本往前找最近一处画面 */
+/**
+ * 这一条配的是哪张画面：读过的用当时记下的，没读到的按剧本往前找最近一处画面。
+ * 规则和"跳到这一句"用的是同一套（engine.pictureAt），所以翻到的画面
+ * 和真跳过去之后屏幕上那张一定一致。
+ */
 function pictureFor(entry) {
   if (!entry) return null;
-  if (entry.visual) return entry.visual;
-  const logged = ((engine.state && engine.state.log) || [])
-    .find((l) => l.scene === entry.scene && l.step === entry.step && l.visual);
-  if (logged) return logged.visual;
-  const steps = engine.scenes?.[entry.scene]?.steps || [];
-  for (let i = Math.min(entry.step, steps.length - 1); i >= 0; i--) {
-    if (steps[i].visual) return steps[i].visual;
-  }
-  return null;
+  return engine.pictureAt(entry.scene, entry.step, entry);
 }
 
 function updateReplayPos() {
