@@ -37,15 +37,24 @@ const visualFiles = new Set();
 const visualPanels = new Set();
 
 const checkVisual = (visual, tag) => {
-  if (!visual || !/^assets\/storyboards\/sheet-\d\d\.jpg$/.test(visual.sheet) ||
-      !Number.isInteger(visual.panel) || visual.panel < 0 || visual.panel > 5) {
-    errors.push(`${tag} 缺少有效分镜图与格子编号`);
+  let key;
+  let file;
+  if (visual?.src && !visual.sheet && visual.panel === undefined &&
+      /^assets\/storyboards\/[a-z0-9-]+\.(png|jpg|webp)$/.test(visual.src)) {
+    key = visual.src;
+    file = visual.src;
+  } else if (visual?.sheet && !visual.src &&
+      /^assets\/storyboards\/sheet-\d\d\.jpg$/.test(visual.sheet) &&
+      Number.isInteger(visual.panel) && visual.panel >= 0 && visual.panel <= 5) {
+    key = `${visual.sheet}#${visual.panel}`;
+    file = visual.sheet;
+  } else {
+    errors.push(`${tag} 缺少有效分镜图与格子编号，或独立画面路径`);
     return;
   }
-  const key = `${visual.sheet}#${visual.panel}`;
   if (visualPanels.has(key)) errors.push(`${tag} 分镜格重复使用：${key}`);
   visualPanels.add(key);
-  visualFiles.add(visual.sheet);
+  visualFiles.add(file);
 };
 
 const checkSteps = (list, sceneId, where) => {
@@ -149,11 +158,7 @@ const sceneCount = Object.keys(scenes).length;
 const stepCount = Object.values(scenes).reduce((n, s) => n + s.steps.length, 0);
 
 // 人物立绘：有就用，没有也不影响跑通（名字要完全一致，见 docs/立绘需求.md）
-const PORTRAITS = [
-  "li-changhe-wary", "li-changhe-soft", "li-changhe-tired",
-  "shitou-scared", "shitou-curious", "shitou-smile",
-  "he-xiuying-calm", "he-xiuying-firm", "he-xiuying-sad",
-];
+const PORTRAITS = ["li-changhe", "shitou", "he-xiuying", "he-xiuying-old"];
 let havePortrait = 0;
 for (const f of PORTRAITS) {
   let ok = false;

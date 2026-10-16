@@ -33,6 +33,7 @@ const files = {
   "story/lore.json": lore,
 };
 const storyboardPaths = new Set();
+const standaloneVisuals = new Set();
 
 // 背景图：直接换成 data URI，塞进每一幕的 bg / bg 步骤里
 let imgCount = 0;
@@ -43,7 +44,8 @@ for (const rel of manifest.scenes) {
     for (const [k, v] of Object.entries(obj)) {
       if ((k === "bg" || k === "src") && typeof v === "string" && v.startsWith("assets/")) {
         obj[k] = await toDataURI(v);
-        imgCount++;
+        if (v.startsWith("assets/storyboards/")) standaloneVisuals.add(v);
+        else imgCount++;
       } else if (typeof v === "object") {
         await swap(v);
       } else if (k === "sheet" && typeof v === "string" && v.startsWith("assets/storyboards/")) {
@@ -165,5 +167,5 @@ html = html.replace("<title>", "<title>（单文件版）");
 await writeFile(outPath, html, "utf8");
 const kb = Math.round(Buffer.byteLength(html, "utf8") / 1024);
 console.log(`已生成：${outPath}`);
-console.log(`大小：${kb} KB（内联了 ${imgCount} 张背景图、${storyboardPaths.size} 张分镜图、${Object.keys(portraits).length} 张立绘、${Object.keys(audio).length} 个音频文件）`);
+console.log(`大小：${kb} KB（内联了 ${imgCount} 张背景图、${storyboardPaths.size + standaloneVisuals.size} 张分镜与独立画面、${Object.keys(portraits).length} 张立绘、${Object.keys(audio).length} 个音频文件）`);
 console.log("这个文件双击就能玩，可以直接发给别人。");

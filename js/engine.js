@@ -8,13 +8,6 @@ import { Save } from "./save.js";
 const $ = (id) => document.getElementById(id);
 const PLAYER = "__player__";
 
-// 情绪 → 立绘文件名后缀。剧本里写中文情绪（和 AI 返回的一致），文件用英文名。
-const MOOD_FILE = {
-  "警惕": "wary", "缓和": "soft", "疲惫": "tired",
-  "害怕": "scared", "好奇": "curious", "笑": "smile",
-  "平静": "calm", "坚定": "firm", "难过": "sad",
-};
-
 export class StoryEngine {
   constructor(hooks = {}) {
     this.on = hooks;                     // { toast, report, stateChange }
@@ -50,21 +43,14 @@ export class StoryEngine {
     });
   }
 
-  /** 显示某个角色的立绘。没有这张图就自动不显示，不会留空框。 */
-  setPortrait(npcId, mood) {
+  /** 显示某个角色的统一立绘。没有这张图就自动不显示。 */
+  setPortrait(npcId) {
     const el = this.ui.portrait;
     if (!el) return;
     const token = ++this._portraitToken;
     if (!npcId || npcId === PLAYER || !this.characters?.[npcId]) { el.hidden = true; return; }
-    const want = mood || this.characters[npcId].defaultMood || "";
-    const list = [];
     const withExt = (base) => [`${base}.png`, `${base}.webp`];
-    // 先找指定情绪，再找默认情绪，最后把九种情绪都试一遍 ——
-    // 这样"只画了三个表情里的一个"也能显示出来，不会空着。
-    if (want && MOOD_FILE[want]) list.push(...withExt(`assets/char/${npcId}-${MOOD_FILE[want]}`));
-    const rest = Object.values(MOOD_FILE).filter((m) => m !== MOOD_FILE[want]);
-    for (const m of rest) list.push(...withExt(`assets/char/${npcId}-${m}`));
-    list.push(...withExt(`assets/char/${npcId}`));
+    const list = withExt(`assets/char/${npcId}`);
 
     const tryNext = (i) => {
       if (token !== this._portraitToken) return;
@@ -84,7 +70,7 @@ export class StoryEngine {
     tryNext(0);
   }
 
-  /** 从六格分镜图中取出当前一格；窄屏保留整格画面。 */
+  /** 单图或六格分镜都铺满舞台；分镜额外裁掉格线与邻格。 */
   paintVisual(img, visual) {
     const canvas = this.ui.visual;
     if (!canvas) return;
@@ -94,25 +80,22 @@ export class StoryEngine {
     const height = Math.max(1, Math.round(rect.height * dpr));
     canvas.width = width;
     canvas.height = height;
-    const panelWidth = img.naturalWidth / 2;
-    const panelHeight = img.naturalHeight / 3;
-    const col = visual.panel % 2;
-    const row = Math.floor(visual.panel / 2);
-    const sx = col * panelWidth;
-    const sy = row * panelHeight;
+    const panelWidth = visual.src ? img.naturalWidth : img.naturalWidth / 2;
+    const panelHeight = visual.src ? img.naturalHeight : img.naturalHeight / 3;
+    const col = visual.src ? 0 : visual.panel % 2;
+    const row = visual.src ? 0 : Math.floor(visual.panel / 2);
+    const insetX = visual.src ? 0 : Math.max(5, panelWidth * 0.012);
+    const insetY = visual.src ? 0 : Math.max(5, panelHeight * 0.025);
+    const sx = col * panelWidth + insetX;
+    const sy = row * panelHeight + insetY;
+    const sourceWidth = panelWidth - 2 * insetX;
+    const sourceHeight = panelHeight - 2 * insetY;
     const ctx = canvas.getContext("2d");
-    const cover = Math.max(width / panelWidth, height / panelHeight);
-    const cropWidth = width / cover;
-    const cropHeight = height / cover;
-    ctx.filter = "blur(18px) brightness(0.4)";
-    ctx.drawImage(img, sx + (panelWidth - cropWidth) / 2, sy + (panelHeight - cropHeight) / 2,
+    const cover = Math.max(width / sourceWidth, height / sourceHeight);
+    const cropWidth = Math.min(sourceWidth, width / cover);
+    const cropHeight = Math.min(sourceHeight, height / cover);
+    ctx.drawImage(img, sx + (sourceWidth - cropWidth) / 2, sy + (sourceHeight - cropHeight) / 2,
       cropWidth, cropHeight, 0, 0, width, height);
-    ctx.filter = "none";
-    const contain = Math.min(width / panelWidth, height / panelHeight);
-    const displayWidth = panelWidth * contain;
-    const displayHeight = panelHeight * contain;
-    ctx.drawImage(img, sx, sy, panelWidth, panelHeight,
-      (width - displayWidth) / 2, (height - displayHeight) / 2, displayWidth, displayHeight);
     canvas.hidden = false;
   }
 
@@ -122,13 +105,14 @@ export class StoryEngine {
     this._activeVisual = visual || null;
     this._activeImage = null;
     canvas.hidden = true;
-    if (!visual?.sheet) return;
+    const source = visual?.src || visual?.sheet;
+    if (!source) return;
     canvas.setAttribute("aria-label", `我看见：${(description || "草地上的景象").replaceAll("你", "我")}`);
     const img = new Image();
     const loaded = await new Promise((resolve) => {
       img.onload = () => resolve(true);
       img.onerror = () => resolve(false);
-      img.src = window.__STORYBOARDS__?.[visual.sheet] || visual.sheet;
+      img.src = window.__STORYBOARDS__?.[source] || source;
     });
     if (token !== this._visualToken) return;
     if (!loaded) { this.on.toast?.("画面暂时无法加载"); return; }
@@ -256,7 +240,7 @@ export class StoryEngine {
     }
 
     this.remember(npcId, "npc", out.text, out.mood);
-    this.setPortrait(npcId, out.mood);
+    this.setPortrait(npcId);
     const delta = this.capFreeTrust(out.trust);
     if (delta) this.addTrust(delta, `${display}的反应`);
     this.autosave();
@@ -396,13 +380,13 @@ export class StoryEngine {
       for (const s of scene.steps || []) {
         if (s.t === "sfx" && s.name) sfx.push(s.name);
         if (s.t === "bg" && s.src) images.push(s.src);
-        if (s.visual?.sheet) images.push(s.visual.sheet);
+        if (s.visual?.sheet || s.visual?.src) images.push(s.visual.sheet || s.visual.src);
         for (const sub of s.after || []) if (sub.t === "sfx" && sub.name) sfx.push(sub.name);
-        for (const sub of s.after || []) if (sub.visual?.sheet) images.push(sub.visual.sheet);
+        for (const sub of s.after || []) if (sub.visual?.sheet || sub.visual?.src) images.push(sub.visual.sheet || sub.visual.src);
         for (const o of s.options || []) {
-          if (o.visual?.sheet) images.push(o.visual.sheet);
+          if (o.visual?.sheet || o.visual?.src) images.push(o.visual.sheet || o.visual.src);
           for (const sub of o.after || []) if (sub.t === "sfx" && sub.name) sfx.push(sub.name);
-          for (const sub of o.after || []) if (sub.visual?.sheet) images.push(sub.visual.sheet);
+          for (const sub of o.after || []) if (sub.visual?.sheet || sub.visual?.src) images.push(sub.visual.sheet || sub.visual.src);
         }
       }
       if (scene.ambient) this.audio.warm([scene.ambient], "ambient");
@@ -592,7 +576,7 @@ export class StoryEngine {
     });
     if (log.length > 400) log.shift();
     // 只有人物说话时才换立绘。
-    if (step.who && step.who !== PLAYER) this.setPortrait(step.who, step.mood);
+    if (step.who && step.who !== PLAYER) this.setPortrait(step.who);
     if (who) {
       this.state.history.push({ role: isPlayer ? "player" : "npc", name: who, text });
       if (this.state.history.length > 60) this.state.history.shift();
@@ -770,7 +754,7 @@ export class StoryEngine {
     }
 
     await this.speak({ t: "say", who: step.ai, text: reply, raw: true });
-    if (this.lastMood) this.setPortrait(step.ai, this.lastMood);
+    if (this.lastMood) this.setPortrait(step.ai);
     if (aiTrust) {
       this.addTrust(aiTrust, this.ai.online
         ? `${this.characters[step.ai]?.display || ""}的反应`
