@@ -24,6 +24,7 @@
 html, body {
   margin: 0;
   height: 100%;
+  height: 100dvh;
   background: var(--bg-deep);
   color: var(--ink);
   font-family: var(--font-serif);
@@ -40,7 +41,7 @@ body[data-mode="playing"] { cursor: pointer; }
 
 /* ---------- 背景舞台 ---------- */
 
-#stage { position: absolute; inset: 0; z-index: 0; }
+#stage { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 
 .bg-layer {
   position: absolute;
@@ -60,7 +61,7 @@ body[data-mode="playing"] { cursor: pointer; }
   width: 100%;
   height: 100%;
   opacity: 1;
-  transition: opacity 0.35s ease;
+  filter: contrast(1.06) saturate(1.03);
 }
 .visual-hint {
   position: absolute;
@@ -98,6 +99,12 @@ body[data-mode="playing"] { cursor: pointer; }
     linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%);
   pointer-events: none;
 }
+#stage.showing-visual .vignette {
+  background:
+    radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0) 58%, rgba(0,0,0,0.25) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0) 24%, rgba(0,0,0,0.2));
+}
+#stage.showing-visual .rain { opacity: 0.2; }
 
 /* 雨：用重复线性渐变做斜向雨丝，纯 CSS，不依赖素材 */
 .rain {
@@ -221,16 +228,20 @@ button { font-family: var(--font-sans); cursor: pointer; }
   justify-content: center;
 }
 
-/* 人物立绘：站在对话框左侧。图片不存在时自动不显示，不会留空框 */
+/* 人物立绘贴住舞台左下角，底部自然融入画面，对话框始终盖在前面。 */
 #portrait {
-  position: fixed;
-  left: 2.5vw;
-  bottom: 170px;
-  max-height: 46vh;
-  max-width: 26vw;
+  position: absolute;
+  left: clamp(0px, 1vw, 16px);
+  bottom: 0;
+  max-height: 68vh;
+  max-width: min(34vw, 540px);
   z-index: 3;
   pointer-events: none;
-  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.55));
+  object-fit: contain;
+  object-position: left bottom;
+  filter: drop-shadow(10px 8px 24px rgba(0, 0, 0, 0.32));
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 87%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 87%, transparent 100%);
   transform-origin: 50% 100%;
   animation: portraitIn 0.5s ease, portraitBreath 4.2s ease-in-out infinite;
 }
@@ -546,7 +557,7 @@ button { font-family: var(--font-sans); cursor: pointer; }
 }
 
 @media (max-width: 620px) {
-  #portrait { display: none; }
+  #portrait { max-height: 40vh; max-width: 48vw; }
   .dialogue-inner { padding: 16px 18px 18px; }
   .text { font-size: 17px; line-height: 1.85; }
   .trust-bar { width: 48px; }

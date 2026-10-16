@@ -159,7 +159,7 @@ let html = await read("index.html");
 const css = await read("css/style.css");
 html = html.replace(/<link rel="stylesheet"[^>]*>/, `<style>\n${css}\n</style>`);
 html = html.replace(
-  /<script type="module" src="js\/main\.js"><\/script>/,
+  /<script type="module" src="js\/main\.js(?:\?[^\"]*)?"><\/script>/,
   `<script type="module">\n${inline}\n${bundle}\n</script>`
 );
 html = html.replace("<title>", "<title>（单文件版）");

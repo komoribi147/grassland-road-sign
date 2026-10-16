@@ -36,11 +36,33 @@ export class StoryEngine {
     };
     this._portraitToken = 0;
     this._visualToken = 0;
+    this._bgToken = 0;
+    this._imageCache = new Map();
     this._activeVisual = null;
     this._activeImage = null;
     window.addEventListener("resize", () => {
       if (this._activeVisual && this._activeImage) this.paintVisual(this._activeImage, this._activeVisual);
     });
+  }
+
+  /** 下载并解码一次；分镜、背景和立绘切换时复用同一张已就绪的图。 */
+  loadImage(src) {
+    if (this._imageCache.has(src)) return this._imageCache.get(src);
+    const loaded = new Promise((resolve, reject) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.onload = async () => {
+        try { await img.decode?.(); } catch { /* onload 已确认图片可用 */ }
+        resolve(img);
+      };
+      img.onerror = () => {
+        this._imageCache.delete(src);
+        reject(new Error(`图片加载失败：${src}`));
+      };
+      img.src = window.__STORYBOARDS__?.[src] || window.__PORTRAITS__?.[src] || src;
+    });
+    this._imageCache.set(src, loaded);
+    return loaded;
   }
 
   /** 显示某个角色的统一立绘。没有这张图就自动不显示。 */
@@ -52,20 +74,20 @@ export class StoryEngine {
     const withExt = (base) => [`${base}.png`, `${base}.webp`];
     const list = withExt(`assets/char/${npcId}`);
 
-    const tryNext = (i) => {
+    const tryNext = async (i) => {
       if (token !== this._portraitToken) return;
       if (i >= list.length) { el.hidden = true; return; }
-      const probe = new Image();
-      probe.onload = () => {
+      try {
+        const img = await this.loadImage(list[i]);
         if (token !== this._portraitToken) return;
-        el.src = window.__PORTRAITS__?.[list[i]] || list[i];
+        // 立绘本身也先解码，避免 src 已赋值而屏幕仍留一帧空白。
+        const url = img.src;
+        if (el.src !== url) el.src = url;
         el.hidden = false;
         // 每个人呼吸的节奏不一样，画面才不像一个模子
         const seed = [...npcId].reduce((n, c) => n + c.charCodeAt(0), 0);
         el.style.animationDuration = `0.5s, ${(3.6 + (seed % 17) / 10).toFixed(2)}s`;
-      };
-      probe.onerror = () => tryNext(i + 1);
-      probe.src = window.__PORTRAITS__?.[list[i]] || list[i];
+      } catch { tryNext(i + 1); }
     };
     tryNext(0);
   }
@@ -78,8 +100,8 @@ export class StoryEngine {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const width = Math.max(1, Math.round(rect.width * dpr));
     const height = Math.max(1, Math.round(rect.height * dpr));
-    canvas.width = width;
-    canvas.height = height;
+    if (canvas.width !== width) canvas.width = width;
+    if (canvas.height !== height) canvas.height = height;
     const panelWidth = visual.src ? img.naturalWidth : img.naturalWidth / 2;
     const panelHeight = visual.src ? img.naturalHeight : img.naturalHeight / 3;
     const col = visual.src ? 0 : visual.panel % 2;
@@ -91,31 +113,37 @@ export class StoryEngine {
     const sourceWidth = panelWidth - 2 * insetX;
     const sourceHeight = panelHeight - 2 * insetY;
     const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
     const cover = Math.max(width / sourceWidth, height / sourceHeight);
     const cropWidth = Math.min(sourceWidth, width / cover);
     const cropHeight = Math.min(sourceHeight, height / cover);
     ctx.drawImage(img, sx + (sourceWidth - cropWidth) / 2, sy + (sourceHeight - cropHeight) / 2,
       cropWidth, cropHeight, 0, 0, width, height);
     canvas.hidden = false;
+    canvas.parentElement.classList.add("showing-visual");
   }
 
   async renderVisual(visual, description = "") {
     const canvas = this.ui.visual;
     const token = ++this._visualToken;
-    this._activeVisual = visual || null;
-    this._activeImage = null;
-    canvas.hidden = true;
     const source = visual?.src || visual?.sheet;
-    if (!source) return;
+    if (!source) {
+      this._activeVisual = null;
+      this._activeImage = null;
+      canvas.hidden = true;
+      canvas.parentElement.classList.remove("showing-visual");
+      return;
+    }
     canvas.setAttribute("aria-label", `我看见：${(description || "草地上的景象").replaceAll("你", "我")}`);
-    const img = new Image();
-    const loaded = await new Promise((resolve) => {
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-      img.src = window.__STORYBOARDS__?.[source] || source;
-    });
+    let img;
+    try { img = await this.loadImage(source); }
+    catch {
+      if (token === this._visualToken) this.on.toast?.("画面暂时无法加载");
+      return;
+    }
     if (token !== this._visualToken) return;
-    if (!loaded) { this.on.toast?.("画面暂时无法加载"); return; }
+    this._activeVisual = visual;
     this._activeImage = img;
     this.paintVisual(img, visual);
   }
@@ -143,6 +171,10 @@ export class StoryEngine {
     this.lore = await j("story/lore.json");
     const list = await Promise.all(this.manifest.scenes.map(j));
     for (const scene of list) this.scenes[scene.id] = scene;
+    this.warmScene(this.manifest.start);
+    for (const id of Object.keys(this.characters)) {
+      this.loadImage(`assets/char/${id}.png`).catch(() => {});
+    }
   }
 
   // ---------- 状态 ----------
@@ -392,8 +424,7 @@ export class StoryEngine {
       if (scene.ambient) this.audio.warm([scene.ambient], "ambient");
       this.audio.warm(sfx, "sfx");
       for (const src of new Set(images)) {
-        const img = new Image();     // 只为把图下进缓存，不插入页面
-        img.src = window.__STORYBOARDS__?.[src] || src;
+        this.loadImage(src).catch(() => {});
       }
     }
   }
@@ -411,6 +442,7 @@ export class StoryEngine {
   }
 
   setBg(src, tone) {
+    const token = ++this._bgToken;
     const front = this._bgFront ? this.ui.bgA : this.ui.bgB;
     const back = this._bgFront ? this.ui.bgB : this.ui.bgA;
     const grad = Array.isArray(tone) && tone.length >= 2
@@ -418,9 +450,9 @@ export class StoryEngine {
       : "linear-gradient(165deg, #24302a, #0b100e)";
     front.style.backgroundImage = grad;
     if (src) {
-      const img = new Image();
-      img.onload = () => { front.style.backgroundImage = `url("${src}")`; };
-      img.src = src; // 文件不存在时保持渐变底色
+      this.loadImage(src).then((img) => {
+        if (token === this._bgToken) front.style.backgroundImage = `url("${img.src}")`;
+      }).catch(() => {}); // 文件不存在时保持渐变底色
     }
     front.classList.add("on");
     // 背景缓慢推拉：每换一次背景就换一个方向，并且重新开始
