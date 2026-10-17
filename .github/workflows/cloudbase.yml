@@ -1,0 +1,38 @@
+name: Publish China site to Tencent CloudBase
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudbase-static-site
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Prepare the static site
+        run: npm run package:static
+      - name: Publish to Tencent CloudBase
+        env:
+          TCB_SECRET_ID: ${{ secrets.TCB_SECRET_ID }}
+          TCB_SECRET_KEY: ${{ secrets.TCB_SECRET_KEY }}
+          TCB_ENV_ID: ${{ secrets.TCB_ENV_ID }}
+        shell: bash
+        run: |
+          if [[ -z "$TCB_SECRET_ID" || -z "$TCB_SECRET_KEY" || -z "$TCB_ENV_ID" ]]; then
+            echo "CloudBase is not configured yet; static files are ready in dist/."
+            exit 0
+          fi
+          npm install --global @cloudbase/cli
+          tcb login --apiKeyId "$TCB_SECRET_ID" --apiKey "$TCB_SECRET_KEY"
+          tcb hosting deploy ./dist -e "$TCB_ENV_ID" --yes

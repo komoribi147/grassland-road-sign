@@ -16,3 +16,4 @@ desktop.ini
 
 # 依赖（本项目零依赖，一般用不到）
 node_modules/
+/dist/

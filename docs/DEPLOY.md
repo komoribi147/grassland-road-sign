@@ -25,7 +25,25 @@ https://<你的账号名>.github.io/grassland-road-sign/
 
 Pages 版是纯静态的：**没有 AI 实时对话**，NPC 会用剧本里写好的兜底台词（体验依然完整）。想让人在线上也体验 AI，需要把 `server/` 部署到一台能跑 Node 的服务器上（下面第三节）。
 
-## 三、带 AI 的线上版（可选）
+## 三、中国大陆访问版（腾讯云 CloudBase）
+
+仓库已准备好自动发布流程：`.github/workflows/cloudbase.yml`。它会把网页、剧情和素材打包到 `dist/`，再上传到 CloudBase 静态网站托管。这个版本与 GitHub Pages 一样是静态版，NPC 使用剧本兜底台词；在线 AI 服务需要另行部署 `server/`。
+
+首次设置需要在腾讯云 CloudBase 创建一个靠近主要访客的中国大陆环境，并启用静态网站托管；再在 GitHub 仓库的 `Settings → Secrets and variables → Actions` 添加三个仓库密钥：
+
+| 密钥名 | 从哪里取得 |
+| --- | --- |
+| `TCB_SECRET_ID` | 腾讯云访问管理中的 API 密钥 SecretId |
+| `TCB_SECRET_KEY` | 同一组 API 密钥的 SecretKey |
+| `TCB_ENV_ID` | CloudBase 环境 ID |
+
+密钥只放在 GitHub Secrets，不要写进代码或发到聊天里。建议为部署单独创建权限受限的腾讯云密钥。设置完成后，往 `main` 推送代码就会自动更新中国大陆版；也可以在 GitHub 的 Actions 页面手动运行发布流程。首次成功发布后，CloudBase 会提供访问地址。
+
+CloudBase 静态托管集成 CDN 和 HTTPS。默认域名可以先用来试访问，官方建议正式使用绑定自己的域名；如果网站托管在中国大陆并使用自定义域名，需要先完成 ICP 备案。备案和域名要由域名/云账号持有人在控制台办理。
+
+当前 `assets/` 约 24 MiB，其中四张人物立绘 PNG 约 10 MiB。网页现在只在剧情需要人物时才加载对应立绘，避免启动时一次下载全部立绘。CDN 可以减少跨地区访问延迟，但不能消除高清文件的下载流量；后续可以把图片转成 WebP/AVIF 并按设备尺寸提供版本，进一步减小首屏和移动网络流量。
+
+## 四、带 AI 的线上版（可选）
 
 需要一个能跑 Node.js 的环境，任选其一：
 
@@ -42,7 +60,7 @@ Pages 版是纯静态的：**没有 AI 实时对话**，NPC 会用剧本里写�
 
 启动命令：`node server/server.mjs`（或 `npm start`）。
 
-## 三之补充、三个 NPC 各用各的模型（推荐）
+## 四之补充、三个 NPC 各用各的模型（推荐）
 
 打开 `server/ai-config.json`，每个角色可以单独指定：
 
@@ -68,7 +86,7 @@ AI_KEY_HEXIUYING=同学C的APIPassword
 某个角色没填自己的 Key，就自动用 `AI_API_KEY`。一个都没配也不会崩，只是改用剧本兜底台词。
 启动时终端会打印每个 NPC 用的模型和有没有配上 Key，菜单里也能看到。
 
-## 四、比赛现场 checklist
+## 五、比赛现场 checklist
 
 - [ ] 提前一天在比赛用的那台电脑上跑通 `node server/server.mjs`
 - [ ] 提前准备好 `.env`，并且**单独测一次** AI 回答（有的会场网络访问不了外网）
@@ -79,7 +97,7 @@ AI_KEY_HEXIUYING=同学C的APIPassword
 - [ ] 录一段 3～5 分钟的完整录屏放在 U 盘里，作为最后兜底
 - [ ] 音量：现场用笔记本喇叭时把音效调小，`菜单 → 音效`
 
-## 五、讯飞星火 Key 怎么拿
+## 六、讯飞星火 Key 怎么拿
 
 1. 打开 <https://console.xfyun.cn>，注册/登录。
 2. 找到 **星火认知大模型**，创建一个应用。

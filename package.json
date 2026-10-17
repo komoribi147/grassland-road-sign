@@ -8,6 +8,7 @@
     "start": "node server/server.mjs",
     "check": "node tools/check-story.mjs",
     "test": "node tools/test-engine.mjs",
+    "package:static": "node tools/package-static.mjs",
     "gen": "node tools/gen-image.mjs"
   }
 }

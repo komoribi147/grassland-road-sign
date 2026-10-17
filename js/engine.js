@@ -416,9 +416,6 @@ export class StoryEngine {
   /** 数据就位后预热立绘和首幕的图与声音（沿用团队的渐进预热体系） */
   _warmAll() {
     this.warmScene(this.manifest.start);
-    for (const id of Object.keys(this.characters)) {
-      this.loadImage(`assets/char/${id}.png`).catch(() => {});
-    }
   }
 
   /** 剧本内容的短指纹：存档里的日志只认同一版剧本记下的 */
