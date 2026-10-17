@@ -6,6 +6,8 @@
 
 > **第一次来？先看 [docs/START_HERE.md](docs/START_HERE.md)**——三条路，看你想做哪件事，不用先学编程。
 
+在线预览：[中国大陆测试站（腾讯云 CloudBase）](https://grassland-road-sign-d8bdfce86570-1453404640.tcloudbaseapp.com/) · [GitHub Pages](https://komoribi147.github.io/grassland-road-sign/)。CloudBase 免费体验版的默认域名仅供开发测试，打开时可能出现腾讯云的访问提示。
+
 ## 现在就能跑
 
 需要本机有 Node.js（本项目零依赖，不用装任何东西）。

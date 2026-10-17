@@ -27,9 +27,17 @@ Pages 版是纯静态的：**没有 AI 实时对话**，NPC 会用剧本里写�
 
 ## 三、中国大陆访问版（腾讯云 CloudBase）
 
-仓库已准备好自动发布流程：`.github/workflows/cloudbase.yml`。它会把网页、剧情和素材打包到 `dist/`，再上传到 CloudBase 静态网站托管。这个版本与 GitHub Pages 一样是静态版，NPC 使用剧本兜底台词；在线 AI 服务需要另行部署 `server/`。
+测试站已部署在上海环境 `grassland-road-sign-d8bdfce86570`，地址是：
 
-首次设置需要在腾讯云 CloudBase 创建一个靠近主要访客的中国大陆环境，并启用静态网站托管；再在 GitHub 仓库的 `Settings → Secrets and variables → Actions` 添加三个仓库密钥：
+<https://grassland-road-sign-d8bdfce86570-1453404640.tcloudbaseapp.com/>
+
+CloudBase 从本仓库公开的 `main` 分支运行 `npm run package:static`，将生成的 `dist/` 部署到网站根目录 `/`。这个版本与 GitHub Pages 一样是静态版，NPC 使用剧本兜底台词；在线 AI 服务需要另行部署 `server/`。
+
+队员更新 GitHub 后，进入 CloudBase 控制台的 **静态网站托管 → 网站部署 → grassland-road-sign → 更新服务**，选择 **公开仓库部署**，填写本仓库地址并选择 `main`，保持构建命令和目录不变，再部署一次。目前尚未配置自动发布，GitHub 推送本身不会自动更新测试站。
+
+仓库也准备了自动发布流程：`.github/workflows/cloudbase.yml`。它会把网页、剧情和素材打包到 `dist/`，再上传到 CloudBase 静态网站托管。若要改为每次推送 `main` 自动部署，需要先给 GitHub Actions 配置权限受限的腾讯云密钥；未设置密钥时，工作流只打包，不会发布。
+
+若要启用 GitHub Actions 自动发布，在 GitHub 仓库的 `Settings → Secrets and variables → Actions` 添加三个仓库密钥：
 
 | 密钥名 | 从哪里取得 |
 | --- | --- |
@@ -41,7 +49,7 @@ Pages 版是纯静态的：**没有 AI 实时对话**，NPC 会用剧本里写�
 
 CloudBase 静态托管集成 CDN 和 HTTPS。默认域名可以先用来试访问，官方建议正式使用绑定自己的域名；如果网站托管在中国大陆并使用自定义域名，需要先完成 ICP 备案。备案和域名要由域名/云账号持有人在控制台办理。
 
-当前 `assets/` 约 24 MiB，其中四张人物立绘 PNG 约 10 MiB。网页现在只在剧情需要人物时才加载对应立绘，避免启动时一次下载全部立绘。CDN 可以减少跨地区访问延迟，但不能消除高清文件的下载流量；后续可以把图片转成 WebP/AVIF 并按设备尺寸提供版本，进一步减小首屏和移动网络流量。
+当前静态网站打包后约 30 MB，其中四张人物立绘 PNG 约 10 MB。网页现在只在剧情需要人物时才加载对应立绘，避免启动时一次下载全部立绘。CDN 可以减少跨地区访问延迟，但不能消除高清文件的下载流量；后续可以把图片转成 WebP/AVIF 并按设备尺寸提供版本，进一步减小首屏和移动网络流量。免费体验版的默认域名只供开发测试，会显示访问提示，也有访问频率限制；正式公开使用需要合规的自定义域名和备案资源。
 
 ## 四、带 AI 的线上版（可选）
 
