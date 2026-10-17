@@ -41,11 +41,34 @@ function renderLoreList() {
   for (const [id, card] of Object.entries(engine.lore)) {
     const div = document.createElement("div");
     div.className = "lore-card" + (unlocked.has(id) ? "" : " locked");
+    const title = document.createElement("h3");
+    title.textContent = unlocked.has(id) ? card.title : (card.lockedTitle || "尚未解锁");
+    div.appendChild(title);
     if (unlocked.has(id)) {
-      div.innerHTML = `<h3>${card.title}</h3><p>${card.text}</p>` +
-        (card.think ? `<p class="think">想一想：${card.think}</p>` : "");
+      const body = document.createElement("p");
+      body.textContent = card.text;
+      div.appendChild(body);
+      if (card.think) {
+        const think = document.createElement("p");
+        think.className = "think";
+        think.textContent = `想一想：${card.think}`;
+        div.appendChild(think);
+      }
+      if (card.sourceUrl && card.sourceTitle) {
+        const source = document.createElement("p");
+        source.className = "source";
+        const link = document.createElement("a");
+        link.href = card.sourceUrl;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = `史料参考：${card.sourceTitle}`;
+        source.appendChild(link);
+        div.appendChild(source);
+      }
     } else {
-      div.innerHTML = `<h3>${card.lockedTitle || "尚未解锁"}</h3><p>继续体验剧情后解锁。</p>`;
+      const body = document.createElement("p");
+      body.textContent = "继续体验剧情后解锁。";
+      div.appendChild(body);
     }
     list.appendChild(div);
   }

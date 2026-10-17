@@ -540,6 +540,9 @@ button { font-family: var(--font-sans); cursor: pointer; }
 .lore-card h3 { margin: 0 0 8px; font-size: 16px; font-weight: 500; letter-spacing: 0.06em; }
 .lore-card p { margin: 0 0 8px; font-size: 14.5px; line-height: 1.95; color: var(--ink-dim); }
 .lore-card .think { font-family: var(--font-sans); font-size: 13px; color: var(--accent); opacity: 0.9; }
+.lore-card .source { margin-top: 10px; font-family: var(--font-sans); font-size: 12px; line-height: 1.6; }
+.lore-card .source a { color: var(--ink-faint); text-decoration: underline; text-underline-offset: 3px; }
+.lore-card .source a:hover { color: var(--accent); }
 .lore-card.locked { border-left-color: var(--line); opacity: 0.55; }
 .lore-card.locked h3 { color: var(--ink-faint); }
 

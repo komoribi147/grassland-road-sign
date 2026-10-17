@@ -5,10 +5,10 @@
   "tone": ["#232a26", "#0a0d0b"],
   "ambient": "",
   "present": ["li-changhe", "shitou", "he-xiuying"],
-  "situation": "夜里，草地上原地休息。篝火生不起来，全连只剩一点青稞面，老班长按“一人一勺、伤员两勺”的规矩盛汤。",
+  "situation": "进入草地后的一个雨夜，队伍原地歇脚。老班长用仅剩的青稞面熬薄汤，伤员先分。你还穿着他给的那只草鞋。",
   "steps": [
-    { "t": "visual", "description": "草地深处。夜。雨暂时停了，但地上全是水。", "visual": {"sheet":"assets/storyboards/sheet-03.jpg","panel":2} },
-    { "t": "visual", "description": "几十个红军战士背靠背坐着，浑身湿透。有人在拧衣服，水哗哗地流。有人靠在别人肩上就睡着了——不确定是睡着，还是别的。", "visual": {"sheet":"assets/storyboards/sheet-03.jpg","panel":3} },
+    { "t": "visual", "description": "入夜，雨暂时停了。地上仍积着水，草叶一碰就滴水。", "visual": {"sheet":"assets/storyboards/sheet-03.jpg","panel":2} },
+    { "t": "visual", "description": "战士们背靠背坐着。有人拧衣服，有人扶着发烧的同伴。石头抱着军号，靠在老班长身旁。", "visual": {"sheet":"assets/storyboards/sheet-03.jpg","panel":3} },
     { "t": "visual", "description": "篝火生不起来，火柴全湿了。\n炊事班这边，老班长把黑锅架在几块石头上，锅里煮着一小把青稞面，汤稀得能照见人影。", "visual": {"sheet":"assets/storyboards/sheet-03.jpg","panel":4} },
     { "t": "lore", "card": "kouliang" },
     { "t": "say", "who": "shitou", "text": "老班长……今天能多给我一口不？我……我不多要，就一口。" , "after": [{ "t": "sfx", "name": "stomach", "level": 0.4 }]},
@@ -17,28 +17,28 @@
     { "t": "say", "who": "he-xiuying", "text": "石头。你那勺已经盛了。伤员还没喝。" },
     { "t": "visual", "description": "（石头缩回去。）", "visual": {"sheet":"assets/storyboards/sheet-03.jpg","panel":5} },
     { "t": "say", "who": "shitou", "text": "……我知道了。" },
-    { "t": "visual", "description": "老班长盛汤。第一碗给伤员，第二碗给石头，第三碗递给你。锅里还剩一点底子。", "visual": {"sheet":"assets/storyboards/sheet-04.jpg","panel":0} , "after": [{ "t": "sfx", "name": "spoon-scrape", "level": 0.5 }]},
+    { "t": "visual", "description": "老班长按勺分汤：伤员的碗里两勺，石头和你的碗里各一勺。他自己的空碗搁在锅旁。", "visual": {"sheet":"assets/storyboards/sheet-04.jpg","panel":0} , "after": [{ "t": "sfx", "name": "spoon-scrape", "level": 0.5 }]},
     { "t": "say", "who": "li-changhe", "text": "你喝。" },
     {
       "t": "select",
       "key": "answer_soup",
       "ai": "li-changhe",
-      "situation": "夜里，草地上，老班长把第三碗稀得照见人影的青稞面汤递给你，锅里只剩一点底子。",
-      "fallback": ["我胃小。喝不了多少。你们年轻人，路还长。"],
+      "situation": "夜里，老班长分完青稞面汤，自己还没喝。你发现他的碗是空的。",
+      "fallback": ["我胃小。你喝吧。"],
       "trust": 5,
       "options": [
-        { "text": "锅里还有底子。你先喝。", "trust": 4, "why": "想着别人", "reply": "我胃小。喝不了多少。你们年轻人，路还长。" },
-        { "text": "你还没喝吧？", "trust": 2, "why": "惦记着他", "reply": "我不饿。你先顾自己。" },
-        { "text": "一人一勺是规矩。我喝我这一勺。", "trust": 1, "why": "守规矩", "reply": "明白人。喝吧，明天还得走。" }
+        { "text": "你还没盛。锅底这一点该是你的。", "trust": 3, "why": "注意到他没喝", "reply": "我胃小。你喝吧。" },
+        { "text": "我分半勺给你。", "trust": 3, "why": "愿意分享", "reply": "你那勺也少。收着，明天要赶路。" },
+        { "text": "我先喝了。明早换我背锅。", "trust": 2, "why": "主动分担", "reply": "锅沉。先把自己的脚养好，明早再说。" }
       ],
       "after": [{ "t": "visual", "description": "（他说这话的时候，把自己那只碗往身后挪了挪。）", "visual": {"sheet":"assets/storyboards/sheet-04.jpg","panel":1} }]
     },
-    { "t": "visual", "description": "老班长背过身，蹲在一边，从口袋里摸出什么东西往嘴里塞。", "visual": {"sheet":"assets/storyboards/sheet-04.jpg","panel":2} },
+    { "t": "visual", "description": "老班长背过身，蹲到暗处，摸出一截草根往嘴边送。离得远，你看不清。", "visual": {"sheet":"assets/storyboards/sheet-04.jpg","panel":2} },
     {
       "t": "choose",
       "prompt": "我要不要走近看看？",
       "options": [
-        { "text": "走近看看", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 2 }, "trust": 3, "goto": "act1:observe" },
+        { "text": "走近看看", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 2 }, "trust": 1, "goto": "act1:observe" },
         { "text": "不动，先把汤喝完", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 3 }, "trust": 0, "goto": "act1:skip" }
       ]
     },
@@ -50,12 +50,12 @@
       "key": "answer_root",
       "ai": "li-changhe",
       "situation": "你撞见他蹲在一边偷偷嚼草根，他有点被逮住的意思。",
-      "fallback": ["这草根……甜。你们不懂。我老家河南，小时候放牛，就爱嚼这个。"],
+      "fallback": ["别学我。草根有的不能吃。"],
       "trust": 6,
       "options": [
-        { "text": "草根别吃了。回头肚子疼。", "trust": 3, "why": "担心他", "reply": "这草根……甜。你们不懂。我老家河南，小时候放牛，就爱嚼这个。" },
-        { "text": "……我什么都没看见。", "trust": 1, "why": "给他留面子", "reply": "看见就看见了。我又没偷吃公粮。" },
-        { "text": "给我也尝一口。", "trust": 2, "why": "不跟他见外", "reply": "就一口。苦是苦，顶饿。" }
+        { "text": "你把汤让了出来，也该顾自己。", "trust": 3, "why": "关心他的身体", "reply": "知道。走出这片泥地，就能想法子找粮。" },
+        { "text": "我替你再找点能吃的？", "trust": 2, "why": "愿意帮忙", "reply": "别乱挖。草根有的不能吃。" },
+        { "text": "……我不告诉石头。", "trust": 1, "why": "给他留了余地", "reply": "也别学我。吃错了，连路都走不了。" }
       ],
       "after": [
         { "t": "visual", "description": "（他拍拍手上的泥。）", "visual": {"sheet":"assets/storyboards/sheet-04.jpg","panel":4} },
@@ -71,9 +71,9 @@
     { "t": "label", "name": "hejie" },
     { "t": "visual", "description": "何大姐走过来。她手里拿着一个水壶。", "visual": {"sheet":"assets/storyboards/sheet-05.jpg","panel":0} },
     { "t": "visual", "description": "（她蹲下，看着老班长的嘴。）", "visual": {"sheet":"assets/storyboards/sheet-05.jpg","panel":1} },
-    { "t": "say", "who": "he-xiuying", "text": "你又吃草根。" },
+    { "t": "say", "who": "he-xiuying", "text": "又拿草根顶饿？" },
     { "t": "say", "who": "li-changhe", "text": "就嚼两口。" },
-    { "t": "say", "who": "he-xiuying", "text": "上回你说的“就嚼两口”，第二天吐了一宿。你是炊事班长，你倒了，全连喝西北风。" },
+    { "t": "say", "who": "he-xiuying", "text": "你上回肚子疼了一宿。明天还得带路，别硬撑。" },
     { "t": "visual", "description": "（她从水壶里倒出一点水，递过去。）", "visual": {"sheet":"assets/storyboards/sheet-05.jpg","panel":2} , "after": [{ "t": "sfx", "name": "pour", "level": 0.45 }]},
     { "t": "say", "who": "he-xiuying", "text": "漱口。" },
     { "t": "say", "who": "li-changhe", "text": "中。听你的，何大姐。" },
@@ -82,10 +82,15 @@
     { "t": "say", "who": "li-changhe", "text": "先带着。" },
     { "t": "say", "who": "he-xiuying", "text": "底细清楚吗？" },
     { "t": "say", "who": "li-changhe", "text": "不清楚。" },
-    { "t": "say", "who": "he-xiuying", "text": "那你还带？" },
-    { "t": "say", "who": "li-changhe", "text": "你当年从瑞金跟出来的时候，有人问过你底细吗？" },
-    { "t": "visual", "description": "（何大姐没说话。她看了你一眼，转身走了。）", "visual": {"sheet":"assets/storyboards/sheet-05.jpg","panel":4} },
-    { "t": "visual", "description": "远处有人轻声唱：“八月继续向前进，草地行军不怕冷……”\n声音断断续续，被风吞掉。", "visual": {"sheet":"assets/storyboards/sheet-05.jpg","panel":5} },
+    { "t": "say", "who": "he-xiuying", "text": "还得多留个心眼。" },
+    { "t": "say", "who": "li-changhe", "text": "我知道。让他跟着走，慢慢看。" },
+    { "t": "visual", "description": "（何大姐没说话。她看了你一眼，正要去看伤员，又想起了手里的名册。）", "visual": {"sheet":"assets/storyboards/sheet-05.jpg","panel":4} },
+    { "t": "say", "who": "he-xiuying", "text": "伤员的名册淋花了。你认得字吗？" },
+    { "t": "say", "who": "__player__", "text": "还认得。头一个，田德福。" },
+    { "t": "say", "who": "he-xiuying", "text": "把这三个名字先记住。队伍走散了，好一个个找。" },
+    { "t": "say", "who": "shitou", "text": "你识字？那往后我叫你文书，好不好？" },
+    { "t": "say", "who": "li-changhe", "text": "先把路走稳了，称呼往后再说。" },
+    { "t": "visual", "description": "你在心里默念伤员的名字。远处有人轻声哼着不成调的曲子，雨声渐渐盖过去。", "visual": {"sheet":"assets/storyboards/sheet-05.jpg","panel":5} },
     { "t": "goto", "scene": "act2" }
   ]
 }

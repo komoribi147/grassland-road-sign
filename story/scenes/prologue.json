@@ -5,13 +5,13 @@
   "tone": ["#3d4739", "#131814"],
   "ambient": "rain",
   "present": ["li-changhe", "shitou", "he-xiuying"],
-  "situation": "黄昏，松潘草地边缘，一直下雨。你刚在泥水里醒过来，是老班长把你叫起来的。石头和何大姐也在旁边。",
+  "situation": "1935年8月下旬，松潘草地边缘。你跌伤了额头，从泥水里醒来，想不起自己的番号。老班长警惕地盘问你，石头和何大姐也在旁边。",
   "steps": [
-    { "t": "visual", "description": "1935年8月，松潘草地边缘。黄昏。雨。", "visual": {"sheet":"assets/storyboards/sheet-01.jpg","panel":0} },
-    { "t": "visual", "description": "屏幕从一片模糊的绿色和灰色里亮起来。\n你趴着，嘴里全是泥。雨落在后背上，很轻，很冷，一直没停过。", "visual": {"sheet":"assets/storyboards/sheet-01.jpg","panel":1} , "after": [{ "t": "sfx", "name": "heartbeat", "level": 0.4 }]},
+    { "t": "visual", "description": "1935年8月下旬，毛儿盖以北的草地边缘。黄昏，一阵冷雨。", "visual": {"sheet":"assets/storyboards/sheet-01.jpg","panel":0} },
+    { "t": "visual", "description": "你趴在浅水里，嘴里全是泥。额角碰破了，眼前一阵阵发黑。雨点落在后背上。", "visual": {"sheet":"assets/storyboards/sheet-01.jpg","panel":1} , "after": [{ "t": "sfx", "name": "heartbeat", "level": 0.4 }]},
     { "t": "say", "who": "li-changhe", "text": "醒了？醒了就爬起来。这地方不能躺，躺下就起不来了。" },
     { "t": "visual", "description": "你抬起头。\n老班长李长河蹲在你面前，手里握着一根探路的木棍。他没有伸手——那根木棍横在你和他之间，是防备。", "visual": {"sheet":"assets/storyboards/sheet-01.jpg","panel":2} },
-    { "t": "visual", "description": "你穿着一身红军的衣服。可你说不清自己是哪个连的，连长是谁，从哪儿来的。", "visual": {"sheet":"assets/storyboards/sheet-01.jpg","panel":3} },
+    { "t": "visual", "description": "你身上是红军的衣服。想得起跟队伍走，却想不起自己的番号，也说不清刚才怎样掉了队。", "visual": {"sheet":"assets/storyboards/sheet-01.jpg","panel":3} },
     { "t": "lore", "card": "songpan" },
     { "t": "say", "who": "li-changhe", "text": "你是哪个连的？" },
     {
@@ -22,9 +22,9 @@
       "fallback": ["……先起来吧。是不是同志，走出去再说。"],
       "trust": 2,
       "options": [
-        { "text": "我不记得了。醒过来就在这儿了。", "trust": 3, "why": "说了实话", "reply": "记不起来的人，这一路多。先起来。" },
-        { "text": "哪个连的，路上慢慢想。先赶路要紧。", "trust": 1, "why": "没正面回答", "reply": "说得轻巧。跟上，别掉队。" },
-        { "text": "是不是同志，走出去再说。", "trust": 2, "why": "学了他自己的话", "reply": "……你倒会说话。起来吧。" }
+        { "text": "额头撞着了，番号一时想不起来。", "trust": 3, "why": "如实说明", "reply": "先起来。想起来了再告诉我。" },
+        { "text": "我跟队伍走散了。您先看看我能不能跟上。", "trust": 2, "why": "愿意接受观察", "reply": "中。跟在后头，别乱走。" },
+        { "text": "我说不清。可前面有伤员，我能搭把手。", "trust": 2, "why": "先提出帮忙", "reply": "话先放着。起来，跟上。" }
       ],
       "after": [{ "t": "visual", "description": "（他用木棍戳了戳你身边的泥，没再追问。）", "visual": {"sheet":"assets/storyboards/sheet-02.jpg","panel":0} }]
     },
@@ -35,39 +35,28 @@
     { "t": "say", "who": "shitou", "text": "可他连自己哪个连的都不知道……" },
     { "t": "say", "who": "li-changhe", "text": "石头。去前面探路。" },
     { "t": "visual", "description": "（石头撇嘴走了。）", "visual": {"sheet":"assets/storyboards/sheet-02.jpg","panel":1} },
-    { "t": "say", "who": "li-changhe", "text": "别往心里去。那孩子……他哥上个月在毛儿盖没了。他现在看谁都像坏人。" },
+    { "t": "say", "who": "li-changhe", "text": "别怪他。他哥在毛儿盖没了，心里还没缓过来。" },
     { "t": "lore", "card": "maoergai" },
 
     { "t": "action", "label": "站起来", "visual": {"sheet":"assets/storyboards/sheet-02.jpg","panel":2}, "hint": "点一下，才算真的站起来" , "after": [{ "t": "sfx", "name": "cloth-ring", "level": 0.45 }]},
-    { "t": "visual", "description": "你撑着地站起来，眼前晃了一下。\n你低头看自己的脚——一只脚上只剩一只草鞋，另一只脚裹着破布，早就湿透了。", "visual": {"sheet":"assets/storyboards/sheet-02.jpg","panel":3} },
+    { "t": "visual", "description": "你撑着地站起来。左脚上的草鞋还在，右脚只裹着一层湿透的破布。", "visual": {"sheet":"assets/storyboards/sheet-02.jpg","panel":3} },
     { "t": "say", "who": "li-changhe", "text": "鞋呢？" , "after": [{ "t": "sfx", "name": "foot-mud", "level": 0.5 }]},
     {
       "t": "select",
       "key": "answer_shoe",
       "ai": "li-changhe",
       "situation": "你刚在松潘草地的泥水里醒过来，老班长发现你少了一只鞋，问你鞋去哪了。",
-      "fallback": ["穿上。我一只脚光着走了三天了，不差这一会儿。"],
+      "fallback": ["先穿我的。过了泥地再想法子。"],
       "trust": 5,
       "options": [
-        { "text": "……没注意。光脚踩在泥里，不凉。", "trust": 2, "why": "没叫苦", "reply": "穿上。我一只脚光着走了三天了，不差这一会儿。" },
-        { "text": "醒过来就没了一只。不知道陷在哪块泥里了。", "trust": 3, "why": "实话实说", "reply": "草地吃鞋。明天寻点草，再打一只。先穿我的。" },
-        { "text": "一只鞋也能走路。", "trust": 1, "why": "嘴硬", "reply": "走你的吧。脚底板不要了？" }
+        { "text": "醒来就没了，不知道掉在哪块泥里。", "trust": 2, "why": "如实说明", "reply": "草地吃鞋。先穿我的，过了泥地再说。" },
+        { "text": "您也得走，别把鞋给我。", "trust": 2, "why": "也顾及他", "reply": "你那脚包不住。穿上，我还站得稳。" },
+        { "text": "有绳子吗？我先把布裹紧。", "trust": 2, "why": "想办法照顾自己", "reply": "绳子有。鞋也有。都拿着，别让脚烂了。" }
       ],
-      "after": [{ "t": "visual", "description": "（一只草鞋落在你脚边的泥水里。）", "visual": {"sheet":"assets/storyboards/sheet-02.jpg","panel":4} }]
+      "after": [{ "t": "visual", "description": "老班长解下自己右脚的草鞋，放到你脚边。你把它套在裹布的脚上；他只剩左脚有鞋。", "visual": {"sheet":"assets/storyboards/sheet-02.jpg","panel":4} }]
     },
-    { "t": "say", "who": "he-xiuying", "text": "老李，你脚上那道口子还没好。给他穿我的。" },
-    { "t": "visual", "description": "（她从背包里翻出一双旧布鞋。）", "visual": {"sheet":"assets/storyboards/sheet-02.jpg","panel":5} },
-    { "t": "say", "who": "li-changhe", "text": "你那双鞋……你自己做的。留着。" },
-    { "t": "say", "who": "he-xiuying", "text": "伤员要紧。" },
-    { "t": "visual", "description": "（她把鞋递过来，没再看你，转身去扶一个伤员。）", "visual": {"sheet":"assets/storyboards/sheet-03.jpg","panel":0} },
-    {
-      "t": "choose",
-      "prompt": "我伸手，还是收回？",
-      "options": [
-        { "text": "接过布鞋", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 0 }, "trust": 8, "why": "接住了别人的东西", "replyWho": "he-xiuying", "reply": "穿上。别湿了脚。", "after": [{ "t": "sfx", "name": "pack", "level": 0.35 }] },
-        { "text": "把手缩回去", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 1 }, "trust": -5, "why": "没有接" }
-      ]
-    },
+    { "t": "say", "who": "he-xiuying", "text": "老李，光脚那边我给你裹一层。你也别逞强。" },
+    { "t": "say", "who": "li-changhe", "text": "中。你先看伤员，我跟着。" },
     { "t": "ambient", "name": "rain" },
     { "t": "sfx", "name": "shout" },
     { "t": "visual", "description": "雨声渐大。\n远处传来喊声：“一营的——跟上——别掉队——”", "visual": {"sheet":"assets/storyboards/sheet-03.jpg","panel":1} },
