@@ -8,7 +8,9 @@
     "start": "node server/server.mjs",
     "check": "node tools/check-story.mjs",
     "test": "node tools/test-engine.mjs",
+    "test:ai": "node tools/test-ai-server.mjs",
     "package:static": "node tools/package-static.mjs",
+    "package:ai": "node tools/package-ai-function.mjs",
     "gen": "node tools/gen-image.mjs"
   }
 }

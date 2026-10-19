@@ -1,21 +1,21 @@
 {
   "id": "act3",
   "title": "第三幕 · 路标",
-  "bg": "assets/bg/act3-rain-markers.jpg",
+  "bg": "assets/stills/markers.png",
   "tone": ["#3f4841", "#141a16"],
   "ambient": "rain",
   "present": ["li-changhe", "shitou", "he-xiuying"],
   "situation": "在草地行军数日后，暴雨和大雾使小队与前队暂时失散。你、老班长、石头、何大姐带着三名伤员寻找前人留下的路标，夜里在高地歇脚。",
   "steps": [
-    { "t": "visual", "description": "又走了几天。雨忽然大起来，前面的队伍渐渐隐进雾里。", "visual": {"sheet":"assets/storyboards/sheet-09.jpg","panel":2} },
-    { "t": "visual", "description": "队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。", "visual": {"sheet":"assets/storyboards/sheet-09.jpg","panel":3} },
+    { "t": "visual", "description": "又走了几天。雨忽然大起来，前面的队伍渐渐隐进雾里。", "visual": {"src":"assets/stills/rain-front-vanishes.png"} },
+    { "t": "visual", "description": "队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。", "visual": {"src":"assets/stills/seven-separated.png"} },
     { "t": "say", "who": "shitou", "text": "老班长，我把军号上的红布系在你的探路棍上。雾里我能认出来。" },
     { "t": "say", "who": "li-changhe", "text": "中。泥沼边那根留给后队，这根咱们带着走。" },
-    { "t": "visual", "description": "指南针摔进泥里，玻璃裂了；雨水和泥浆遮着刻度，一时辨不清方向。", "visual": {"sheet":"assets/storyboards/sheet-09.jpg","panel":4} },
+    { "t": "visual", "description": "指南针摔进泥里，玻璃裂了；雨水和泥浆遮着刻度，一时辨不清方向。", "visual": {"src":"assets/stills/broken-compass.png"} },
     { "t": "say", "who": "he-xiuying", "text": "老李，方向不对。我们是不是绕回来了？" },
-    { "t": "visual", "description": "（老班长蹲在地上，用手指抠泥，闻了闻。）", "visual": {"sheet":"assets/storyboards/sheet-09.jpg","panel":5} , "after": [{ "t": "sfx", "name": "finger-mud", "level": 0.35 }]},
+    { "t": "visual", "description": "（老班长蹲在地上，用手指抠泥，闻了闻。）", "visual": {"src":"assets/stills/cook-smells-mud.png"} , "after": [{ "t": "sfx", "name": "finger-mud", "level": 0.35 }]},
     { "t": "say", "who": "li-changhe", "text": "没绕回来。刚才的泥发黄，这儿是黑的。再找找前头的记号。" },
-    { "t": "visual", "description": "（他站起来，眯着眼看远处。）", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":0} },
+    { "t": "visual", "description": "（他站起来，眯着眼看远处。）", "visual": {"src":"assets/stills/cook-looks-ahead.png"} },
     { "t": "say", "who": "li-changhe", "text": "看到那棵歪树没有？树后头有根绑布的木棍。往那儿走。" },
     {
       "t": "select",
@@ -30,12 +30,12 @@
         { "text": "雾太重了，先让伤员歇一下？", "trust": 2, "why": "顾及同行者", "reply": "先到那棵树下。那儿地实，能歇。" }
       ]
     },
-    { "t": "visual", "description": "雾里露出几根相隔不远的木棍，有的绑着布条，有的只插着草。你们先前立的那根红布木棍也在后头。", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":1} },
+    { "t": "visual", "description": "雾里露出几根相隔不远的木棍，有的绑着布条，有的只插着草。你们先前立的那根红布木棍也在后头。", "visual": {"src":"assets/stills/markers-look-back.png"} },
     { "t": "say", "who": "li-changhe", "text": "看见了吧？他们留给咱们的。走过去，咱们也给后面的人留。" },
-    { "t": "bg", "src": "assets/bg/act3-night-high-ground.jpg", "tone": ["#1e2521", "#080b09"] },
+    { "t": "bg", "src": "assets/stills/high-camp-wide-bg.png", "tone": ["#1e2521", "#080b09"] },
     { "t": "ambient", "name": "" },
-    { "t": "visual", "description": "夜里，大家挤在稍干的高地上。老班长把仅有的油布盖在发烧的伤员身上，自己坐在外侧挡风。", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":2} , "after": [{ "t": "sfx", "name": "thump", "level": 0.45 }, { "t": "sfx", "name": "mumble", "level": 0.3 }]},
-    { "t": "visual", "description": "石头缩在你旁边，浑身发抖。", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":3} },
+    { "t": "visual", "description": "夜里，大家挤在稍干的高地上。老班长把仅有的油布盖在发烧的伤员身上，自己坐在外侧挡风。", "visual": {"src":"assets/stills/cook-covers-companion.png"} , "after": [{ "t": "sfx", "name": "thump", "level": 0.45 }, { "t": "sfx", "name": "mumble", "level": 0.3 }]},
+    { "t": "visual", "description": "石头缩在你旁边，浑身发抖。", "visual": {"src":"assets/stills/shitou-cold-night.png"} },
     { "t": "say", "who": "shitou", "text": "{player}……你说，天亮了还能找到前队吗？" },
     {
       "t": "select",
@@ -51,7 +51,7 @@
       ]
     },
     { "t": "say", "who": "shitou", "text": "我昨天晚上梦见我娘了。她给我烙饼，白面的。我一口咬下去——醒了，嘴里全是草。" , "after": [{ "t": "sfx", "name": "stomach", "level": 0.3 }]},
-    { "t": "visual", "description": "（沉默。）", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":4} },
+    { "t": "visual", "description": "（沉默。）", "visual": {"src":"assets/stills/camp-silence.png"} },
     { "t": "say", "who": "shitou", "text": "{player}，你说……革命胜利了，是不是天天吃白面馍？" },
     {
       "t": "select",
@@ -66,15 +66,15 @@
         { "text": "我也馋。你娘烙的饼得有多香？", "trust": 2, "why": "认真听他讲母亲", "reply": "可香了。等见着她，让她烙给你尝。" }
       ]
     },
-    { "t": "visual", "description": "（石头笑了，露出缺了的那颗门牙。）", "visual": {"sheet":"assets/storyboards/sheet-10.jpg","panel":5} },
+    { "t": "visual", "description": "（石头笑了，露出缺了的那颗门牙。）", "visual": {"src":"assets/stills/shitou-gap-smile.png"} },
     { "t": "say", "who": "shitou", "text": "那我得活着走出去。我娘还等我呢。" },
-    { "t": "visual", "description": "何大姐把壶里最后一点能喝的水喂给伤员。她自己的嘴唇也干裂了。", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":0} , "after": [{ "t": "sfx", "name": "kettle-empty", "level": 0.4 }]},
+    { "t": "visual", "description": "何大姐把壶里最后一点能喝的水喂给伤员。她自己的嘴唇也干裂了。", "visual": {"src":"assets/stills/medic-last-water.png"} , "after": [{ "t": "sfx", "name": "kettle-empty", "level": 0.4 }]},
     {
       "t": "choose",
       "prompt": "我要走过去吗？",
       "options": [
-        { "text": "走过去，站在何大姐旁边", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 4 }, "trust": 4, "goto": "act3:water" },
-        { "text": "留在原地，让她一个人待着", "visual": { "sheet": "assets/storyboards/sheet-16.jpg", "panel": 5 }, "trust": 0, "goto": "act3:after_water" }
+        { "text": "走过去，站在何大姐旁边", "visual": { "src":"assets/stills/approach-medic-night.png" }, "trust": 4, "goto": "act3:water" },
+        { "text": "留在原地，让她一个人待着", "visual": { "src":"assets/stills/high-camp.png" }, "trust": 0, "goto": "act3:after_water" }
       ]
     },
 
@@ -92,7 +92,7 @@
         { "text": "壶里还有水吗？", "trust": 2, "why": "询问补给", "reply": "最后一口刚喂了。明天得找水。" }
       ],
       "after": [
-        { "t": "visual", "description": "（她把水壶摇了摇，空的。）", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":1} },
+        { "t": "visual", "description": "（她把水壶摇了摇，空的。）", "visual": {"src":"assets/stills/empty-canteen-night.png"} },
         { "t": "say", "who": "he-xiuying", "text": "明天得找水，烧开了再装壶。" }
       ]
     },
@@ -100,7 +100,7 @@
     { "t": "label", "name": "after_water" },
     { "t": "say", "who": "shitou", "text": "老班长，你左脚那只草鞋也散了。" },
     { "t": "say", "who": "li-changhe", "text": "鞋绳断了。先收起来，天亮再想办法。" },
-    { "t": "visual", "description": "老班长把我叫到一边。", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":2} },
+    { "t": "visual", "description": "老班长把我叫到一边。", "visual": {"src":"assets/stills/cook-calls-aside.png"} },
     { "t": "say", "who": "li-changhe", "text": "{player}。你还认得字。你说，等这仗打完，孩子们是不是都能进学堂？" },
     {
       "t": "select",
@@ -115,7 +115,7 @@
         { "text": "您怎么突然问起这个？", "trust": 2, "why": "想听他的想法", "reply": "看何大姐一夜还在认名册，想起这个了。" }
       ]
     },
-    { "t": "visual", "description": "（他睁开眼，看了看你，又看了看睡着的石头。）", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":3} },
+    { "t": "visual", "description": "（他睁开眼，看了看你，又看了看睡着的石头。）", "visual": {"src":"assets/stills/cook-watches-shitou.png"} },
     { "t": "say", "who": "li-changhe", "text": "要是再走散了，替我跟前队说一声：炊事班李长河，河南信阳人。" },
     { "t": "say", "who": "__player__", "text": "我记住了。您也得跟紧。" },
     { "t": "say", "who": "li-changhe", "text": "中。睡吧。" },
@@ -125,7 +125,7 @@
     { "t": "say", "who": "li-changhe", "text": "老家还有个闺女，闹灾那年走散了。等我出去，还想再找她。" },
     { "t": "say", "who": "__player__", "text": "我也帮您找。" },
     { "t": "label", "name": "after_daughter" },
-    { "t": "visual", "description": "何大姐收好药箱，走过来坐在你旁边。她从小布包里倒出几颗青稞粒，数了数，又收回去。", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":4} },
+    { "t": "visual", "description": "何大姐收好药箱，走过来坐在你旁边。她从小布包里倒出几颗青稞粒，数了数，又收回去。", "visual": {"src":"assets/stills/barley-count.png"} },
     { "t": "say", "who": "he-xiuying", "text": "老李让你记他的名字？" },
     {
       "t": "select",
@@ -140,9 +140,9 @@
         { "text": "他像怕走散似的。我有点担心。", "trust": 3, "why": "察觉他的疲惫", "reply": "我也担心。天亮我再看看他的脚。" }
       ]
     },
-    { "t": "visual", "description": "何大姐低头捻着那只装青稞的小布包。营地安静下来，只听见伤员的呼吸。", "visual": {"sheet":"assets/storyboards/sheet-11.jpg","panel":5} },
+    { "t": "visual", "description": "何大姐低头捻着那只装青稞的小布包。营地安静下来，只听见伤员的呼吸。", "visual": {"src":"assets/stills/barley-pouch-night.png"} },
     { "t": "say", "who": "he-xiuying", "text": "有个女同志叫桂香，先前跟我们同行。她怕伤员饿，总往自己袋里省麦粒。后来走散了，我还不知道她到哪儿了。" },
-    { "t": "visual", "description": "她抬起头，看着你，像要确认你听清了那个名字。", "visual": {"sheet":"assets/storyboards/sheet-12.jpg","panel":0} },
+    { "t": "visual", "description": "她抬起头，看着你，像要确认你听清了那个名字。", "visual": {"src":"assets/stills/medic-confirms-name.png"} },
     { "t": "say", "who": "he-xiuying", "text": "桂香。这个名字也替我记着。" },
     {
       "t": "select",
@@ -157,9 +157,9 @@
         { "text": "你说得慢些，我把名字再记一遍。", "trust": 3, "why": "认真倾听", "reply": "桂香。桂花的桂，香气的香。" }
       ]
     },
-    { "t": "visual", "description": "何大姐起身，拍去膝上的泥，仍不放心地望向伤员。", "visual": {"sheet":"assets/storyboards/sheet-12.jpg","panel":1} },
+    { "t": "visual", "description": "何大姐起身，拍去膝上的泥，仍不放心地望向伤员。", "visual": {"src":"assets/stills/medic-rises-night.png"} },
     { "t": "say", "who": "he-xiuying", "text": "我叫何秀英，江西瑞金人。你连我也一块记上。" },
-    { "t": "visual", "description": "她停了一下，又低头看药箱边那页被雨淋花的名册。", "visual": {"sheet":"assets/storyboards/sheet-12.jpg","panel":2} },
+    { "t": "visual", "description": "她停了一下，又低头看药箱边那页被雨淋花的名册。", "visual": {"src":"assets/stills/rain-blurred-roster.png"} },
     { "t": "say", "who": "he-xiuying", "text": "湘江那一仗，我丈夫没回来。他从前教我认过一些字。往后我又自己学，能认名册，还想学更多。" },
     { "t": "lore", "card": "xiangjiang" },
     {
@@ -176,9 +176,9 @@
       ]
     },
     { "t": "say", "who": "he-xiuying", "text": "等走出去，我想继续念书，学医。下回伤员发烧，我能做的不该只有等。" },
-    { "t": "visual", "description": "老班长在旁边翻了个身。他一直听着，眼睛还闭着。", "visual": {"sheet":"assets/storyboards/sheet-12.jpg","panel":3} , "after": [{ "t": "sfx", "name": "rustle", "level": 0.3 }]},
+    { "t": "visual", "description": "老班长在旁边翻了个身。他一直听着，眼睛还闭着。", "visual": {"src":"assets/stills/cook-turns-listening.png"} , "after": [{ "t": "sfx", "name": "rustle", "level": 0.3 }]},
     { "t": "say", "who": "li-changhe", "text": "中。等到了能读书的地方，我陪你去问。" },
-    { "t": "visual", "description": "何大姐望了他一眼，第一次轻轻笑出来。", "visual": {"sheet":"assets/storyboards/sheet-12.jpg","panel":4} },
+    { "t": "visual", "description": "何大姐望了他一眼，第一次轻轻笑出来。", "visual": {"src":"assets/stills/medic-first-smile.png"} },
     { "t": "say", "who": "he-xiuying", "text": "我自己也会问。你到时候可得好好养脚。" },
     { "t": "say", "who": "li-changhe", "text": "中。都走出去。" },
     { "t": "goto", "scene": "act4" }

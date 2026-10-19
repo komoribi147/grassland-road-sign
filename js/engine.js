@@ -88,9 +88,10 @@ export class StoryEngine {
     this._resolveClick = null;           // 点击等待中：重开收场用
     this._bgFront = true;
     this.reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    this.portraitsEnabled = false;       // 新立绘尚在暂存审核，剧情暂不请求旧立绘
 
     this.ui = {
-      bgA: $("bgA"), bgB: $("bgB"), rain: $("rain"),
+      bgA: $("bgA"), bgB: $("bgB"), rain: $("rain"), mist: $("mist"),
       topbar: $("topbar"), chapterName: $("chapterName"),
       trustAddress: $("trustAddress"), trustFill: $("trustFill"),
       dialogue: $("dialogue"), speaker: $("speakerName"),
@@ -166,7 +167,10 @@ export class StoryEngine {
     const el = this.ui.portrait;
     if (!el) return;
     const token = ++this._portraitToken;
-    if (!npcId || npcId === PLAYER || !this.characters?.[npcId]) { el.hidden = true; return; }
+    if (!this.portraitsEnabled || !npcId || npcId === PLAYER || !this.characters?.[npcId]) {
+      el.hidden = true;
+      return;
+    }
     const withExt = (base) => [`${base}.png`, `${base}.webp`];
     const list = withExt(`assets/char/${npcId}`);
 
@@ -232,6 +236,12 @@ export class StoryEngine {
     const canvas = this.ui.visual;
     if (!canvas) return;
     if (!this._drawVisual(canvas, img, visual)) return;
+    canvas.classList.remove("shot-a", "shot-b");
+    if (!this.reduced) {
+      this._shotFlip = !this._shotFlip;
+      void canvas.offsetWidth;
+      canvas.classList.add(this._shotFlip ? "shot-a" : "shot-b");
+    }
     canvas.hidden = false;
     canvas.parentElement.classList.add("showing-visual");
   }
@@ -260,6 +270,7 @@ export class StoryEngine {
       this._activeVisual = null;
       this._activeImage = null;
       canvas.hidden = true;
+      canvas.classList.remove("shot-a", "shot-b");
       canvas.parentElement.classList.remove("showing-visual");
       return;
     }
@@ -280,6 +291,7 @@ export class StoryEngine {
       this._activeVisual = null;
       this._activeImage = null;
       canvas.hidden = true;
+      canvas.classList.remove("shot-a", "shot-b");
       canvas.parentElement.classList.remove("showing-visual");
       this.on.toast?.("画面暂时无法加载");
       this.ui.visualHint.textContent = description ? `${description}（点击继续）` : "点击继续";
@@ -884,6 +896,7 @@ export class StoryEngine {
   }
 
   setBg(src, tone) {
+    this.ui.mist.hidden = !/assets\/stills\/(?:prologue-marsh-bg|fog-morning-bg|bog-transition-bg|markers|dawn-meadow-bg|last-signpost-wide-bg)\.png$/.test(src || "");
     const token = ++this._bgToken;
     const front = this._bgFront ? this.ui.bgA : this.ui.bgB;
     const back = this._bgFront ? this.ui.bgB : this.ui.bgA;

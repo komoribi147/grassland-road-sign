@@ -15,6 +15,9 @@
   --font-sans: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
 }
 
+.motion-demo-link { color: var(--ink-dim); text-underline-offset: 5px; }
+.motion-demo-link:hover { color: var(--ink); }
+
 * { box-sizing: border-box; }
 
 /* 关键：页面用 hidden 属性控制显示，而下面多处写了 display:flex，
@@ -62,6 +65,25 @@ body[data-mode="playing"] { cursor: pointer; }
   height: 100%;
   opacity: 1;
   filter: contrast(1.06) saturate(1.03);
+  transform-origin: center;
+}
+.story-visual.shot-a {
+  animation: shotReveal 0.75s ease-out both, shotMoveA 18s ease-out both;
+}
+.story-visual.shot-b {
+  animation: shotReveal 0.75s ease-out both, shotMoveB 18s ease-out both;
+}
+@keyframes shotReveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes shotMoveA {
+  from { transform: scale(1.035) translate3d(0, 0, 0); }
+  to { transform: scale(1.09) translate3d(-1.1%, -0.7%, 0); }
+}
+@keyframes shotMoveB {
+  from { transform: scale(1.085) translate3d(0.9%, 0.5%, 0); }
+  to { transform: scale(1.035) translate3d(0, 0, 0); }
 }
 .visual-hint {
   position: absolute;
@@ -120,6 +142,21 @@ body[data-mode="playing"] { cursor: pointer; }
   animation: rainfall 0.55s linear infinite;
   opacity: 0.5;
   pointer-events: none;
+}
+.mist {
+  position: absolute;
+  inset: -8%;
+  background:
+    radial-gradient(ellipse 55% 20% at 28% 39%, rgba(215, 223, 216, 0.27), transparent 72%),
+    radial-gradient(ellipse 50% 19% at 74% 52%, rgba(211, 221, 214, 0.2), transparent 74%);
+  opacity: 0.15;
+  filter: blur(12px);
+  animation: mistDrift 28s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes mistDrift {
+  from { transform: translate3d(-1.5%, 0, 0); }
+  to { transform: translate3d(1.5%, -1%, 0); }
 }
 @keyframes rainfall {
   from { background-position: 0 0; }
@@ -621,6 +658,8 @@ button { font-family: var(--font-sans); cursor: pointer; }
 
 @media (prefers-reduced-motion: reduce) {
   .rain { animation: none; }
+  .mist { animation: none; }
+  .story-visual.shot-a, .story-visual.shot-b { animation: none; transform: none; }
   .click-hint { animation: none; }
   .bg-layer.on.kb-a, .bg-layer.on.kb-b { animation: none; }
   #portrait, #portrait.talking { animation: portraitIn 0.5s ease; }

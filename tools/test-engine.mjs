@@ -5,6 +5,7 @@
 // 用极简 DOM 替身把真实的 StoryEngine 跑起来，图用不同的 src 区分，
 // 断言「最后画上去的是哪张图」。
 import assert from "node:assert/strict";
+import { frameOf } from "../js/sheet-geometry.js";
 
 const STAGE = { width: 1600, height: 900 };
 const drawCalls = [];
@@ -98,8 +99,45 @@ function makeEngine(scenes, start = "act1") {
   return e;
 }
 
-const PIC_A = { src: "assets/storyboards/a.png" };
-const PIC_B = { src: "assets/storyboards/b.png" };
+// 新一轮视觉制作期间，旧立绘应保持在磁盘上，但剧情不能加载或展示它们。
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  e.setPortrait("a");
+  assert.equal(e.ui.portrait.hidden, true, "未启用的新立绘不应出现在剧情里");
+  assert.equal(attempts.get("assets/char/a.png") || 0, 0, "不应请求旧立绘素材");
+}
+
+const PIC_A = { src: "assets/stills/a.png" };
+const PIC_B = { src: "assets/stills/b.png" };
+
+assert.deepEqual(
+  frameOf({ src: "assets/stills/a.png", crop: { x: 0.1, y: 0.2, w: 0.5, h: 0.6 } }, null, 1600, 900),
+  { x: 160, y: 180, w: 800, h: 540 },
+  "独立画面应能切出可信的细节近景",
+);
+
+// 每个正式镜头重新开始缓慢推拉，切换方向；减少动态效果时保持静止。
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  e.reduced = false;
+  await e.renderVisual(PIC_A);
+  assert.equal(e.ui.visual.classList.contains("shot-a"), true);
+  await e.renderVisual(PIC_B);
+  assert.equal(e.ui.visual.classList.contains("shot-b"), true);
+  e.reduced = true;
+  await e.renderVisual(PIC_A);
+  assert.equal(e.ui.visual.classList.contains("shot-a"), false);
+  assert.equal(e.ui.visual.classList.contains("shot-b"), false);
+}
+
+// 雾只出现在湿冷草地镜头，切到夜营或今日草地就收起。
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  e.setBg("assets/stills/fog-morning-bg.png");
+  assert.equal(e.ui.mist.hidden, false);
+  e.setBg("assets/stills/camp-night-bg.png");
+  assert.equal(e.ui.mist.hidden, true);
+}
 
 // 一幕：台词 → 状态步骤 → 台词 → 画面 B → 台词（落点）
 const jumpyScene = () => ({
@@ -195,16 +233,16 @@ console.log("\n⑤ 图下不来：重试一次，真下不来就把画面收掉"
 {
   const e = makeEngine(jumpyScene());
   e.state = e.newState();
-  failOnce.add("assets/storyboards/flaky.png");
+  failOnce.add("assets/stills/flaky.png");
   drawCalls.length = 0;
-  await e.renderVisual({ src: "assets/storyboards/flaky.png" });
-  check(lastDrawn() === "assets/storyboards/flaky.png", "第一次被掐断、第二次成功，画面照常出来");
+  await e.renderVisual({ src: "assets/stills/flaky.png" });
+  check(lastDrawn() === "assets/stills/flaky.png", "第一次被掐断、第二次成功，画面照常出来");
 
-  failAlways.add("assets/storyboards/gone.png");
+  failAlways.add("assets/stills/gone.png");
   e.state = e.newState();
   e._activeVisual = PIC_A;
   drawCalls.length = 0;
-  await e.renderVisual({ src: "assets/storyboards/gone.png" });
+  await e.renderVisual({ src: "assets/stills/gone.png" });
   check(drawCalls.length === 0 && e._activeVisual === null && elements.get("storyVisual").hidden === true,
     "真下不来就收起画面，不把上一张留在屏幕上");
 }

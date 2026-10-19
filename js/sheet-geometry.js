@@ -139,9 +139,18 @@ function axisSpans(size, count, trim, bands, slack) {
   return out;
 }
 
-/** 取某一格的取景框（原图像素）。visual.src 是独立整图，不分格。 */
+/** 取画面取景框（原图像素）。独立镜头可指定归一化 crop 做细节切镜。 */
 export function frameOf(visual, boxes, width, height) {
-  if (!visual || visual.src || !boxes) return { x: 0, y: 0, w: width, h: height };
+  if (visual?.src) {
+    const c = visual.crop;
+    if (c && [c.x, c.y, c.w, c.h].every(Number.isFinite) && c.x >= 0 && c.y >= 0
+        && c.w > 0 && c.h > 0 && c.x + c.w <= 1 && c.y + c.h <= 1) {
+      return { x: Math.round(c.x * width), y: Math.round(c.y * height),
+        w: Math.round(c.w * width), h: Math.round(c.h * height) };
+    }
+    return { x: 0, y: 0, w: width, h: height };
+  }
+  if (!visual || !boxes) return { x: 0, y: 0, w: width, h: height };
   const panel = Number(visual.panel) || 0;
   const row = boxes.rows[Math.floor(panel / 2)] || [0, height];
   const col = boxes.cols[panel % 2] || [0, width];

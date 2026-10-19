@@ -1,19 +1,19 @@
 {
   "id": "epilogue",
   "title": "尾声 · 今天的草地",
-  "bg": "assets/bg/epilogue-today.jpg",
+  "bg": "assets/stills/today-background.png",
   "tone": ["#6b7360", "#22261d"],
   "ambient": "",
   "present": [],
   "situation": "很多年以后，今天的松潘草地。",
   "steps": [
-    { "t": "visual", "description": "画面虚化。", "visual": {"sheet":"assets/storyboards/sheet-14.jpg","panel":5} },
-    { "t": "visual", "description": "雨停了。泥地变成了草甸，草甸上有一条小路，路边立着一块碑。", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":0} },
-    { "t": "visual", "description": "今天的松潘草地。几个小学生站在纪念碑前，轮流读碑上的文字。", "visual": {"src":"assets/storyboards/epilogue-scarves.jpg"} },
-    { "t": "visual", "description": "孩子们把读不熟的地名又念了一遍。风吹过纸页，声音没有停。", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":2} },
-    { "t": "visual", "description": "一个苍老的女声，很慢，很轻——", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":3} },
+    { "t": "visual", "description": "画面虚化。", "visual": {"src":"assets/stills/today-mud-to-grass.png"} },
+    { "t": "visual", "description": "雨停了。泥地变成了草甸，草甸上有一条小路，路边立着一块碑。", "visual": {"src":"assets/stills/today-path-monument.png"} },
+    { "t": "visual", "description": "今天的松潘草地。几个小学生站在纪念碑前，轮流读碑上的文字。", "visual": {"src":"assets/stills/today-children-reading.png"} },
+    { "t": "visual", "description": "孩子们把读不熟的地名又念了一遍。风吹过纸页，声音没有停。", "visual": {"src":"assets/stills/today-pages.png"} },
+    { "t": "visual", "description": "一个苍老的女声，很慢，很轻——", "visual": {"src":"assets/stills/today-memorial-close.png"} },
     { "t": "say", "who": "he-xiuying-old", "text": "那年在草地上，我说想继续念书，学医。后来我学成了，在延安的医院工作，也带过年轻的护士。每教她们认一个名字，我都会想起那天夜里。" },
-    { "t": "visual", "description": "声音停了。风从草地上过来。", "visual": {"sheet":"assets/storyboards/sheet-15.jpg","panel":4} },
+    { "t": "visual", "description": "声音停了。风从草地上过来。", "visual": {"src":"assets/stills/today-wind.png"} },
     { "t": "say", "who": "he-xiuying-old", "text": "李长河，河南信阳人。桂香，给伤员留过麦粒。还有许多人的名字，我记了一辈子。" },
     { "t": "end", "title": "草地上的路标", "text": "还有许多人的名字，我记了一辈子。" }
   ]

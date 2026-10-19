@@ -24,6 +24,10 @@ jobs:
           node-version: "22"
       - name: 先检查剧本数据
         run: node tools/check-story.mjs
+      - name: 检查剧情运行与独立镜头
+        run: |
+          npm test
+          node tools/test-visual-assets.mjs
 
   deploy:
     needs: check          # 检查不过就不发布：线上页面始终保留上一个能用的版本
@@ -33,11 +37,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: 只打包当前网页素材
+        run: npm run package:static
       - uses: actions/configure-pages@v5
         with:
           enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist/
       - id: deployment
         uses: actions/deploy-pages@v4

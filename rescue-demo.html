@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111713">
+  <title>一起拉 · 草地上的路标</title>
+  <meta name="description" content="雾里的泥沼，听老班长的口令，和大家一起把石头拉向岸边。">
+  <link rel="preload" as="image" href="assets/rescue/scene.webp">
+  <link rel="stylesheet" href="css/rescue-demo.css?v=20261018-2">
+</head>
+<body data-phase="loading">
+  <main class="experience" id="experience">
+    <div class="scene-window" id="sceneWindow">
+      <div class="camera" id="camera">
+        <svg id="scene" viewBox="0 0 1672 941" preserveAspectRatio="xMidYMin slice" role="img" aria-label="何秀英扶稳老班长，三人在雨雾中的草地边合力，将石头拉向岸边。">
+          <defs>
+            <!-- 保留首选原图的人物像素，用显示遮罩分层，避免重新生成面孔。 -->
+            <g id="peopleContours">
+              <path d="M0 176 L27 143 L47 142 L56 101 L106 78 L130 62 L135 43 L155 22 L182 15 L216 12 L248 30 L270 49 L280 58 L294 47 L303 43 L316 49 L318 61 L355 67 L365 78 L389 62 L417 48 L462 41 L495 46 L519 58 L537 79 L543 102 L561 122 L551 139 L552 162 L566 182 L553 214 L572 240 L604 261 L632 293 L649 321 L660 337 L699 351 L723 375 L738 396 L737 423 L711 444 L681 447 L673 469 L667 507 L672 543 L694 561 L710 578 L742 593 L754 611 L749 625 L718 631 L688 627 L666 617 L642 605 L609 591 L587 565 L574 532 L555 506 L529 467 L500 444 L466 440 L444 470 L417 493 L381 498 L343 502 L314 513 L272 513 L244 528 L201 543 L177 558 L147 569 L121 579 L90 582 L61 578 L55 561 L67 544 L76 521 L80 493 L80 469 L63 474 L47 480 L17 484 L0 481 Z"/>
+              <path d="M631 359 L672 355 L718 380 L756 406 L804 427 L850 448 L897 470 L946 493 L996 514 L1042 535 L1070 550 L1066 582 L1020 567 L984 548 L936 526 L886 506 L836 483 L786 462 L736 440 L690 420 L656 400 Z"/>
+              <path d="M990 555 L1007 536 L1030 523 L1055 523 L1080 536 L1103 549 L1147 539 L1186 524 L1223 501 L1265 491 L1303 479 L1312 452 L1301 429 L1306 410 L1301 399 L1305 388 L1323 379 L1347 375 L1360 364 L1390 369 L1410 369 L1437 377 L1461 386 L1491 406 L1507 424 L1514 448 L1508 473 L1493 489 L1516 508 L1528 533 L1527 560 L1541 593 L1540 630 L1542 666 L1540 704 L1558 740 L1581 753 L1585 775 L1564 796 L1536 803 L1516 816 L1488 811 L1464 813 L1442 802 L1412 808 L1382 802 L1352 809 L1315 806 L1278 798 L1235 785 L1217 760 L1192 741 L1176 712 L1165 692 L1141 679 L1114 660 L1086 642 L1067 631 L1059 614 L1035 604 L1028 590 L1008 579 Z"/>
+            </g>
+            <filter id="softEdge" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3.5"/></filter>
+            <mask id="peopleMask" maskUnits="userSpaceOnUse" x="-40" y="-40" width="1752" height="1021">
+              <use href="#peopleContours" fill="white" stroke="white" stroke-width="18" stroke-linejoin="round" filter="url(#softEdge)"/>
+            </mask>
+          </defs>
+          <image href="assets/rescue/background.webp" width="1672" height="941"/>
+          <g id="people" mask="url(#peopleMask)">
+            <image href="assets/rescue/scene.webp" width="1672" height="941"/>
+          </g>
+          <image id="stillFrame" href="assets/rescue/scene.webp" width="1672" height="941"/>
+        </svg>
+        <img class="motion-frame" id="effortFrame" src="assets/rescue/effort.webp" alt="" aria-hidden="true">
+        <img class="motion-frame" id="nearBankFrame" src="assets/rescue/near-bank.webp" alt="" aria-hidden="true">
+        <img class="shore-frame" id="shoreFrame" src="assets/rescue/shore.webp" alt="三人已回到草地上，石头抱着军号喘息。" hidden>
+      </div>
+      <div class="mist mist-back" aria-hidden="true"></div>
+      <div class="mist mist-front" aria-hidden="true"></div>
+      <canvas id="weather" aria-hidden="true"></canvas>
+      <div class="scene-shade" aria-hidden="true"></div>
+    </div>
+
+    <header class="topbar">
+      <a class="wordmark" href="index.html" aria-label="返回草地上的路标首页">草地上的路标<span>第二幕 · 泥沼</span></a>
+      <div class="settings">
+        <button id="motionToggle" type="button" aria-pressed="true" title="切换动态画面与静态对照">动态 <span>开</span></button>
+        <button id="soundToggle" type="button" aria-pressed="true">声音 <span>开</span></button>
+      </div>
+    </header>
+
+    <section class="intro" id="intro" aria-labelledby="introTitle">
+      <p class="eyebrow">1935 · 松潘草地</p>
+      <h1 id="introTitle">一起，把他拉上来。</h1>
+      <p class="intro-line">雨雾里，石头陷进了泥沼。<br>老班长已经回过身，何大姐扶住了他。</p>
+      <button class="primary enter" id="enterButton" type="button" disabled>画面加载中…</button>
+      <p class="load-error" id="loadError" role="alert" hidden>画面暂时没有加载成功，请刷新重试。</p>
+      <p class="intro-note">约一分钟 · 建议戴耳机</p>
+    </section>
+
+    <section class="interaction" id="interaction" aria-label="与大家一起协力" hidden>
+      <div class="dialogue" aria-live="polite" aria-atomic="true">
+        <p class="speaker" id="speaker">何秀英</p>
+        <p class="line" id="line">先站稳！踩住这块草甸，抓牢绑腿布。</p>
+      </div>
+      <div class="actions">
+        <button class="primary" id="gripButton" type="button">站稳，抓牢绑腿布 <span aria-hidden="true">↗</span></button>
+        <button class="primary hold" id="pullButton" type="button" aria-describedby="actionHint" hidden>
+          <span class="hold-fill" id="holdFill" aria-hidden="true"></span>
+          <svg class="hand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 13V5a1.5 1.5 0 0 1 3 0v6-7a1.5 1.5 0 0 1 3 0v7-6a1.5 1.5 0 0 1 3 0v7-4a1.5 1.5 0 0 1 3 0v7c0 4-3 6-6 6h-2c-2 0-3-1-4-3l-4-5a1.7 1.7 0 0 1 2-2z"/></svg>
+          <span id="pullLabel">按住，听口令一起拉</span>
+        </button>
+        <button class="alternative" id="assistButton" type="button" aria-pressed="false" hidden>点一下，持续协力</button>
+        <button class="primary" id="replayButton" type="button" hidden>再体验一次 <span aria-hidden="true">↺</span></button>
+      </div>
+      <p class="action-hint" id="actionHint">先找到稳固的支点。</p>
+      <div class="effort-track" id="effortTrack" role="progressbar" aria-label="协力进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><span id="effortFill"></span></div>
+      <p class="memory" id="memory" hidden>有人回头，有人伸手。草地上的路，是一起走出来的。</p>
+    </section>
+
+    <p class="quiet-note" id="quietNote" hidden>松开，稳住身子；准备好了再一起拉。</p>
+    <footer class="footer-note">历史背景下的虚构叙事</footer>
+    <noscript><p class="no-script">请启用浏览器脚本以体验互动。</p></noscript>
+  </main>
+  <script type="module" src="js/rescue-demo.js?v=20261018-2"></script>
+</body>
+</html>

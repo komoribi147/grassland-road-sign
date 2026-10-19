@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>草地上的路标 · 沉浸式叙事</title>
 <meta name="description" content="1935年8月，松潘草地。我从泥水里醒来，记不起自己的番号，只能跟着他们走。" />
-<link rel="stylesheet" href="css/style.css?v=20261017-script-revision-2" />
+<link rel="stylesheet" href="css/style.css?v=20261018-rescue-demo-1" />
 </head>
 <body data-mode="title">
 
@@ -14,6 +14,7 @@
     <div class="bg-layer" id="bgA"></div>
     <div class="bg-layer" id="bgB"></div>
     <canvas id="storyVisual" class="story-visual" role="img" aria-label="剧情画面" hidden></canvas>
+    <div class="mist" id="mist" aria-hidden="true" hidden></div>
     <div class="rain" id="rain" hidden></div>
     <div class="vignette"></div>
   </div>
@@ -63,6 +64,7 @@
         <button class="ghost-btn" id="btnAbout" type="button">这是什么</button>
       </div>
       <p class="footnote">一次约 20 分钟的沉浸式体验 · 点「开始」之后才有声音 · 建议戴耳机</p>
+      <p class="footnote"><a class="motion-demo-link" href="rescue-demo.html">体验「泥沼拉人」动态样张 →</a></p>
     </div>
   </section>
 
@@ -197,6 +199,7 @@
   <!-- 换幕时的章节卡 -->
   <div class="chapter-card" id="chapterCard" hidden><span id="chapterCardText"></span></div>
 
-  <script type="module" src="js/main.js?v=20261017-script-revision"></script>
+  <script src="js/site-config.js?v=20261018-ai"></script>
+  <script type="module" src="js/main.js?v=20261018-ai"></script>
 </body>
 </html>

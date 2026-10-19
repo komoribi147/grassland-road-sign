@@ -1,5 +1,5 @@
-// 与本地小服务器（server/server.mjs）里的 /api/npc 通信。
-// 服务器不在线 / 没配大模型 Key 时，剧情会自动用剧本科幻写好的台词兜底。
+// 本地预览走同源 API；线上静态站通过 site-config.js 指向云端 API。
+// API 未就绪时，剧情会自动使用剧本里的兜底台词。
 export class AiClient {
   constructor() {
     this.online = false;
@@ -8,11 +8,16 @@ export class AiClient {
     this.lastError = "";
   }
 
+  endpoint(path) {
+    const base = String(globalThis.__AI_API_BASE__ || "").replace(/\/+$/, "");
+    return base ? `${base}/${path}` : path;
+  }
+
   async check() {
     try {
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), 4000);
-      const res = await fetch("api/health", { cache: "no-store", signal: ctrl.signal });
+      const res = await fetch(this.endpoint("api/health"), { cache: "no-store", signal: ctrl.signal });
       clearTimeout(t);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const info = await res.json();
@@ -34,7 +39,7 @@ export class AiClient {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
-      const res = await fetch("api/npc", {
+      const res = await fetch(this.endpoint("api/npc"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

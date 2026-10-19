@@ -35,12 +35,13 @@ const jumpTargets = [];
 const bgFiles = new Set();
 const visualFiles = new Set();
 const visualPanels = new Set();
+let visualCount = 0;
 
 const checkVisual = (visual, tag) => {
   let key;
   let file;
   if (visual?.src && !visual.sheet && visual.panel === undefined &&
-      /^assets\/storyboards\/[a-z0-9-]+\.(png|jpg|webp)$/.test(visual.src)) {
+      /^assets\/(?:stills|storyboards)\/[a-z0-9-]+\.(png|jpg|webp)$/.test(visual.src)) {
     key = visual.src;
     file = visual.src;
   } else if (visual?.sheet && !visual.src &&
@@ -52,8 +53,11 @@ const checkVisual = (visual, tag) => {
     errors.push(`${tag} 缺少有效分镜图与格子编号，或独立画面路径`);
     return;
   }
-  if (visualPanels.has(key)) errors.push(`${tag} 分镜格重复使用：${key}`);
-  visualPanels.add(key);
+  if (visual.sheet) {
+    if (visualPanels.has(key)) errors.push(`${tag} 分镜格重复使用：${key}`);
+    visualPanels.add(key);
+  }
+  visualCount++;
   visualFiles.add(file);
 };
 
@@ -169,7 +173,7 @@ for (const f of PORTRAITS) {
 }
 
 console.log(`检查完成：${sceneCount} 个场景 / ${stepCount} 个步骤 / ${Object.keys(lore).length} 张史料卡`);
-console.log(`画面分镜：${visualPanels.size} 格 / ${visualFiles.size} 张图`);
+console.log(`画面：${visualCount} 个节点 / ${visualFiles.size} 张图`);
 console.log(`人物立绘：${havePortrait}/${PORTRAITS.length} 张${havePortrait === 0 ? "（还没有，规格和提示词见 docs/立绘需求.md）" : ""}`);
 if (drafts.length) {
   console.log(`\n待团队定稿的补写内容（${drafts.length} 处）：`);
