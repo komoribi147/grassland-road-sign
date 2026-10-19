@@ -6,17 +6,17 @@
 | ---: | --- | --- | --- | ---: |
 | 1 | `prologue.json.bg` | 序章 · 泥水 | `assets/stills/prologue-marsh-bg.png` | 1 |
 | 2 | `prologue.json.0` | 1935年8月下旬，毛儿盖以北的草地边缘。黄昏，一阵冷雨。 | `assets/stills/wake.png` | 1 |
-| 3 | `prologue.json.1` | 你趴在浅水里，嘴里全是泥。额角碰破了，眼前一阵阵发黑。雨点落在后背上。 | `assets/stills/wake-close.png` | 1 |
+| 3 | `prologue.json.1` | 你趴在浅水里，嘴里全是泥。额角碰破了，眼前一阵阵发黑。雨点落在后背上。 | `assets/stills/wake-close-pov.png` | 1 |
 | 4 | `prologue.json.3` | 你抬起头。 老班长李长河蹲在你面前，手里握着一根探路的木棍。他没有伸手——那根木棍横在你和他之间，是防备。 | `assets/stills/cook-caution.png` | 1 |
 | 5 | `prologue.json.4` | 你身上是红军的衣服。想得起跟队伍走，却想不起自己的番号，也说不清刚才怎样掉了队。 | `assets/stills/uniform-memory.png` | 1 |
 | 6 | `prologue.json.7.after.0` | （他用木棍戳了戳你身边的泥，没再追问。） | `assets/stills/stick-in-mud.png` | 1 |
 | 7 | `prologue.json.8` | 老班长没有再追问。 他站起身，往旁边让了半步——不是拉你，是给你留了个站起来的地方。 | `assets/stills/cook-steps-aside.png` | 1 |
 | 8 | `prologue.json.9` | 石头在旁边小声嘀咕。 | `assets/stills/shitou-murmur.png` | 1 |
-| 9 | `prologue.json.14` | （石头撇嘴走了。） | `assets/stills/shitou-leaves.png` | 1 |
+| 9 | `prologue.json.14` | （石头撇嘴走了。） | `assets/stills/shitou-leaves-pov.png` | 1 |
 | 10 | `prologue.json.17` | 站起来 | `assets/stills/rise-pov.png` | 1 |
-| 11 | `prologue.json.18` | 你撑着地站起来。左脚上的草鞋还在，右脚只裹着一层湿透的破布。 | `assets/stills/rise-from-mud.png` | 1 |
-| 12 | `prologue.json.20.after.0` | 老班长解下自己右脚的草鞋，放到你脚边。你把它套在裹布的脚上；他只剩左脚有鞋。 | `assets/stills/sandal.png` | 1 |
-| 13 | `prologue.json.25` | 雨声渐大。 远处传来喊声：“一营的——跟上——别掉队——” | `assets/stills/rain-shout.png` | 1 |
+| 11 | `prologue.json.18` | 你撑着地站起来。左脚上的草鞋还在，右脚只裹着一层湿透的破布。 | `assets/stills/rise-from-mud-pov.png` | 1 |
+| 12 | `prologue.json.20.after.0` | 老班长解下自己右脚的草鞋，放到你脚边。你把它套在裹布的脚上；他只剩左脚有鞋。 | `assets/stills/sandal-pov.png` | 1 |
+| 13 | `prologue.json.25` | 雨声渐大。 远处传来喊声：“一营的——跟上——别掉队——” | `assets/stills/rain-shout-pov.png` | 1 |
 | 14 | `act1.json.bg` | 第一幕 · 断粮 | `assets/stills/camp-night-bg.png` | 1 |
 | 15 | `act1.json.0` | 入夜，雨暂时停了。地上仍积着水，草叶一碰就滴水。 | `assets/stills/camp.png` | 1 |
 | 16 | `act1.json.1` | 战士们背靠背坐着。有人拧衣服，有人扶着发烧的同伴。石头抱着军号，靠在老班长身旁。 | `assets/stills/soldiers-resting.png` | 1 |
@@ -26,7 +26,7 @@
 | 20 | `act1.json.12.after.0` | （他说这话的时候，把自己那只碗往身后挪了挪。） | `assets/stills/empty-bowl.png` | 1 |
 | 21 | `act1.json.13` | 老班长背过身，蹲到暗处，摸出一截草根往嘴边送。离得远，你看不清。 | `assets/stills/root-from-distance.png` | 1 |
 | 22 | `act1.json.14.options.0` | 走近看看 | `assets/stills/approach-root.png` | 1 |
-| 23 | `act1.json.14.options.1` | 不动，先把汤喝完 | `assets/stills/stay-and-drink-soup.png` | 1 |
+| 23 | `act1.json.14.options.1` | 不动，先把汤喝完 | `assets/stills/stay-and-drink-soup-pov.png` | 1 |
 | 24 | `act1.json.16` | 你走近。他在嚼草根，嘴角有绿色的汁液。 | `assets/stills/grass-root.png` | 1 |
 | 25 | `act1.json.17.after.0` | （他拍拍手上的泥。） | `assets/stills/pat-mud.png` | 1 |
 | 26 | `act1.json.21` | 你没动。汤很快就凉了，你还是一口一口喝完了。 | `assets/stills/cold-soup.png` | 1 |
@@ -60,7 +60,7 @@
 | 54 | `act2.json.46` | 何大姐在被踩散的粮袋旁捡起几颗青稞粒，拣去泥草，收进小布袋，打算到了营地洗净煮熟。 | `assets/stills/grain-pick.png` | 1 |
 | 55 | `act3.json.bg` | 第三幕 · 路标 | `assets/stills/markers.png` | 1 |
 | 56 | `act3.json.0` | 又走了几天。雨忽然大起来，前面的队伍渐渐隐进雾里。 | `assets/stills/rain-front-vanishes.png` | 1 |
-| 57 | `act3.json.1` | 队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。 | `assets/stills/seven-separated.png` | 1 |
+| 57 | `act3.json.1` | 队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。 | `assets/stills/seven-separated-pov.png` | 1 |
 | 58 | `act3.json.4` | 指南针摔进泥里，玻璃裂了；雨水和泥浆遮着刻度，一时辨不清方向。 | `assets/stills/broken-compass.png` | 1 |
 | 59 | `act3.json.6` | （老班长蹲在地上，用手指抠泥，闻了闻。） | `assets/stills/cook-smells-mud.png` | 1 |
 | 60 | `act3.json.8` | （他站起来，眯着眼看远处。） | `assets/stills/cook-looks-ahead.png` | 1 |
@@ -94,7 +94,7 @@
 | 88 | `act4.json.14` | 走近老班长 | `assets/stills/approach-last-signpost.png` | 1 |
 | 89 | `act4.json.15` | 他的两只脚都光着：右脚那只草鞋在你脚上，左脚那只早已磨断了绳。 | `assets/stills/cook-both-feet-bare.png` | 1 |
 | 90 | `act4.json.17` | 何大姐蹲下，打开药箱，手停在最后一卷绷带上。她轻轻合上箱盖。 | `assets/stills/medic-last-bandage.png` | 1 |
-| 91 | `act4.json.20` | 把红布路标插稳 | `assets/stills/secure-last-marker.png` | 1 |
+| 91 | `act4.json.20` | 把红布路标插稳 | `assets/stills/secure-last-marker-pov.png` | 1 |
 | 92 | `epilogue.json.bg` | 尾声 · 今天的草地 | `assets/stills/today-background.png` | 1 |
 | 93 | `epilogue.json.0` | 画面虚化。 | `assets/stills/today-mud-to-grass.png` | 1 |
 | 94 | `epilogue.json.1` | 雨停了。泥地变成了草甸，草甸上有一条小路，路边立着一块碑。 | `assets/stills/today-path-monument.png` | 1 |

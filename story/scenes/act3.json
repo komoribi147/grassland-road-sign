@@ -8,7 +8,7 @@
   "situation": "在草地行军数日后，暴雨和大雾使小队与前队暂时失散。你、老班长、石头、何大姐带着三名伤员寻找前人留下的路标，夜里在高地歇脚。",
   "steps": [
     { "t": "visual", "description": "又走了几天。雨忽然大起来，前面的队伍渐渐隐进雾里。", "visual": {"src":"assets/stills/rain-front-vanishes.png"} },
-    { "t": "visual", "description": "队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。", "visual": {"src":"assets/stills/seven-separated.png"} },
+    { "t": "visual", "description": "队伍走散了，只剩下老班长、你、石头、何大姐，和三个伤员。", "visual": {"src":"assets/stills/seven-separated-pov.png"} },
     { "t": "say", "who": "shitou", "text": "老班长，我把军号上的红布系在你的探路棍上。雾里我能认出来。" },
     { "t": "say", "who": "li-changhe", "text": "中。泥沼边那根留给后队，这根咱们带着走。" },
     { "t": "visual", "description": "指南针摔进泥里，玻璃裂了；雨水和泥浆遮着刻度，一时辨不清方向。", "visual": {"src":"assets/stills/broken-compass.png"} },

@@ -27,7 +27,7 @@
     { "t": "visual", "description": "何大姐蹲下，打开药箱，手停在最后一卷绷带上。她轻轻合上箱盖。", "visual": {"src":"assets/stills/medic-last-bandage.png"} },
     { "t": "say", "who": "shitou", "text": "老班长，我们看见河了。" },
     { "t": "say", "who": "he-xiuying", "text": "把那根木棍插在他身旁。后面的人还能看见。" },
-    { "t": "action", "label": "把红布路标插稳", "visual": {"src":"assets/stills/secure-last-marker.png"}, "hint": "留给后面的人", "after": [{ "t": "sfx", "name": "stick-mud", "level": 0.4 }] },
+    { "t": "action", "label": "把红布路标插稳", "visual": {"src":"assets/stills/secure-last-marker-pov.png"}, "hint": "留给后面的人", "after": [{ "t": "sfx", "name": "stick-mud", "level": 0.4 }] },
     { "t": "say", "who": "shitou", "text": "我扶着老田。咱们接着走。" },
     { "t": "goto", "scene": "epilogue" }
   ]

@@ -39,7 +39,7 @@
       "prompt": "我要不要走近看看？",
       "options": [
         { "text": "走近看看", "visual": { "src":"assets/stills/approach-root.png" }, "trust": 1, "goto": "act1:observe" },
-        { "text": "不动，先把汤喝完", "visual": { "src":"assets/stills/stay-and-drink-soup.png" }, "trust": 0, "goto": "act1:skip" }
+        { "text": "不动，先把汤喝完", "visual": { "src":"assets/stills/stay-and-drink-soup-pov.png" }, "trust": 0, "goto": "act1:skip" }
       ]
     },
 
