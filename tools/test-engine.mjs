@@ -263,5 +263,30 @@ console.log("\n⑥ 图还在路上就开口说话：日志记的是「这一步�
     "回看给这一句算出的也是 B：卡顿之后翻回看不会再跳到上一格");
 }
 
-console.log(ok === 14 ? "\n全部通过" : `\n有断言没过（${ok}/14）`);
-process.exit(ok === 14 ? 0 : 1);
+console.log("\n⑦ 剧本标注的音量传给实际音效");
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  let played;
+  e.audio.once = (...args) => { played = args; };
+  await e.play({ t: "sfx", name: "heartbeat", level: 0.3 });
+  check(played?.[0] === "heartbeat" && played?.[1] === 0.3,
+    "一次性音效使用剧本标注的 level");
+}
+
+console.log("\n⑧ 画面和台词的音效在内容出现时播放");
+for (const kind of ["visual", "say"]) {
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  const played = [];
+  let release;
+  e.audio.once = (...args) => played.push(args);
+  e.visualBeat = e.speak = () => new Promise((resolve) => { release = resolve; });
+  const pending = e.play({ t: kind, name: "cue", after: [{ t: "sfx", name: "thump", level: 0.2 }] });
+  check(played.length === 1 && played[0][0] === "thump" && played[0][1] === 0.2,
+    `${kind} 的音效不等点击继续才响`);
+  release("next");
+  await pending;
+  check(played.length === 1, `${kind} 的音效不会重复播放`);
+}
+
+console.log(ok === 19 ? "\n全部通过" : `\n有断言没过（${ok}/19）`);
+process.exit(ok === 19 ? 0 : 1);

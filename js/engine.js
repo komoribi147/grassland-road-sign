@@ -1151,10 +1151,18 @@ export class StoryEngine {
     return this.applyMove(step);
   }
 
-  /** 执行步骤里的 after 追加内容。 */
-  async runAfter(step) {
+  /** 画面或台词附带的声音跟内容同时出现，避免等到下一次点击才突然响。 */
+  playCues(step) {
+    for (const sub of step.after || []) {
+      if (sub.t === "sfx") this.audio.once(sub.name, sub.level);
+    }
+  }
+
+  /** 执行步骤里的 after 追加内容。声音已在画面/台词出现时播放时跳过。 */
+  async runAfter(step, skipSfx = false) {
     if (!Array.isArray(step.after)) return false;
     for (const sub of step.after) {
+      if (skipSfx && sub.t === "sfx") continue;
       const r = await this.play(sub);
       if (r === "moved") return true;
     }
@@ -1332,14 +1340,17 @@ export class StoryEngine {
   async play(step) {
     switch (step.t) {
       case "visual": {
-        const done = await this.visualBeat(step);
-        if (step.after && await this.runAfter(step)) return "moved";
+        const pending = this.visualBeat(step);
+        this.playCues(step);
+        const done = await pending;
+        if (step.after && await this.runAfter(step, true)) return "moved";
         return done;
       }
       case "say": {
-        const done = await this.speak(step);
-        // 台词也可以挂 after：等玩家点过这一句，再补一个音效（不新增步骤，步号不会错位）
-        if (step.after && await this.runAfter(step)) return "moved";
+        const pending = this.speak(step);
+        this.playCues(step);
+        const done = await pending;
+        if (step.after && await this.runAfter(step, true)) return "moved";
         return done;
       }
       case "choose":
@@ -1363,7 +1374,7 @@ export class StoryEngine {
         this.setAmbient(step.name, step.level);
         return "next";
       case "sfx":
-        this.audio.once(step.name);
+        this.audio.once(step.name, step.level);
         return "next";
       case "lore": {
         if (!this.state.lore.includes(step.card)) {

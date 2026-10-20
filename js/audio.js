@@ -30,7 +30,9 @@ export class AudioManager {
 
   /** 按各自基准重新算一遍所有在播的音量（拖总音量条、开关声音时用） */
   _applyLevels() {
-    for (const el of this.layers.values()) el.volume = this._level(this._baseFor(el));
+    for (const el of this.layers.values()) {
+      el.volume = this._level(this._baseFor(el)) * (el.fade ?? 1);
+    }
   }
 
   /** 玩家拖音量条：0 到 1 */
@@ -43,15 +45,20 @@ export class AudioManager {
 
   setEnabled(on) {
     this.enabled = on;
-    this._applyLevels();
     for (const el of this.layers.values()) {
-      if (!on) el.pause();
+      if (!on) {
+        clearInterval(el.fadeTimer);
+        el.fade = 0;
+        el.pause();
+      }
       else el.play().catch(() => { /* 浏览器要求用户先交互 */ });
     }
+    this._applyLevels();
   }
 
   /** 浏览器要求先有用户操作才允许播放，第一次点击时把待播的环境音补上 */
   resume() {
+    if (!this.enabled) return;
     for (const el of this.layers.values()) {
       el.play().catch(() => { /* 仍然不允许就下次再说 */ });
     }
@@ -99,35 +106,52 @@ export class AudioManager {
     if (playing) {
       if (Number.isFinite(level)) {
         playing.baseLevel = level;
-        playing.volume = this._level(level);
+        this._applyLevels();
       }
       return playing;
     }
     const el = new Audio(`assets/audio/${name}.mp3`);
     el.loop = true;
     el.baseLevel = Number.isFinite(level) ? level : AMBIENT_LEVEL[name] ?? this.volume;
-    el.volume = this._level(el.baseLevel);
+    el.fade = 0;
+    el.volume = 0;
+    el.addEventListener("playing", () => {
+      clearInterval(el.fadeTimer);
+      const started = Date.now();
+      el.fade = 0;
+      this._applyLevels();
+      el.fadeTimer = setInterval(() => {
+        if (el.paused || this.layers.get(name) !== el) {
+          clearInterval(el.fadeTimer);
+          return;
+        }
+        el.fade = Math.min(1, (Date.now() - started) / 700);
+        this._applyLevels();
+        if (el.fade === 1) clearInterval(el.fadeTimer);
+      }, 25);
+    });
     el.addEventListener("error", () => {
       this.missing.add(name);
       this.layers.delete(name);
     });
-    el.play().catch(() => { /* 等用户第一次点击后再播 */ });
     this.layers.set(name, el);
+    el.play().catch(() => { /* 等用户第一次点击后再播 */ });
     return el;
   }
 
   stop(name) {
     const el = this.layers.get(name);
     if (!el) return;
+    clearInterval(el.fadeTimer);
     el.pause();
     this.layers.delete(name);
   }
 
   /** 一次性音效，例如 splash / bell */
-  once(name) {
+  once(name, level) {
     if (!name || this.missing.has(`sfx:${name}`)) return;
     const el = new Audio(`assets/audio/sfx-${name}.mp3`);
-    el.volume = this._level(Math.min(0.6, this.volume + 0.15));
+    el.volume = this._level(Number.isFinite(level) ? level : 0.4);
     el.addEventListener("error", () => this.missing.add(`sfx:${name}`));
     el.play().catch(() => { /* 忽略 */ });
   }
