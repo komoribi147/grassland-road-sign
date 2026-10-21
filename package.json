@@ -7,10 +7,12 @@
   "scripts": {
     "start": "node server/server.mjs",
     "check": "node tools/check-story.mjs",
-    "test": "node tools/test-engine.mjs && node tools/test-audio.mjs",
-    "test:ai": "node tools/test-ai-server.mjs",
+    "test": "node tools/test-engine.mjs && node tools/test-audio.mjs && node tools/test-reflection-report.mjs",
+    "test:ai": "node tools/test-cloud-settings.mjs && node tools/test-ai-client.mjs && node tools/test-ask.mjs && node tools/test-ai-server.mjs",
     "package:static": "node tools/package-static.mjs",
     "package:ai": "node tools/package-ai-function.mjs",
+    "deploy:ai": "node tools/deploy-ai.mjs",
+    "check:public-ai": "node tools/check-public-ai.mjs",
     "gen": "node tools/gen-image.mjs"
   }
 }

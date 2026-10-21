@@ -27,7 +27,7 @@ node server/server.mjs
 https://<你的账号名>.github.io/grassland-road-sign/
 ```
 
-Pages 版目前是纯静态的：**没有 AI 实时对话**，NPC 会用剧本里写好的兜底台词（体验依然完整）。在线 AI 的部署步骤见第四节。
+Pages 网页通过 `js/site-config.js` 连接公开 AI 服务。当前服务尚缺云端模型密钥，NPC 会用剧本兜底台词（体验依然完整）。最新状态与接入步骤见 [公网接入记录](PUBLIC_AI_DEPLOYMENT.md)。
 
 ## 三、中国大陆访问版（腾讯云 CloudBase）
 
@@ -55,24 +55,23 @@ CloudBase 静态托管集成 CDN 和 HTTPS。默认域名可以先用来试访�
 
 当前静态网站打包后约 265 MB，主要是 98 张独立剧情镜头及样张图片。人物立绘仍保存在仓库，但剧情暂不加载，静态发布包也不包含。网页按剧情进度加载镜头；CDN 可以减少跨地区访问延迟，但不能消除高清文件的下载流量。后续可在保留原始 PNG 的前提下制作高质量 WebP/AVIF 发布版本，进一步减小移动网络流量。免费体验版的默认域名只供开发测试，会显示访问提示，也有访问频率限制；正式公开使用需要合规的自定义域名和备案资源。
 
-## 四、CloudBase 线上 AI（待账号和密钥配置）
+## 四、CloudBase 线上 AI（服务已部署，待模型密钥）
 
 网页继续用静态托管，角色请求交给同一 CloudBase 环境中的 HTTP 云函数。**密钥只填云函数的环境变量，不写入 GitHub、静态网页或 `js/site-config.js`。**
 
-1. 运行 `npm run package:ai`，得到 `dist-ai-function.zip`。压缩包只有 API 服务、人设和配置，根目录含可执行的 `scf_bootstrap`，不含 `.env`。
-2. 在现有 CloudBase 环境中新建 **HTTP 云函数**，选择 Node.js 18 或更新运行时，上传该 ZIP。函数启动脚本监听平台要求的 `9000` 端口。
-3. 在云函数环境变量中填写下表。星火 Lite 可免费使用，但需要先在讯飞开放平台开通并取得该版本的 APIPassword；用量和并发仍受官方规则限制。
+1. 现有环境已有 `grassland-ai` HTTP 云函数与 `/api` 公开路由，无需重复创建。函数使用 Node.js 20.19、监听 `9000` 端口。
+2. 将 `server/.env.cloud.example` 复制为根目录 `.env.cloud`，填写所选云端模型的以下配置。此文件已被 Git 忽略，保留原有本地 Ollama 配置。星火 Lite 需要先在讯飞开放平台开通并取得该版本的 APIPassword；免费用量和并发以平台规则为准。
 
 | 变量 | 值 |
 | --- | --- |
 | `AI_API_KEY` | 星火 Lite 对应的 APIPassword |
 | `AI_MODEL` | `lite`，覆盖三个角色原先各自的模型名 |
-| `AI_ALLOWED_ORIGINS` | `https://grassland-road-sign-d8bdfce86570-1453404640.tcloudbaseapp.com` |
 | `AI_BASE_URL` | 可不填，默认是星火 HTTP 对话接口 |
 
-4. 给云函数设置公开的 **HTTP 网关**路由 `/api`，开启**路径透传**，让 `/api/health` 和 `/api/npc` 原样到达函数。**在网关按客户端 IP 设置限频**；服务自身也做每个实例每分钟 12 次的基础限频，并限制输入长度。公网流量的主要限频应以网关规则为准。
-5. 把网关的公开 HTTPS 地址填入 `js/site-config.js` 的 `__AI_API_BASE__`（只填域名，不含 `/api`），更新 CloudBase 静态网站。
-6. 访问公开站点的菜单，确认“AI 状态：在线”；与三个角色各说一句，检查回答随人物不同而变化。直接访问网关 `/api/health` 可检查模型就绪状态。**仅部署 ZIP 或仅更新网页都不能证明线上 AI 已可用。**
+3. 运行 `npm run deploy:ai`。脚本打包 API、人设与配置，通过云端 API 上传原始 ZIP 并更新云函数环境变量。ZIP 保留启动脚本执行权限，不含 `.env`；密钥不进入网页、Git 或系统进程参数。
+4. 运行 `npm run check:public-ai -- --live`，验证两类接口收到三名角色的真实回答；随后从公开网页实际提问。**仅健康检查显示已配置不能证明模型有效。**
+
+来源白名单及网关跨域分工已配置在 `cloudbaserc.json`。默认路由去掉 `/api` 前缀，服务兼容转发前后的两种路径。现有按 IP 限制为每实例每分钟 12 次，尚无持久化总用量上限；扩大开放前需结合模型平台额度和网关能力控制总用量。
 
 CloudBase 默认域名有访问提示和频率限制；若面向大量访客长期开放，需要按云平台要求配置正式域名及相应资源。
 

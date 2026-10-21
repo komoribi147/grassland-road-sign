@@ -42,9 +42,7 @@ export function initAsk(engine) {
 
   let activeNpc = null;
   let busy = false;
-
-  const apiBase = () => String(globalThis.__AI_API_BASE__ || "").replace(/\/+$/, "");
-  const apiUrl = (path) => apiBase() ? `${apiBase()}/${path}` : `/${path}`;
+  let requestVersion = 0;
 
   const memory = () => {
     if (!engine.state) return {};
@@ -130,6 +128,10 @@ export function initAsk(engine) {
   }
 
   function close() {
+    requestVersion++;
+    busy = false;
+    sendBtn.disabled = false;
+    input.disabled = false;
     layer.hidden = true;
     input.blur();
   }
@@ -143,6 +145,11 @@ export function initAsk(engine) {
       return;
     }
 
+    const npc = activeNpc;
+    const state = engine.state;
+    const epoch = engine.epoch;
+    const version = ++requestVersion;
+    const current = () => version === requestVersion && engine.state === state && engine.epoch === epoch && !layer.hidden && activeNpc === npc;
     busy = true;
     sendBtn.disabled = true;
     input.disabled = true;
@@ -156,7 +163,7 @@ export function initAsk(engine) {
       .map((c) => ({ title: c.title, text: c.text }));
 
     const payload = {
-      npc: activeNpc,
+      npc,
       mode: "ask",
       playerText: text,
       situation: engine.situationText?.("") || "",
@@ -171,42 +178,38 @@ export function initAsk(engine) {
       history: (engine.state?.history || []).slice(-4).map((h) => ({ role: h.role, text: h.text })),
     };
 
-    let answer = "";
     try {
-      const res = await fetch(apiUrl("api/ask"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.text) throw new Error(data.error || "请求失败");
-      answer = String(data.text).trim();
-    } catch {
-      answer = fallbackLine(activeNpc);
+      let answer = "";
+      try {
+        const data = await engine.ai.ask(payload);
+        answer = String(data.text).trim();
+      } catch {
+        if (!current()) return;
+        answer = fallbackLine(npc);
+        engine.on?.toast?.("这次没有连上 AI，先显示预设回应。");
+      }
+      // 关闭、重开或回看后，旧请求不再属于眼前这次体验。
+      if (!current()) return;
+      if (!answer) answer = fallbackLine(npc);
+      const listMem = memory()[npc] || (memory()[npc] = []);
+      listMem.push({ q: text, a: answer });
+      if (listMem.length > 12) listMem.splice(0, listMem.length - 12);
+      try { engine.autosave?.(); } catch { /* 忽略 */ }
+      renderLog();
+    } finally {
+      pending.remove();
+      if (version === requestVersion) {
+        busy = false;
+        sendBtn.disabled = false;
+        input.disabled = false;
+        if (current()) input.focus();
+      }
     }
-
-    if (!answer) answer = fallbackLine(activeNpc);
-    pending.remove();
-
-    const listMem = memory()[activeNpc] || (memory()[activeNpc] = []);
-    listMem.push({ q: text, a: answer });
-    if (listMem.length > 12) listMem.splice(0, listMem.length - 12);
-    try { engine.autosave?.(); } catch { /* 忽略 */ }
-
-    // 重新按记忆渲染，保证切换人物后还能看到各自的对话
-    renderLog();
-    busy = false;
-    sendBtn.disabled = false;
-    input.disabled = false;
-    input.focus();
   }
 
   async function checkAi() {
     try {
-      const res = await fetch(apiUrl("api/health"), { cache: "no-store" });
-      if (!res.ok) throw new Error("health");
-      const data = await res.json();
-      if (!data.ai) throw new Error("offline");
+      if (!await engine.ai.check()) throw new Error("offline");
       openBtn.hidden = false;
       openBtn.title = "";
     } catch {

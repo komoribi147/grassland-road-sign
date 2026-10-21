@@ -216,6 +216,8 @@ const send = (res, code, body, type = "application/json; charset=utf-8") => {
 const PUBLIC_FILES = new Set(["index.html", "rescue-demo.html", "favicon.ico"]);
 const PUBLIC_DIRS = new Set(["assets", "css", "js", "story", "docs", "openworld"]);
 const allowedOrigins = new Set((process.env.AI_ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean));
+// 部分 CloudBase 网关会为已登记域名自动注入 CORS。仅对显式配置的域名交由网关写该响应头。
+const gatewayCorsOrigins = new Set((process.env.AI_GATEWAY_CORS_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean));
 const requestCounts = new Map();
 
 function allowOrigin(req, res) {
@@ -225,7 +227,7 @@ function allowOrigin(req, res) {
   try { sameOrigin = new URL(origin).host === req.headers.host; } catch { return false; }
   if (!sameOrigin && !allowedOrigins.has(origin)) return false;
   res.setHeader("Vary", "Origin");
-  if (!sameOrigin) res.setHeader("Access-Control-Allow-Origin", origin);
+  if (!sameOrigin && !gatewayCorsOrigins.has(origin)) res.setHeader("Access-Control-Allow-Origin", origin);
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   return true;
@@ -322,6 +324,9 @@ const readBody = (req) => new Promise((resolve, reject) => {
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
+  // CloudBase 默认 HTTP 访问服务会去掉已匹配的 /api 前缀。
+  // 两种入口统一走同一套来源校验、限频与参数校验。
+  if (["/health", "/npc", "/ask"].includes(url.pathname)) url.pathname = `/api${url.pathname}`;
 
   if (url.pathname.startsWith("/api/")) {
     if (!allowOrigin(req, res)) return send(res, 403, JSON.stringify({ error: "来源不允许" }));

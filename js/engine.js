@@ -1,10 +1,11 @@
 // 剧情引擎：读 story/ 目录下的 JSON，按步骤播放，处理选择、预选项回答、信任值、史料卡。
 // 剧情作者只需要写 JSON，不需要改这个文件。
 
-import { AiClient } from "./ai.js";
+import { AiClient } from "./ai.js?v=20261021-public-ai";
 import { AudioManager } from "./audio.js";
 import { Save } from "./save.js";
 import { frameOf, guttersFromProfiles, panelBoxes } from "./sheet-geometry.js";
+import { buildReflectionReport } from "./reflection-report.js";
 
 const $ = (id) => document.getElementById(id);
 const PLAYER = "__player__";
@@ -1439,23 +1440,6 @@ export class StoryEngine {
   }
 
   buildReport(step = {}) {
-    const unlocked = this.state.lore.length;
-    const total = Object.keys(this.lore).length;
-    const chars = [...new Set(this.state.history.filter((h) => h.role === "npc").map((h) => h.name))];
-    return {
-      title: step.title || "走出来了",
-      closing: step.text || "他让我记住。我记了一辈子。",
-      trust: Math.round(this.state.trust),
-      address: this.address(),
-      choices: this.state.picks.length,
-      words: this.state.answers.join("").length,
-      turns: this.state.turns,
-      lore: unlocked,
-      loreTotal: total,
-      met: chars.filter((n) => n !== "我"),
-      minutes: Math.max(1, Math.round((Date.now() - this.state.startedAt) / 60000)),
-      picks: (this.state.picks || []).slice(-8),
-      said: (this.state.answers || []).slice(-5),
-    };
+    return buildReflectionReport(this.state, this.characters, this.lore, step);
   }
 }

@@ -90,7 +90,7 @@ const stripModule = (src) => src
   .replace(/^export\s+(class|const|function|let)\s/gm, "$1 ");
 
 const parts = [];
-for (const f of ["js/save.js", "js/audio.js", "js/ai.js", "js/sheet-geometry.js", "js/engine.js", "js/main.js"]) {
+for (const f of ["js/save.js", "js/audio.js", "js/ai.js", "js/sheet-geometry.js", "js/reflection-report.js", "js/reflection-view.js", "js/engine.js", "js/ask.js", "js/landscape.js", "js/main.js"]) {
   parts.push(`/* ===== ${f} ===== */\n` + stripModule(await read(f)));
 }
 let bundle = parts.join("\n\n");
@@ -137,7 +137,9 @@ if (warmOld.test(bundle)) {
 }
 
 // 拦掉剧情 JSON 的网络请求，改成读内存里的数据（图片和音频已经是 data URI，不用管）
+const reflectionCover = await toDataURI("assets/stills/today-path-monument.png");
 const inline = `
+window.__REFLECTION_COVER__ = ${JSON.stringify(reflectionCover)};
 window.__AUDIO__ = ${JSON.stringify(audio)};
 window.__STORYBOARDS__ = ${JSON.stringify(storyboards)};
 window.__PORTRAITS__ = ${JSON.stringify(portraits)};
@@ -156,11 +158,13 @@ window.fetch = function (url, opts) {
 
 // ---------- 3. 组装 HTML ----------
 let html = await read("index.html");
-const css = await read("css/style.css");
-html = html.replace(/<link rel="stylesheet"[^>]*>/, `<style>\n${css}\n</style>`);
+const css = (await Promise.all(["css/style.css", "css/landscape.css", "css/ask.css"].map(read))).join("\n");
+html = html.replace(/<link rel="stylesheet"[^>]*>/g, "");
+html = html.replace("</head>", () => `<style>\n${css}\n</style>\n</head>`);
+html = html.replace(/<script src="js\/(?:site-config|landscape)\.js(?:\?[^\"]*)?"><\/script>/g, "");
 html = html.replace(
   /<script type="module" src="js\/main\.js(?:\?[^\"]*)?"><\/script>/,
-  `<script type="module">\n${inline}\n${bundle}\n</script>`
+  () => `<script type="module">\n${inline}\n${bundle}\n</script>`
 );
 html = html.replace("<title>", "<title>（单文件版）");
 

@@ -1,7 +1,9 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261017-cn-site";
+import { StoryEngine } from "./engine.js?v=20261021-public-ai";
 import { Save } from "./save.js";
-import { initAsk } from "./ask.js";
+import { initAsk } from "./ask.js?v=20261021-public-ai";
+import { buildReflectionText } from "./reflection-report.js";
+import { renderReflectionReport } from "./reflection-view.js";
 
 const $ = (id) => document.getElementById(id);
 const screens = ["screenTitle", "screenLore", "screenReplay", "screenMenu", "screenAbout", "screenReport", "screenTalk", "screenError"];
@@ -79,50 +81,18 @@ function renderLoreList() {
 
 let lastReport = null;
 
-function buildReportText(r) {
-  return [
-    "《草地上的路标》· 学习报告",
-    "",
-    `日期：${new Date().toLocaleString("zh-CN")}`,
-    `他们对你的称呼：${r.address}`,
-    `最终信任值：${r.trust}`,
-    `你做出的选择：${r.choices} 次`,
-    `你说出口的话：${r.words} 字`,
-    `与他们对答：${r.turns} 轮`,
-    `解锁史料卡：${r.lore}/${r.loreTotal}`,
-    `用时：约 ${r.minutes} 分钟`,
-    "",
-    `你在这段路上遇到过：${r.met.join("、") || "——"}`,
-    "",
-    "结尾：",
-    `　　${r.closing}`,
-    "",
-    "可以继续了解：",
-    "　　松潘草地 · 班佑河 · 湘江战役 · 毛儿盖 · 长征中的女红军 · 1930年代初的河南",
-  ].join("\n");
-}
-
 function showReport(r) {
   document.body.dataset.mode = "title";
   engine.showHud(false);
+  $("chapterCard").hidden = true;
+  clearTimeout(toastTimer);
+  $("toast").hidden = true;
   lastReport = r;
   $("reportTitle").textContent = r.title;
-  $("reportBody").innerHTML = `
-    <p>${r.closing}</p>
-    <div class="report-grid">
-      <div class="report-cell"><div class="k">他们对你的称呼</div><div class="v">${r.address}</div></div>
-      <div class="report-cell"><div class="k">信任值</div><div class="v">${r.trust}</div></div>
-      <div class="report-cell"><div class="k">你做出的选择</div><div class="v">${r.choices}</div></div>
-      <div class="report-cell"><div class="k">你说过的话</div><div class="v">${r.words} 字</div></div>
-      <div class="report-cell"><div class="k">与 NPC 对话</div><div class="v">${r.turns} 轮</div></div>
-      <div class="report-cell"><div class="k">史料卡</div><div class="v">${r.lore}/${r.loreTotal}</div></div>
-    </div>
-    <p class="small">你在这段路上遇到了：${r.met.join("、") || "——"}。用时约 ${r.minutes} 分钟。</p>
-    ${r.picks?.length ? `<p class="small">你做过的选择：${r.picks.join("、")}</p>` : ""}
-    ${r.said?.length ? `<p class="small">你自己说过的话：「${r.said.join("」「")}」</p>` : ""}
-    <p class="small">继续了解：把史料卡里没解锁的卡片找齐，或者换个活法重走一次——他们记住的是你说过的话。</p>
-  `;
+  renderReflectionReport($("reportBody"), r, { onChange: () => Save.write(engine.state) });
+  engine.autosave();
   openScreen("screenReport");
+  $("screenReport").querySelector(".panel-box").scrollTop = 0;
   renderLoreList();
 }
 
@@ -631,20 +601,19 @@ $("btnRetry").addEventListener("click", () => {
 });
 
 $("btnReportClose").addEventListener("click", () => {
-  Save.clear();
   openScreen("screenTitle");
-  $("btnResume").hidden = true;
+  $("btnResume").hidden = !Save.read();
 });
 
 $("btnReportSave").addEventListener("click", () => {
   if (!lastReport) return;
-  const blob = new Blob([buildReportText(lastReport)], { type: "text/plain;charset=utf-8" });
+  const blob = new Blob([buildReflectionText(lastReport)], { type: "text/plain;charset=utf-8" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "草地上的路标-学习报告.txt";
+  a.download = "草地上的路标-我的回望.txt";
   a.click();
-  URL.revokeObjectURL(a.href);
-  showToast("学习报告已保存");
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  showToast("回望已保存");
 });
 
 // 浏览器要求先有用户操作才允许播放声音，第一次点屏幕时补上环境音
@@ -663,8 +632,11 @@ document.querySelectorAll("[data-close]").forEach((btn) => {
 
 // 键盘：空格 / 回车推进（避免在输入框里触发）
 document.addEventListener("keydown", (e) => {
-  if (e.target instanceof HTMLInputElement) return;
-  if (e.key === "Escape") closeScreens();
+  if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target.isContentEditable) return;
+  if (e.key === "Escape") {
+    if (!$("screenReport").hidden) $("btnReportClose").click();
+    else closeScreens();
+  }
 });
 
 // ---------- 演示模式 ----------

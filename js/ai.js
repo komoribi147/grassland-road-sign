@@ -36,10 +36,18 @@ export class AiClient {
   }
 
   async reply(payload, timeoutMs = 25000) {
+    return this.request("api/npc", payload, timeoutMs);
+  }
+
+  async ask(payload, timeoutMs = 25000) {
+    return this.request("api/ask", payload, timeoutMs);
+  }
+
+  async request(path, payload, timeoutMs) {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
-      const res = await fetch(this.endpoint("api/npc"), {
+      const res = await fetch(this.endpoint(path), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

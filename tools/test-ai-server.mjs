@@ -36,7 +36,8 @@ const child = spawn(process.execPath, ["server/server.mjs"], {
     AI_API_KEY: "mock-key",
     AI_MODEL: "lite",
     AI_BASE_URL: `http://127.0.0.1:${upstreamPort}/v1/chat/completions`,
-    AI_ALLOWED_ORIGINS: origin,
+    AI_ALLOWED_ORIGINS: `${origin},https://gateway-injected.example`,
+    AI_GATEWAY_CORS_ORIGINS: "https://gateway-injected.example",
   },
   stdio: "ignore",
 });
@@ -52,6 +53,15 @@ try {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
   assert.ok(healthy, "API server should start");
+
+  const gatewayHealth = await fetch(`${base}/health`, { headers: { Origin: origin } });
+  assert.equal(gatewayHealth.status, 200, "CloudBase 网关去掉 /api 前缀后仍能检查服务");
+  assert.equal((await gatewayHealth.json()).ai, true);
+  const gatewayBlocked = await fetch(`${base}/health`, { headers: { Origin: "https://other.example" } });
+  assert.equal(gatewayBlocked.status, 403, "短路径也必须执行来源校验");
+  const managedCors = await fetch(`${base}/health`, { headers: { Origin: "https://gateway-injected.example" } });
+  assert.equal(managedCors.status, 200);
+  assert.equal(managedCors.headers.get("access-control-allow-origin"), null, "网关已注入跨域头的域名，应用不能重复注入");
 
   const blocked = await fetch(`${base}/api/health`, { headers: { Origin: "https://other.example" } });
   assert.equal(blocked.status, 403);
@@ -81,6 +91,13 @@ try {
   });
   assert.equal(trusted.status, 200);
   assert.match(modelRequest.messages.at(-1).content, /哥哥/);
+
+  const gatewayNpc = await fetch(`${base}/npc`, {
+    method: "POST", headers: { Origin: origin, "Content-Type": "application/json" },
+    body: JSON.stringify({ npc: "li-changhe", playerText: "班长，我们一起走。" }),
+  });
+  assert.equal(gatewayNpc.status, 200, "CloudBase 短路径应接通相同的角色接口");
+  assert.ok((await gatewayNpc.json()).text);
 
   // 本地模型偶尔把情绪和别的角色的口音混进台词，气泡里只应显示台词。
   const localPort = await freePort();

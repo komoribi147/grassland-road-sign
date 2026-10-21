@@ -584,10 +584,64 @@ button { font-family: var(--font-sans); cursor: pointer; }
 .lore-card.locked { border-left-color: var(--line); opacity: 0.55; }
 .lore-card.locked h3 { color: var(--ink-faint); }
 
-.report-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 18px 0; }
-.report-cell { padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: rgba(20,26,22,0.45); }
-.report-cell .k { font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); letter-spacing: 0.1em; }
-.report-cell .v { font-size: 22px; margin-top: 6px; color: var(--ink); }
+/* 结尾是一页私人回望。文字留白，人物原话与玩家留言各有位置。 */
+#screenReport .reflection-panel { padding: 0; width: min(880px, 94vw); }
+.reflection-panel > .panel-head {
+  position: sticky; top: 0; z-index: 2;
+  padding: 18px 26px; background: #111812; border-bottom: 1px solid var(--line);
+}
+.reflection-cover { position: relative; min-height: 260px; overflow: hidden; background: linear-gradient(155deg, #626950, #17221b); }
+.reflection-cover-image { position: absolute; width: 100%; height: 100%; object-fit: cover; object-position: center 48%; opacity: .57; }
+.reflection-cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(12,16,14,.94), rgba(12,16,14,.08) 90%); }
+.reflection-cover-text { position: relative; z-index: 1; padding: 92px 38px 32px; }
+.reflection-kicker { font-family: var(--font-sans); font-size: 11px; letter-spacing: .3em; color: #d2d4c1; }
+.reflection-closing { margin: 18px 0 0; max-width: 640px; font-size: clamp(22px, 3.8vw, 30px); line-height: 1.9; font-weight: 400; color: #f1eee4; }
+.reflection-content { padding: 0 38px 24px; }
+.reflection-intro { margin: 2px 0 34px; color: var(--ink-dim); font-size: 14px; line-height: 1.9; }
+.reflection-section { margin: 30px 0; }
+.reflection-heading { display: block; font-size: 18px; font-weight: 400; letter-spacing: .1em; margin: 0 0 18px; color: var(--ink); }
+.reflection-people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.reflection-person { min-width: 0; display: flex; flex-direction: column; padding: 22px 18px 16px; border: 1px solid var(--line); border-top: 2px solid #6d7860; border-radius: 3px 3px 9px 9px; background: rgba(77,89,64,.08); }
+.reflection-person.kept { border-color: rgba(200,85,61,.65); background: rgba(200,85,61,.05); }
+.reflection-name { margin: 0 0 14px; font-size: 16px; font-weight: 400; color: #d4ccba; }
+.reflection-quote, .reflection-own-quote { white-space: pre-wrap; overflow-wrap: anywhere; }
+.reflection-quote { margin: 0 0 24px; line-height: 1.9; font-size: 15px; color: var(--ink); }
+.reflection-keep { align-self: flex-start; margin-top: auto; padding: 6px 0; border: 0; background: none; color: var(--ink-faint); font-size: 12px; text-align: left; }
+.reflection-keep[aria-pressed="true"] { color: #dc9c83; }
+.reflection-keep:hover { color: var(--ink); }
+.reflection-keep:focus-visible, .reflection-details summary:focus-visible { outline: 2px solid #dc9c83; outline-offset: 4px; }
+.reflection-own-words { padding-left: 18px; border-left: 1px solid #6d7860; }
+.reflection-own-quote { margin: 0 0 14px; color: var(--ink-dim); font-size: 15px; line-height: 1.9; }
+.reflection-details { padding: 18px 0; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-dim); }
+.reflection-details summary { cursor: pointer; font-family: var(--font-sans); line-height: 1.8; }
+.reflection-choices { margin: 18px 0 0; padding-left: 22px; line-height: 2; overflow-wrap: anywhere; }
+.reflection-muted { font-family: var(--font-sans); font-size: 12.5px; color: var(--ink-faint); line-height: 1.9; }
+.reflection-note-area { margin: 30px 0 34px; }
+.reflection-note-area .reflection-heading { margin-bottom: 8px; }
+.reflection-note {
+  display: block; width: 100%; min-height: 142px; margin-top: 18px; padding: 18px 20px;
+  resize: vertical; border: 1px solid var(--line); border-radius: 8px; background: rgba(114,115,86,.06);
+  color: var(--ink); font-family: var(--font-serif); font-size: 16px; line-height: 2;
+}
+.reflection-note::placeholder { color: var(--ink-faint); font-size: 14px; }
+.reflection-note:focus { outline: 2px solid #949e80; outline-offset: 2px; }
+.reflection-save-state { min-height: 1.8em; margin: 9px 0 0; font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); line-height: 1.8; }
+.reflection-source { margin: 22px 0; }
+.reflection-source h4 { font-weight: 400; font-size: 15px; color: var(--ink); margin: 0 0 8px; }
+.reflection-source p { font-size: 14px; line-height: 1.9; margin: 0 0 10px; }
+.reflection-source-link { color: var(--ink-dim); font-family: var(--font-sans); font-size: 12px; line-height: 1.8; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.reflection-date { margin: 20px 0 0; text-align: right; font-family: var(--font-sans); font-size: 11px; letter-spacing: .12em; color: var(--ink-faint); }
+@media (max-width: 620px) {
+  .reflection-panel > .panel-head { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
+  .reflection-panel > .panel-head h2 { font-size: 19px; }
+  .reflection-cover { min-height: 220px; }
+  .reflection-cover-text { padding: 72px 24px 24px; }
+  .reflection-content { padding: 0 24px 20px; }
+  .reflection-people { grid-template-columns: 1fr; }
+  .reflection-person { padding: 20px; }
+  .reflection-quote { margin-bottom: 14px; }
+  .reflection-note { padding: 14px 16px; }
+}
 
 .toast {
   position: absolute;

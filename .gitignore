@@ -1,5 +1,6 @@
 # 本地配置（含大模型 Key，绝对不要提交）
 .env
+.env.cloud
 
 # 临时文件
 _smoke.html

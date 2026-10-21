@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>草地上的路标 · 沉浸式叙事</title>
 <meta name="description" content="1935年8月，松潘草地。我从泥水里醒来，记不起自己的番号，只能跟着他们走。" />
-<link rel="stylesheet" href="css/style.css?v=20261018-rescue-demo-1" />
+<link rel="stylesheet" href="css/style.css?v=20261021-reflection" />
 <link rel="stylesheet" href="css/landscape.css?v=20261020-1" />
 <link rel="stylesheet" href="css/ask.css?v=20261021-1" />
 </head>
@@ -182,17 +182,17 @@
     </div>
   </section>
 
-  <!-- 结尾学习报告 -->
-  <section class="screen panel" id="screenReport" hidden>
-    <div class="panel-box">
+  <!-- 结尾回望 -->
+  <section class="screen panel" id="screenReport" aria-labelledby="reportTitle" hidden>
+    <div class="panel-box reflection-panel">
       <div class="panel-head">
-        <h2 id="reportTitle">走出来了</h2>
+        <h2 id="reportTitle">走过草地以后</h2>
         <div class="head-actions">
-          <button class="ghost-btn" id="btnReportSave" type="button">保存报告</button>
-          <button class="ghost-btn" id="btnReportClose" type="button">重玩</button>
+          <button class="ghost-btn" id="btnReportSave" type="button">保存回望</button>
+          <button class="ghost-btn" id="btnReportClose" type="button">回到首页</button>
         </div>
       </div>
-      <div class="about-body" id="reportBody"></div>
+      <div id="reportBody"></div>
     </div>
   </section>
 
@@ -201,8 +201,8 @@
   <!-- 换幕时的章节卡 -->
   <div class="chapter-card" id="chapterCard" hidden><span id="chapterCardText"></span></div>
 
-  <script src="js/site-config.js?v=20261018-ai"></script>
-  <script type="module" src="js/main.js?v=20261018-ai"></script>
+  <script src="js/site-config.js?v=20261021-public-ai"></script>
+  <script type="module" src="js/main.js?v=20261021-public-ai"></script>
   <script src="js/landscape.js?v=20261020-1"></script>
 </body>
 </html>
