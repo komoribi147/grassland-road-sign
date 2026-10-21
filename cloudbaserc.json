@@ -13,7 +13,8 @@
       "installDependency": false,
       "description": "草地上的路标：角色对话与自由提问 API",
       "envVariables": {
-        "AI_MODEL": "lite",
+        "AI_MODEL": "deepseek-chat",
+        "AI_BASE_URL": "https://api.deepseek.com/v1/chat/completions",
         "AI_ALLOWED_ORIGINS": "https://komoribi147.github.io,https://grassland-road-sign-d8bdfce86570-1453404640.tcloudbaseapp.com",
         "AI_GATEWAY_CORS_ORIGINS": "https://grassland-road-sign-d8bdfce86570-1453404640.tcloudbaseapp.com"
       }

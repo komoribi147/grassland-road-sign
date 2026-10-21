@@ -27,7 +27,7 @@ node server/server.mjs
 https://<你的账号名>.github.io/grassland-road-sign/
 ```
 
-Pages 网页通过 `js/site-config.js` 连接公开 AI 服务。当前服务尚缺云端模型密钥，NPC 会用剧本兜底台词（体验依然完整）。最新状态与接入步骤见 [公网接入记录](PUBLIC_AI_DEPLOYMENT.md)。
+Pages 网页通过 `js/site-config.js` 连接公开 AI 服务。当前云端已接入 DeepSeek，三名角色两类接口的真实回答已实测通过；网页交互验收状态见 [公网接入记录](PUBLIC_AI_DEPLOYMENT.md)。
 
 ## 三、中国大陆访问版（腾讯云 CloudBase）
 
@@ -35,7 +35,7 @@ Pages 网页通过 `js/site-config.js` 连接公开 AI 服务。当前服务尚�
 
 <https://grassland-road-sign-d8bdfce86570-1453404640.tcloudbaseapp.com/>
 
-CloudBase 从本仓库公开的 `main` 分支运行 `npm run package:static`，将生成的 `dist/` 部署到网站根目录 `/`。目前这个版本仍使用剧本兜底台词；要让访客实时对话，需要按第四节部署云函数并连接网页。
+CloudBase 从本仓库公开的 `main` 分支运行 `npm run package:static`，将生成的 `dist/` 部署到网站根目录 `/`。网页已连接公开 DeepSeek 服务；服务不可用时使用剧本兜底台词。云函数维护步骤见第四节。
 
 队员更新 GitHub 后，进入 CloudBase 控制台的 **静态网站托管 → 网站部署 → grassland-road-sign → 更新服务**，选择 **公开仓库部署**，填写本仓库地址并选择 `main`，保持构建命令和目录不变，再部署一次。目前尚未配置自动发布，GitHub 推送本身不会自动更新测试站。
 
@@ -55,7 +55,7 @@ CloudBase 静态托管集成 CDN 和 HTTPS。默认域名可以先用来试访�
 
 当前静态网站打包后约 265 MB，主要是 98 张独立剧情镜头及样张图片。人物立绘仍保存在仓库，但剧情暂不加载，静态发布包也不包含。网页按剧情进度加载镜头；CDN 可以减少跨地区访问延迟，但不能消除高清文件的下载流量。后续可在保留原始 PNG 的前提下制作高质量 WebP/AVIF 发布版本，进一步减小移动网络流量。免费体验版的默认域名只供开发测试，会显示访问提示，也有访问频率限制；正式公开使用需要合规的自定义域名和备案资源。
 
-## 四、CloudBase 线上 AI（服务已部署，待模型密钥）
+## 四、CloudBase 线上 AI（已部署 DeepSeek）
 
 网页继续用静态托管，角色请求交给同一 CloudBase 环境中的 HTTP 云函数。**密钥只填云函数的环境变量，不写入 GitHub、静态网页或 `js/site-config.js`。**
 
@@ -64,9 +64,9 @@ CloudBase 静态托管集成 CDN 和 HTTPS。默认域名可以先用来试访�
 
 | 变量 | 值 |
 | --- | --- |
-| `AI_API_KEY` | 星火 Lite 对应的 APIPassword |
-| `AI_MODEL` | `lite`，覆盖三个角色原先各自的模型名 |
-| `AI_BASE_URL` | 可不填，默认是星火 HTTP 对话接口 |
+| `AI_API_KEY` | DeepSeek 开放平台的 API Key |
+| `AI_MODEL` | `deepseek-chat`，覆盖三个角色原先各自的模型名 |
+| `AI_BASE_URL` | `https://api.deepseek.com/v1/chat/completions` |
 
 3. 运行 `npm run deploy:ai`。脚本打包 API、人设与配置，通过云端 API 上传原始 ZIP 并更新云函数环境变量。ZIP 保留启动脚本执行权限，不含 `.env`；密钥不进入网页、Git 或系统进程参数。
 4. 运行 `npm run check:public-ai -- --live`，验证两类接口收到三名角色的真实回答；随后从公开网页实际提问。**仅健康检查显示已配置不能证明模型有效。**
