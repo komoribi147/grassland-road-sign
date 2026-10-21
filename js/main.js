@@ -1,7 +1,7 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261021-dialogue-retry";
+import { StoryEngine } from "./engine.js?v=20261021-network-check";
 import { Save } from "./save.js";
-import { initAsk } from "./ask.js?v=20261021-dialogue-retry";
+import { initAsk } from "./ask.js?v=20261021-network-check";
 import { buildReflectionText } from "./reflection-report.js";
 import { renderReflectionReport } from "./reflection-view.js";
 
@@ -206,6 +206,8 @@ async function sendTalkText(text) {
       const status = document.createElement("p");
       status.className = "panel-note talk-status";
       status.setAttribute("role", "status");
+      status.title = engine.lastAiError || "";
+      status.dataset.connectionError = engine.lastAiError || "";
       status.textContent = "这句话没能送达，对话暂时连不上。原话已放回输入框，可以重试。";
       log.appendChild(status);
       log.scrollTop = log.scrollHeight;

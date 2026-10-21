@@ -1,7 +1,7 @@
 // 剧情引擎：读 story/ 目录下的 JSON，按步骤播放，处理选择、预选项回答、信任值、史料卡。
 // 剧情作者只需要写 JSON，不需要改这个文件。
 
-import { AiClient } from "./ai.js?v=20261021-dialogue-retry";
+import { AiClient } from "./ai.js?v=20261021-network-check";
 import { AudioManager } from "./audio.js";
 import { Save } from "./save.js";
 import { frameOf, guttersFromProfiles, panelBoxes } from "./sheet-geometry.js";
