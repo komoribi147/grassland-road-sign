@@ -29,6 +29,8 @@ export function initAsk(engine) {
   openBtn.id = "askBtn";
   openBtn.className = "ask-open";
   openBtn.textContent = "自由提问";
+  openBtn.hidden = true;
+  openBtn.title = "AI 未连接";
   inner.appendChild(openBtn);
 
   const whoEl = layer.querySelector("#askWho");
@@ -40,6 +42,9 @@ export function initAsk(engine) {
 
   let activeNpc = null;
   let busy = false;
+
+  const apiBase = () => String(globalThis.__AI_API_BASE__ || "").replace(/\/+$/, "");
+  const apiUrl = (path) => apiBase() ? `${apiBase()}/${path}` : `/${path}`;
 
   const memory = () => {
     if (!engine.state) return {};
@@ -168,7 +173,7 @@ export function initAsk(engine) {
 
     let answer = "";
     try {
-      const res = await fetch("/api/ask", {
+      const res = await fetch(apiUrl("api/ask"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -194,6 +199,20 @@ export function initAsk(engine) {
     sendBtn.disabled = false;
     input.disabled = false;
     input.focus();
+  }
+
+  async function checkAi() {
+    try {
+      const res = await fetch(apiUrl("api/health"), { cache: "no-store" });
+      if (!res.ok) throw new Error("health");
+      const data = await res.json();
+      if (!data.ai) throw new Error("offline");
+      openBtn.hidden = false;
+      openBtn.title = "";
+    } catch {
+      openBtn.hidden = true;
+      openBtn.title = "AI 未连接";
+    }
   }
 
   openBtn.addEventListener("click", (e) => {
@@ -226,4 +245,5 @@ export function initAsk(engine) {
     }
   };
   new MutationObserver(refresh).observe(dialogue, { attributes: true, attributeFilter: ["hidden"] });
+  void checkAi();
 }
