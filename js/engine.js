@@ -1,7 +1,7 @@
 // 剧情引擎：读 story/ 目录下的 JSON，按步骤播放，处理选择、预选项回答、信任值、史料卡。
 // 剧情作者只需要写 JSON，不需要改这个文件。
 
-import { AiClient } from "./ai.js?v=20261021-public-ai";
+import { AiClient } from "./ai.js?v=20261021-dialogue-retry";
 import { AudioManager } from "./audio.js";
 import { Save } from "./save.js";
 import { frameOf, guttersFromProfiles, panelBoxes } from "./sheet-geometry.js";
@@ -506,38 +506,34 @@ export class StoryEngine {
   /** 主动开口：玩家对着某个角色说一句话 */
   async freeTalk(npcId, text) {
     const display = this.characters[npcId]?.display || npcId;
+    const state = this.state;
+    const epoch = this.epoch;
+    const current = () => this.state === state && this.epoch === epoch;
+    let out = null;
+    // 健康检查只是当时的状态，不能用一次失败永久跳过后续真实请求。
+    try {
+      const previous = this.memoryOf(npcId);
+      out = await this.ai.reply({
+        npc: npcId,
+        mode: "free",
+        situation: this.situationText("队伍正在草地上往外走。"),
+        trust: this.state.trust,
+        address: this.address(),
+        playerText: text,
+        memories: previous.filter((m) => m.role === "player").slice(-6).map((m) => m.text),
+        history: previous.slice(-10),
+      });
+    } catch (err) {
+      if (!current()) return { stale: true, text: "", trust: 0, display };
+      this.lastAiError = String(err.message || err);
+      return { unavailable: true, text: "", trust: 0, display };
+    }
+    if (!current()) return { stale: true, text: "", trust: 0, display };
+    this.ai.online = true;
+    this.lastAiError = "";
     this.remember(npcId, "player", text);
     this.state.answers.push(text);
     this.state.turns++;
-
-    let out = null;
-    if (this.ai.online) {
-      try {
-        const previous = this.memoryOf(npcId).slice(0, -1);
-        out = await this.ai.reply({
-          npc: npcId,
-          mode: "free",
-          situation: this.situationText("队伍正在草地上往外走。"),
-          trust: this.state.trust,
-          address: this.address(),
-          playerText: text,
-          memories: previous.filter((m) => m.role === "player").slice(-6).map((m) => m.text),
-          history: previous.slice(-10),
-        });
-      } catch (err) {
-        this.lastAiError = String(err.message || err);
-      }
-    }
-    if (!out) {
-      const pool = this.characters[npcId]?.freeFallback || ["……"];
-      const last = (this.state.lastFallback || {})[npcId];
-      const fresh = pool.filter((t) => t !== last);
-      const use = fresh.length ? fresh : pool;
-      const pick = use[Math.floor(Math.random() * use.length)];
-      this.state.lastFallback = { ...(this.state.lastFallback || {}), [npcId]: pick };
-      out = { text: pick, trust: 0, mood: "" };
-    }
-
     this.remember(npcId, "npc", out.text, out.mood);
     this.setPortrait(npcId);
     const delta = this.capFreeTrust(out.trust);

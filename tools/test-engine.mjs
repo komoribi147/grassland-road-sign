@@ -288,5 +288,44 @@ for (const kind of ["visual", "say"]) {
   check(played.length === 1, `${kind} 的音效不会重复播放`);
 }
 
+// 自由提问不能因一次健康检查失败就永久跳过模型，也不能拿随机台词冒充回答。
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  e.state = e.newState();
+  e.characters.a.freeFallback = ["我胃小，你别管我。"];
+  e.ai.online = false;
+  e.ai.reply = async () => ({ text: "李长河。", trust: 0, mood: "平静" });
+  const out = await e.freeTalk("a", "你叫什么名字");
+  assert.equal(out.text, "李长河。", "首次健康检查失败不能阻止下一次真实提问");
+  assert.equal(e.memoryOf("a").at(-1).text, "李长河。");
+}
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  e.state = e.newState();
+  e.characters.a.freeFallback = ["我胃小，你别管我。"];
+  e.ai.online = true;
+  e.ai.reply = async () => { throw new Error("HTTP 503"); };
+  const out = await e.freeTalk("a", "你叫什么名字");
+  assert.equal(out.unavailable, true, "失败必须返回明确状态而非随机人物台词");
+  assert.equal(out.text, "");
+  assert.equal(e.ai.online, true, "单次失败不得关闭后续主线的 AI 请求");
+  assert.deepEqual(e.memoryOf("a"), [], "未送达的问题和虚构回答不能进入人物记忆");
+  assert.equal(e.state.turns, 0);
+  assert.deepEqual(e.state.answers, []);
+}
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  e.state = e.newState();
+  e.ai.online = true;
+  let finish;
+  e.ai.reply = () => new Promise(resolve => { finish = resolve; });
+  const pending = e.freeTalk("a", "你叫什么名字");
+  e.state = e.newState();
+  e.epoch++;
+  finish({ text: "李长河。", trust: 3, mood: "平静" });
+  assert.equal((await pending).stale, true);
+  assert.deepEqual(e.memoryOf("a"), [], "重开后旧请求不得写入新一轮体验");
+}
+console.log("自由对话连接恢复、失败提示与记忆隔离通过。");
 console.log(ok === 19 ? "\n全部通过" : `\n有断言没过（${ok}/19）`);
 process.exit(ok === 19 ? 0 : 1);

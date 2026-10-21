@@ -1,7 +1,7 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261021-public-ai";
+import { StoryEngine } from "./engine.js?v=20261021-dialogue-retry";
 import { Save } from "./save.js";
-import { initAsk } from "./ask.js?v=20261021-public-ai";
+import { initAsk } from "./ask.js?v=20261021-dialogue-retry";
 import { buildReflectionText } from "./reflection-report.js";
 import { renderReflectionReport } from "./reflection-view.js";
 
@@ -101,6 +101,7 @@ function showReport(r) {
 // ---------- 自由对话：主角想说什么就说什么 ----------
 
 let talkTarget = null;
+let talkBusy = false;
 
 function renderTalkWho() {
   const box = $("talkWho");
@@ -116,6 +117,7 @@ function renderTalkWho() {
     btn.type = "button";
     btn.className = "who-chip" + (id === talkTarget ? " on" : "");
     btn.textContent = engine.characters[id]?.display || id;
+    btn.disabled = talkBusy;
     btn.addEventListener("click", () => {
       talkTarget = id;
       renderTalkWho();
@@ -170,13 +172,24 @@ function openTalk() {
   setTimeout(() => $("talkInput").focus(), 60);
 }
 
-async function sendTalk() {
+async function sendTalkText(text) {
   const input = $("talkInput");
-  const text = input.value.trim();
-  if (!text || !talkTarget) return;
+  if (!text || !talkTarget || talkBusy) return;
+  const npc = talkTarget;
+  const state = engine.state;
+  const epoch = engine.epoch;
+  const current = () => engine.state === state && engine.epoch === epoch && talkTarget === npc;
+  talkBusy = true;
   input.value = "";
+  input.disabled = true;
+  renderTalkWho();
+  renderTalkLog();
 
   const log = $("talkLog");
+  const question = document.createElement("div");
+  question.className = "bubble me";
+  question.textContent = text;
+  log.appendChild(question);
   const pending = document.createElement("div");
   pending.className = "bubble npc pending";
   pending.textContent = "……";
@@ -184,12 +197,30 @@ async function sendTalk() {
   log.scrollTop = log.scrollHeight;
   $("talkSend").disabled = true;
 
-  const out = await engine.freeTalk(talkTarget, text);
+  try {
+    const out = await engine.freeTalk(npc, text);
+    if (!current() || out.stale) return;
+    renderTalkLog();
+    if (out.unavailable) {
+      input.value = text;
+      const status = document.createElement("p");
+      status.className = "panel-note talk-status";
+      status.setAttribute("role", "status");
+      status.textContent = "这句话没能送达，对话暂时连不上。原话已放回输入框，可以重试。";
+      log.appendChild(status);
+      log.scrollTop = log.scrollHeight;
+    } else if (out.trust && !$("screenTalk").hidden) showToast(`信任 ${out.trust > 0 ? "+" : ""}${out.trust} · ${out.display}的反应`);
+  } finally {
+    talkBusy = false;
+    $("talkSend").disabled = false;
+    input.disabled = false;
+    renderTalkWho();
+    if (current() && !$("screenTalk").hidden) input.focus();
+  }
+}
 
-  $("talkSend").disabled = false;
-  renderTalkLog();
-  if (out.trust) showToast(`信任 ${out.trust > 0 ? "+" : ""}${out.trust} · ${out.display}的反应`);
-  input.focus();
+async function sendTalk() {
+  return sendTalkText($("talkInput").value.trim());
 }
 
 $("btnTalk").addEventListener("click", openTalk);
@@ -209,15 +240,7 @@ async function routeVoice(text) {
   if (engine.submitSpoken(text)) return;
   // 2. 「开口说话」面板开着：说给当前选中的 NPC
   if (!$("screenTalk").hidden && talkTarget) {
-    const log = $("talkLog");
-    const pending = document.createElement("div");
-    pending.className = "bubble npc pending";
-    pending.textContent = "……";
-    log.appendChild(pending);
-    log.scrollTop = log.scrollHeight;
-    const out = await engine.freeTalk(talkTarget, text);
-    renderTalkLog();
-    if (out.trust) showToast(`信任 ${out.trust > 0 ? "+" : ""}${out.trust} · ${out.display}的反应`);
+    await sendTalkText(text);
     return;
   }
   // 3. 其他时候：不打断剧情，轻轻说一句

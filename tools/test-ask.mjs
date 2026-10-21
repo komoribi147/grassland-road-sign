@@ -11,6 +11,7 @@ class Element {
   addEventListener(type, fn) { this.events[type] = fn; }
   emit(type) { this.events[type]?.({ preventDefault() {}, stopPropagation() {} }); }
   remove() {}
+  setAttribute() {}
   focus() {}
   blur() {}
 }
@@ -27,7 +28,7 @@ function setup() {
     state: { askMemory: {} }, epoch: 1,
     characters: { a: { display: "班长", freeFallback: ["跟紧队伍。"] }, b: { display: "石头" } },
     presentNpcs: () => ["a", "b"],
-    ai: { check: async () => true, ask: () => new Promise(resolve => { finish = resolve; }) },
+    ai: { check: async () => true, ask: () => new Promise((resolve, reject) => { finish = value => value instanceof Error ? reject(value) : resolve(value); }) },
     autosave: () => { saved++; },
   };
   initAsk(engine);
@@ -81,4 +82,13 @@ const flush = () => new Promise(resolve => setImmediate(resolve));
   await flush();
   assert.deepEqual(app.engine.state.askMemory.a, [{ q: "新问题", a: "新回答" }]);
 }
-console.log("自由提问通过：正常保存、关闭重开、重新开始、回看跳转及过期请求隔离。");
+{
+  const app = setup();
+  app.start("你叫什么名字")(new Error("HTTP 503"));
+  await flush();
+  assert.deepEqual(app.engine.state.askMemory, {}, "断线不能保存不相关的预设台词冒充回答");
+  assert.equal(elements.get("#askInput").value, "你叫什么名字", "失败保留原话供重试");
+  assert.equal(app.saved(), 0);
+  assert.equal(elements.get("#askSend").disabled, false);
+}
+console.log("自由提问通过：正常保存、关闭重开、重新开始、回看跳转、过期请求隔离和断线重试。");

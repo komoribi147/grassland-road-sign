@@ -67,11 +67,6 @@ export function initAsk(engine) {
     return list[0];
   }
 
-  function fallbackLine(npc) {
-    const pool = engine.characters?.[npc]?.freeFallback || ["……"];
-    return pool[Math.floor(Math.random() * pool.length)];
-  }
-
   function renderWho() {
     const list = present();
     whoEl.innerHTML = "";
@@ -183,14 +178,17 @@ export function initAsk(engine) {
       try {
         const data = await engine.ai.ask(payload);
         answer = String(data.text).trim();
+        if (!answer) throw new Error("empty");
       } catch {
         if (!current()) return;
-        answer = fallbackLine(npc);
-        engine.on?.toast?.("这次没有连上 AI，先显示预设回应。");
+        input.value = text;
+        renderLog();
+        const status = addMsg("status", "这句话没能送达，对话暂时连不上。原话已保留，可以重试。");
+        status.setAttribute("role", "status");
+        return;
       }
       // 关闭、重开或回看后，旧请求不再属于眼前这次体验。
       if (!current()) return;
-      if (!answer) answer = fallbackLine(npc);
       const listMem = memory()[npc] || (memory()[npc] = []);
       listMem.push({ q: text, a: answer });
       if (listMem.length > 12) listMem.splice(0, listMem.length - 12);
