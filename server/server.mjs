@@ -39,6 +39,9 @@ function configFor(npc) {
 
 const MOODS = ["警惕", "缓和", "疲惫", "难过", "坚定", "好奇", "平静"];
 
+// 1935 年的人物不该说出的现代词。先靠提示词约束，生成后再兜底检查一次。
+const MODERN_RE = /手机|互联网|网络|系统|程序|软件|人工智能|AI|数据|信息|视频|微信|APP|项目|任务|压力|焦虑|抑郁|心理|逻辑|概念|理论|科技|科学|情绪|沟通|体验|反馈|机制|流程|资源|效率/;
+
 const MIME = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -58,13 +61,22 @@ const MIME = {
 
 // ---------- 给大模型的"人设提示词" ----------
 
-function buildMessages({ npc, situation, trust = 0, address = "你", playerText, memories = [], history = [], mode = "beat" }) {
+function buildMessages({
+  npc, situation, trust = 0, address = "你", playerText,
+  memories = [], history = [], mode = "beat",
+  sceneTitle = "", step = 0, knownLore = [], askHistory = [], present = [], noModern = false,
+}) {
   const c = characters[npc];
   if (!c) throw new Error(`未知角色：${npc}`);
+  const isAsk = mode === "ask";
 
   const secrets = (c.secrets || [])
     .filter((s) => trust >= (s.minTrust ?? 0))
     .map((s) => s.text);
+
+  const loreText = Array.isArray(knownLore)
+    ? knownLore.slice(0, 6).map((x) => `${x.title}：${x.text}`).join("；")
+    : "";
 
   const system = [
     "你在沉浸式历史叙事作品《草地上的路标》里扮演一个角色，和玩家对话。",
@@ -76,27 +88,43 @@ function buildMessages({ npc, situation, trust = 0, address = "你", playerText,
     (c.never || []).length ? `绝对不要：${c.never.join("；")}。` : "",
     `玩家当前信任值 ${Math.round(trust)}/100，你称呼他“${address}”。信任低时保持警惕和距离，信任高时把他当自己人。`,
     mode === "free" ? "玩家是主动开口找你说话的，你可以比平时多说一点点。" : "",
+    isAsk ? "现在是玩家单独向你提问，不是剧情选项；你只代表此刻的你回答。" : "",
     situation ? `此刻的情境：${situation}` : "",
     secrets.length ? `你可以说出的心里话（只在合适的时机，不要一次全说）：${secrets.join("；")}` : "",
     memories.length ? `玩家之前说过：${memories.join("；")}` : "",
+    isAsk && sceneTitle ? `你此刻在《${sceneTitle}》，剧情走到第 ${step} 步。你只知道到这一步为止发生的事。` : "",
+    isAsk ? "绝不能提到、暗示或预言此后的情节、结局、人物生死、胜负；未来的事你不可能知道。" : "",
+    isAsk ? "如果玩家问以后会怎样，只能按你的见识去猜，用“我估摸”“说不准”“要真能走出去”这样的口吻，不能当成事实。" : "",
+    isAsk && loreText ? `你已经知道的史料（可参考，不要整段背）：${loreText}` : "",
+    isAsk ? "不要使用1935年以后才出现的词，例如手机、网络、系统、程序、数据、信息、视频、心理、压力、项目、任务、科学、科技等。" : "",
+    isAsk ? "回答1到3句，短句，口语，只说你嘴里说出来的话；不要旁白、括号、解释，也不要反问太多。" : "",
+    isAsk && noModern ? "特别注意：上一句出现了现代词，这次一个现代词都不许用。" : "",
     "不要编造人物设定中未给出的亲属、生平和未来经历；没有交代的事就说不知道。",
-    "只输出这个角色说出口的话，不要旁白、不要动作描写、不要括号、不要引号，1到3句，短句，口语。",
-    "",
-    "另外，你要判断玩家这句话让你对他的信任变化，用一个 -5 到 5 的整数表示：",
-    "  真诚、承认害怕、关心伤员和别人、说到自己吃过的苦 → +1 到 +3",
-    "  把自己吃的用的让给别人、替别人担风险 → +3 到 +5",
-    "  撒谎、吹牛、敷衍、抱怨、命令别人 → -2 到 -5",
-    "  普通的接话 → 0",
-    c.judge ? `本角色额外标准：${c.judge}` : "",
-    "",
-    '输出必须是这样一个 JSON，不要有任何多余文字：{"reply":"你要说的话","trust":0,"mood":"平静"}。reply 里只能放说出口的台词，不能放情绪词或字段名。',
+    !isAsk ? "只输出这个角色说出口的话，不要旁白、不要动作描写、不要括号、不要引号，1到3句，短句，口语。" : "",
+    !isAsk ? "" : "",
+    !isAsk ? "另外，你要判断玩家这句话让你对他的信任变化，用一个 -5 到 5 的整数表示：" : "",
+    !isAsk ? "  真诚、承认害怕、关心伤员和别人、说到自己吃过的苦 → +1 到 +3" : "",
+    !isAsk ? "  把自己吃的用的让给别人、替别人担风险 → +3 到 +5" : "",
+    !isAsk ? "  撒谎、吹牛、敷衍、抱怨、命令别人 → -2 到 -5" : "",
+    !isAsk ? "  普通的接话 → 0" : "",
+    !isAsk && c.judge ? `本角色额外标准：${c.judge}` : "",
+    !isAsk ? "" : "",
+    isAsk
+      ? '只输出这个 JSON，不要任何多余文字：{"reply":"你要说的话","mood":"平静"}。reply 里只能放说出口的台词。'
+      : '输出必须是这样一个 JSON，不要有任何多余文字：{"reply":"你要说的话","trust":0,"mood":"平静"}。reply 里只能放说出口的台词，不能放情绪词或字段名。',
     `mood 只能从这几个里选一个：${MOODS.join("、")}`
   ].filter(Boolean).join("\n");
 
   const messages = [{ role: "system", content: system }];
-  for (const h of history.slice(-10)) {
+  for (const h of history.slice(-(isAsk ? 4 : 10))) {
     if (!h.text) continue;
     messages.push({ role: h.role === "player" ? "user" : "assistant", content: h.text });
+  }
+  if (isAsk) {
+    for (const qa of askHistory.slice(-6)) {
+      if (qa?.q) messages.push({ role: "user", content: String(qa.q).slice(0, 200) });
+      if (qa?.a) messages.push({ role: "assistant", content: String(qa.a).slice(0, 300) });
+    }
   }
   messages.push({ role: "user", content: playerText || "" });
   return messages;
@@ -159,7 +187,7 @@ async function askModel(payload) {
       messages,
       temperature: cfg.temperature,
       max_tokens: cfg.maxTokens,
-      response_format: { type: "json_object" },
+      ...(payload.mode === "ask" ? {} : { response_format: { type: "json_object" } }),
     }),
     signal: AbortSignal.timeout(30000),
   });
@@ -237,6 +265,51 @@ function validatePayload(input) {
   };
 }
 
+function validateAskPayload(input) {
+  if (!input || typeof input !== "object" || !characters[input.npc] || input.npc === "he-xiuying-old") return null;
+  const playerText = typeof input.playerText === "string" ? input.playerText.trim() : "";
+  if (!playerText || playerText.length > 120) return null;
+  const shortText = (value, max) => typeof value === "string" ? value.slice(0, max) : "";
+  const present = Array.isArray(input.present)
+    ? [...new Set(input.present.filter((id) => characters[id] && id !== "he-xiuying-old"))]
+    : [];
+  if (!present.includes(input.npc)) return null;
+  const knownLore = Array.isArray(input.knownLore)
+    ? input.knownLore.slice(0, 6).map((x) => ({
+        title: shortText(x?.title, 60),
+        text: shortText(x?.text, 300),
+      })).filter((x) => x.title || x.text)
+    : [];
+  const askHistory = Array.isArray(input.askHistory)
+    ? input.askHistory.slice(-6).map((x) => ({
+        q: shortText(x?.q, 160),
+        a: shortText(x?.a, 300),
+      }))
+    : [];
+  return {
+    npc: input.npc,
+    mode: "ask",
+    situation: shortText(input.situation, 400),
+    sceneTitle: shortText(input.sceneTitle, 80),
+    step: Math.max(0, Math.min(999, Number(input.step) || 0)),
+    trust: Math.max(0, Math.min(100, Number(input.trust) || 0)),
+    address: shortText(input.address, 20) || "你",
+    playerText,
+    knownLore,
+    askHistory,
+    memories: Array.isArray(input.memories) ? input.memories.slice(-6).map((x) => shortText(x, 200)) : [],
+    present,
+    history: Array.isArray(input.history) ? input.history.slice(-6).map((h) => ({
+      role: h?.role === "player" ? "player" : "npc",
+      text: shortText(h?.text, 200),
+    })) : [],
+  };
+}
+
+function hasModern(text) {
+  return MODERN_RE.test(String(text || ""));
+}
+
 const readBody = (req) => new Promise((resolve, reject) => {
   let buf = "";
   req.on("data", (c) => {
@@ -285,6 +358,29 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, JSON.stringify(out));
     } catch (err) {
       console.error("[AI] 出错：", err.message);
+      return send(res, 502, JSON.stringify({ error: "角色暂时无法回答" }));
+    }
+  }
+
+  if (url.pathname === "/api/ask" && req.method === "POST") {
+    try {
+      if (!withinRateLimit(req)) return send(res, 429, JSON.stringify({ error: "问得太快了，请稍后再试" }));
+      const payload = validateAskPayload(await readBody(req));
+      if (!payload) return send(res, 400, JSON.stringify({ error: "提问内容不合要求" }));
+      const cfg = configFor(payload.npc);
+      if (!cfg.apiKey) return send(res, 503, JSON.stringify({ error: "这个角色还没配置 API Key" }));
+      let out = await askModel(payload);
+      if (hasModern(out.text)) {
+        out = await askModel({ ...payload, noModern: true });
+        if (hasModern(out.text)) {
+          const pool = characters[payload.npc].freeFallback || ["……"];
+          out = { text: pool[Math.floor(Math.random() * pool.length)], mood: "平静", trust: 0 };
+        }
+      }
+      console.log(`[ASK] ${characters[payload.npc]?.display || payload.npc}(${cfg.model}) ← ${payload.playerText.slice(0, 40)}`);
+      return send(res, 200, JSON.stringify({ text: out.text, mood: out.mood }));
+    } catch (err) {
+      console.error("[ASK] 出错：", err.message);
       return send(res, 502, JSON.stringify({ error: "角色暂时无法回答" }));
     }
   }
