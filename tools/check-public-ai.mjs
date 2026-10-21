@@ -32,7 +32,10 @@ try {
         const result = await request(`${base}/api/${route}`, {
           method: "POST", headers: { Origin: origins[0], "Content-Type": "application/json" },
           body: JSON.stringify({ npc, playerText: "这会儿我能帮你做点什么？", present: people,
-            situation: "队伍正在草地上行军，准备照料伤员。", sceneTitle: "草地行军", step: 1, trust: 20, address: "你" }),
+            situation: "队伍正在草地上行军，准备照料伤员。", sceneTitle: "草地行军", step: 1, trust: 20, address: "你",
+            history: [{ role: "npc", text: "先跟上队伍。" }],
+            ...(route === "ask" ? { askHistory: [{ q: "能歇歇吗？", a: "再往前走一段。" }] } : {}),
+          }),
         });
         assert.equal(result.status, 200, `${npc} 的 ${route} 必须由云端成功应答`);
         const answer = await result.json();

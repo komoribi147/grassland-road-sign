@@ -20,10 +20,15 @@ const upstream = createServer(async (req, res) => {
   for await (const chunk of req) chunks.push(chunk);
   modelRequest = JSON.parse(Buffer.concat(chunks).toString());
   res.setHeader("Content-Type", "application/json");
+  // 复现 DeepSeek 的真实失败：JSON 模式混入纯文本 assistant 历史会耗尽输出预算只返回空白。
+  const incompatibleHistory = modelRequest.response_format?.type === "json_object" && modelRequest.messages.some((item) => {
+    if (item.role !== "assistant") return false;
+    try { return typeof JSON.parse(item.content).reply !== "string"; } catch { return true; }
+  });
   const content = modelRequest.model === "qwen2.5:14b"
     ? JSON.stringify({ reply: "怕啥子嘛，跟紧我。 平静", trust: 1, mood: "平静" })
     : JSON.stringify({ reply: "你说嘛，我听着呢。", trust: 1, mood: "好奇" });
-  res.end(JSON.stringify({ choices: [{ message: { content } }] }));
+  res.end(JSON.stringify({ choices: [{ message: { content: incompatibleHistory ? " ".repeat(220) : content } }] }));
 });
 await new Promise((resolve) => upstream.listen(0, "127.0.0.1", resolve));
 const upstreamPort = upstream.address().port;
@@ -135,6 +140,16 @@ try {
     });
     assert.equal(localReply.status, 200);
     assert.equal((await localReply.json()).text, "怕啥，跟紧我。");
+    const withHistory = await fetch(`http://127.0.0.1:${localPort}/api/npc`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ npc: "li-changhe", mode: "free", playerText: "你叫什么名字？",
+        history: [{ role: "npc", text: "醒了？醒了就爬起来。" }, { role: "player", text: "我醒了。" }] }),
+    });
+    assert.equal(withHistory.status, 200, "正式剧情带 NPC 历史时也必须能收到回答，不能退化成 502");
+    assert.equal((await withHistory.json()).text, "怕啥，跟紧我。");
+    const priorNpc = modelRequest.messages.find((item) => item.role === "assistant");
+    assert.equal(JSON.parse(priorNpc.content).reply, "醒了？醒了就爬起来。", "历史原话保留，但遵守与本轮一致的 JSON 协议");
+    assert.ok(modelRequest.messages.some((item) => item.role === "user" && item.content === "我醒了。"), "玩家原话仍按用户消息传入");
   } finally {
     localChild.kill();
   }

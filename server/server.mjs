@@ -173,6 +173,15 @@ async function askModel(payload) {
   if (!cfg.apiKey) throw new Error("这个角色还没有配置 API Key");
 
   const messages = buildMessages(payload);
+  // 本轮要求 JSON 时，历史 NPC 回答也须使用相同协议。
+  // DeepSeek 混用纯文本 assistant 历史会只输出空白并耗尽 token。
+  if (payload.mode !== "ask") {
+    for (const message of messages) {
+      if (message.role === "assistant") {
+        message.content = JSON.stringify({ reply: message.content, trust: 0, mood: "平静" });
+      }
+    }
+  }
   // 星火 Lite/Pro 不支持 system 消息，把人设放进当轮 user 消息。
   if (["lite", "generalv3", "pro-128k"].includes(cfg.model)) {
     const roleGuide = messages.shift().content;
