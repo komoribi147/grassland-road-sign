@@ -18,17 +18,28 @@ initAsk(engine);
 
 // ---------- 通用界面 ----------
 
+const topbarEl = $("topbar");
+// 顶栏会因窄屏换行变高：按它此刻的实际底边定位，提示始终落在按钮那一排下面
+function placeToast() {
+  const top = topbarEl && !topbarEl.hidden ? Math.round(topbarEl.getBoundingClientRect().bottom + 8) : 12;
+  document.documentElement.style.setProperty("--toast-top", top + "px");
+}
+
 let toastTimer = 0;
 function showToast(text) {
   const el = $("toast");
-  // 顶栏会因窄屏换行变高：按它此刻的实际底边定位，提示始终落在按钮那一排下面
-  const bar = $("topbar");
-  const top = bar && !bar.hidden ? Math.round(bar.getBoundingClientRect().bottom + 8) : 12;
-  document.documentElement.style.setProperty("--toast-top", top + "px");
+  placeToast();
   el.textContent = text;
   el.hidden = false;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { el.hidden = true; }, 2600);
+}
+
+// 提示还在显示时顶栏才出现/换行（例如剧情数据加载提示）——跟着挪到按钮下方
+if (topbarEl) {
+  new MutationObserver(() => { if (!$("toast").hidden) placeToast(); })
+    .observe(topbarEl, { attributes: true, attributeFilter: ["hidden"] });
+  addEventListener("resize", () => { if (!$("toast").hidden) placeToast(); });
 }
 
 function openScreen(id) {
