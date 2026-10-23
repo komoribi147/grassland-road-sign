@@ -1,5 +1,5 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261024-voice1";
+import { StoryEngine } from "./engine.js?v=20261024-replayfix";
 import { Save } from "./save.js";
 import { initAsk } from "./ask.js?v=20261023-askchoice";
 import { buildReflectionText } from "./reflection-report.js";

@@ -1543,6 +1543,10 @@ export class StoryEngine {
         this.warmVisuals(scene.id, this.state.step);
         this.markSeen();
         const result = await this.play(step);
+        // 回看跳转会在旧循环还停在 waitClick 时改 epoch 并重设 state.step。
+        // 旧循环被 abort 后仍会拿到 "next"，若不在这里拦住，它会把
+        // 新落点的 step +1，表现就是「回看选中的句子，一开口就跳到下一句」。
+        if (epoch !== this.epoch) break;
         if (result === "stop") break;
         if (result === "next") this.state.step++;
         this.autosave();
