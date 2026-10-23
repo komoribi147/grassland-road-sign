@@ -399,8 +399,7 @@ export class StoryEngine {
 
   // ---------- 读取数据 ----------
   // 剧情数据总共只有约 42KB，第一次下载成功后整包缓存进 localStorage。
-  // 之后打开（断网、github.io 被限速都行）立刻就能玩，剧情推进不再依赖网络；
-  // 后台会再静默刷新一次，编剧更新剧情后玩家最多晚一次打开就能拿到。
+  // 之后打开先检查更新，失败才使用缓存；开始后的剧情推进不再依赖网络。
 
   static DATA_KEY = "gsr.data.v1";
 
@@ -627,6 +626,9 @@ export class StoryEngine {
       this.on.toast?.("剧本更新过了，回看按新版重新记一遍");
     }
     this.enterScene(this.state.sceneId, true);
+    // 读档与回看共用取景规则。只显示幕背景会让中途存档看起来退回了早期图片。
+    // 不等待下载：选项照常出现，真正加载好后才显示这一句对应的镜头。
+    this.renderVisual(this.pictureAt(this.state.sceneId, this.state.step), "这段路上的景象");
     return this.run();
   }
 

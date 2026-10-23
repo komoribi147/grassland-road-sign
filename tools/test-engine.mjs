@@ -328,6 +328,20 @@ for (const kind of ["visual", "say"]) {
 }
 console.log("自由对话连接恢复、失败提示与记忆隔离通过。");
 
+// 真实读档入口也要恢复分镜，不能只有回看跳转恢复，读档却只剩场景背景。
+{
+  const e = makeEngine({ act1: { id: "act1", bg: "camp.png", steps: [
+    { t: "visual", visual: PIC_A },
+    { t: "select", options: [{ text: "接着说" }] },
+  ] } });
+  e.run = () => {};
+  const saved = { ...e.newState(), step: 1, storyHash: e.storyHash };
+  await e.resume(saved);
+  assert.equal(e._wantedVisual?.src, PIC_A.src, "选项处读档应恢复此前实际分镜，而非幕背景");
+  await settle();
+  assert.equal(lastDrawn(), PIC_A.src);
+}
+
 {
   const e = makeEngine({ act1: { id: "act1", steps: [] } });
   const active = new Map();
