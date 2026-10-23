@@ -1101,6 +1101,8 @@ export class StoryEngine {
         btn.addEventListener("click", () => resolve(opt));
         box.appendChild(btn);
       });
+      // 主角要行动时，「自由提问」并入选项：问完回到这组选项，不推进剧情
+      this.appendAskEntry(box);
     });
 
     box.hidden = true;
@@ -1193,6 +1195,8 @@ export class StoryEngine {
         btn.addEventListener("click", () => { this._resolveSelect = null; resolve(opt); });
         box.appendChild(btn);
       });
+      // 主角要开口回答时，「自由提问」并入选项：问完把最后一句当回答，推进剧情
+      this.appendAskEntry(box);
     });
 
     box.hidden = true;
@@ -1207,7 +1211,8 @@ export class StoryEngine {
     this.state.vars[step.key || "answer"] = picked.text;
     if (!spoken && picked.set) Object.assign(this.state.vars, picked.set);
     this.remember(step.ai, "player", picked.text);
-    if (spoken) {
+    // 提问推进剧情不是语音回答，不记 voiceAnswers、也不弹语音首答提示
+    if (spoken && picked.via !== "ask") {
       this.state.voiceAnswers = (this.state.voiceAnswers || 0) + 1;
       if (this.state.voiceAnswers === 1) {
         this.on.toast?.("这句话是你自己说出口的，他记住了", 3800);
@@ -1270,10 +1275,35 @@ export class StoryEngine {
     return this.applyMove(picked);
   }
 
+  /** 选项列表末尾的「自由提问」：AI 在线且有人在身边时才出现。
+   *  只打开提问面板，不解决当前选项；怎么收场由 ask.js 关闭面板时决定。 */
+  appendAskEntry(box) {
+    if (!this.ai.online) return;
+    let near = [];
+    try { near = this.presentNpcs(); } catch { /* 没有场景时不加 */ }
+    if (!near.length || !this.on.askOpen) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "choice-btn ask-entry";
+    btn.textContent = "自由提问";
+    btn.addEventListener("click", () => this.on.askOpen?.());
+    box.appendChild(btn);
+  }
+
   /** 语音回答入口：剧情正停在预选项上时，把这句话当作玩家的回答；没人在等就返回 false。 */
   submitSpoken(text) {
     if (!this._resolveSelect) return false;
     this._resolveSelect({ spoken: true, text });
+    this._resolveSelect = null;
+    return true;
+  }
+
+  /** 「自由提问」收场：玩家在预选项上问过至少一句并关了面板，把最后那句当回答推进剧情。
+   *  和 submitSpoken 同一个口子，多带 via 标记，selectStep 用它跳过语音首答提示；
+   *  选择步骤 / 没人在等的时候返回 false，剧情原地不动。 */
+  finishAskFromChoice(text) {
+    if (!this._resolveSelect) return false;
+    this._resolveSelect({ spoken: true, text, via: "ask" });
     this._resolveSelect = null;
     return true;
   }

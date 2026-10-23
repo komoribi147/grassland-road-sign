@@ -1,7 +1,7 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261021-network-check";
+import { StoryEngine } from "./engine.js?v=20261023-askchoice";
 import { Save } from "./save.js";
-import { initAsk } from "./ask.js?v=20261021-network-check";
+import { initAsk } from "./ask.js?v=20261023-askchoice";
 import { buildReflectionText } from "./reflection-report.js";
 import { renderReflectionReport } from "./reflection-view.js";
 
@@ -238,6 +238,16 @@ $("talkInput").addEventListener("keydown", (e) => {
 const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 async function routeVoice(text) {
+  // 0. 提问面板开着：把这句话放进提问输入框，而不是当成剧情回答
+  const askLayer = $("askLayer");
+  if (askLayer && !askLayer.hidden) {
+    const askInput = $("askInput");
+    if (askInput) {
+      askInput.value = text;
+      askInput.focus();
+    }
+    return;
+  }
   // 1. 剧情正停在预选项上：这句话就是回答
   if (engine.submitSpoken(text)) return;
   // 2. 「开口说话」面板开着：说给当前选中的 NPC
@@ -676,7 +686,7 @@ if (location.hash.includes("auto")) {
     for (;;) {
       await wait(speed);
       const visible = (el) => el && el.offsetParent !== null;
-      const choice = [...document.querySelectorAll("#dialogue .choice-btn")].find(visible);
+      const choice = [...document.querySelectorAll("#dialogue .choice-btn:not(.ask-entry)")].find(visible);
       if (choice) { choice.click(); continue; }
       document.querySelector("#dialogue")?.click();
     }

@@ -39,10 +39,16 @@ export function initAsk(engine) {
   const input = layer.querySelector("#askInput");
   const sendBtn = layer.querySelector("#askSend");
   const closeBtn = layer.querySelector("#askClose");
+  const choicesEl = document.getElementById("choices");
 
   let activeNpc = null;
   let busy = false;
   let requestVersion = 0;
+  let aiReady = false;
+  let openedFromChoice = false;   // 这次打开是不是从选项里的「自由提问」进来的
+  let askedCount = 0;             // 本次打开期间问成了几句
+  let lastAsked = "";             // 最后一句（推进剧情时当作主角的回答）
+  let openMark = null;            // 打开时的剧情位置，关闭时核对，防止回看后误推进
 
   const memory = () => {
     if (!engine.state) return {};
@@ -109,13 +115,19 @@ export function initAsk(engine) {
     }
   }
 
-  function open() {
+  function open(fromChoice = false) {
     const list = present();
     if (!list.length) {
       engine.on?.toast?.("这会儿身边没有人。");
       return;
     }
     if (!activeNpc || !list.includes(activeNpc)) activeNpc = preferredNpc(list);
+    openedFromChoice = !!fromChoice;
+    askedCount = 0;
+    lastAsked = "";
+    openMark = fromChoice
+      ? { state: engine.state, epoch: engine.epoch, step: engine.state?.step ?? null }
+      : null;
     layer.hidden = false;
     renderWho();
     renderLog();
@@ -129,6 +141,21 @@ export function initAsk(engine) {
     input.disabled = false;
     layer.hidden = true;
     input.blur();
+
+    // 从选项进来、问过至少一句：把最后一句当作主角的回答，推进剧情。
+    // 先核对剧情位置——回看/跳转之后，旧面板不能把话塞给新步骤。
+    const canAdvance = openedFromChoice && askedCount > 0 && openMark
+      && engine.state === openMark.state
+      && engine.epoch === openMark.epoch
+      && (engine.state?.step ?? null) === openMark.step;
+    const text = lastAsked;
+    openedFromChoice = false;
+    askedCount = 0;
+    lastAsked = "";
+    openMark = null;
+    if (canAdvance) {
+      try { engine.finishAskFromChoice?.(text); } catch { /* 引擎没在等就忽略 */ }
+    }
   }
 
   async function send() {
@@ -189,6 +216,8 @@ export function initAsk(engine) {
       }
       // 关闭、重开或回看后，旧请求不再属于眼前这次体验。
       if (!current()) return;
+      askedCount++;
+      lastAsked = text;
       const listMem = memory()[npc] || (memory()[npc] = []);
       listMem.push({ q: text, a: answer });
       if (listMem.length > 12) listMem.splice(0, listMem.length - 12);
@@ -205,15 +234,22 @@ export function initAsk(engine) {
     }
   }
 
+  // 选项列表显示时悬浮按钮让位（由列表末尾的「自由提问」选项顶上）；
+  // 其余时刻（人物说话、旁白）它就在对话框右上角，提问不推进剧情。
+  function syncAskBtn() {
+    openBtn.hidden = !aiReady || (!!choicesEl && !choicesEl.hidden);
+  }
+
   async function checkAi() {
     try {
       if (!await engine.ai.check()) throw new Error("offline");
-      openBtn.hidden = false;
+      aiReady = true;
       openBtn.title = "";
     } catch {
-      openBtn.hidden = true;
+      aiReady = false;
       openBtn.title = "AI 未连接";
     }
+    syncAskBtn();
   }
 
   openBtn.addEventListener("click", (e) => {
@@ -237,14 +273,22 @@ export function initAsk(engine) {
     });
   }
 
-  // 打开时把人物按当前场景刷新（换幕/换人后仍然只显示在场者）
+  // 打开时把人物按当前场景刷新（换幕/换人后仍然只显示在场者）；
+  // 顺带盯住选项列表的显示/隐藏，决定悬浮按钮是否让位。
   const refresh = () => {
     if (!layer.hidden) {
       const list = present();
       if (!list.includes(activeNpc)) activeNpc = list[0] || null;
       renderWho();
     }
+    syncAskBtn();
   };
-  new MutationObserver(refresh).observe(dialogue, { attributes: true, attributeFilter: ["hidden"] });
+  const observer = new MutationObserver(refresh);
+  observer.observe(dialogue, { attributes: true, attributeFilter: ["hidden"] });
+  if (choicesEl) observer.observe(choicesEl, { attributes: true, attributeFilter: ["hidden"] });
+
+  // 引擎在 selectStep/choose 里把「自由提问」挂进选项时，走这个口子打开面板
+  if (engine.on) engine.on.askOpen = () => open(true);
+
   void checkAi();
 }

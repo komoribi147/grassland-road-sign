@@ -25,6 +25,27 @@
   border-color: rgba(232, 228, 218, 0.5);
 }
 
+/* 主角要行动/回答时，「自由提问」并进选项列表：虚边、居中、更暗，一眼区别于剧情选项 */
+#choices .choice-btn.ask-entry {
+  text-align: center;
+  border-style: dashed;
+  border-color: rgba(232, 228, 218, 0.30);
+  background: transparent;
+  color: var(--ink-dim);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  opacity: 0.72;
+}
+
+#choices .choice-btn.ask-entry:hover {
+  opacity: 1;
+  color: var(--ink);
+  border-color: rgba(200, 85, 61, 0.5);
+  background: rgba(200, 85, 61, 0.08);
+  transform: none;   /* 覆盖 .choice-btn 的悬停位移，保持这一项安静 */
+}
+
 #askLayer {
   position: fixed;
   inset: 0;
