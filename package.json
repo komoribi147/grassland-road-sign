@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server/server.mjs",
     "check": "node tools/check-story.mjs",
-    "test": "node tools/test-engine.mjs && node tools/test-audio.mjs && node tools/test-reflection-report.mjs",
+    "test": "node tools/test-engine.mjs && node tools/test-audio.mjs && node tools/test-reflection-report.mjs && node tools/test-visual-delivery.mjs && node tools/test-image-package.mjs",
     "test:ai": "node tools/test-cloud-settings.mjs && node tools/test-ai-client.mjs && node tools/test-ask.mjs && node tools/test-ai-server.mjs",
     "package:static": "node tools/package-static.mjs",
     "package:ai": "node tools/package-ai-function.mjs",

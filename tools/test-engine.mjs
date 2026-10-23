@@ -327,5 +327,63 @@ for (const kind of ["visual", "say"]) {
   assert.deepEqual(e.memoryOf("a"), [], "重开后旧请求不得写入新一轮体验");
 }
 console.log("自由对话连接恢复、失败提示与记忆隔离通过。");
+
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  const active = new Map();
+  let peak = 0;
+  e.loadImage = (src) => new Promise(resolve => {
+    active.set(src, resolve);
+    peak = Math.max(peak, active.size);
+  });
+  e._prefetchImages(["one", "two", "three", "four"]);
+  e._prefetchImages(["one", "three", "five"]);
+  assert.equal(active.size, 2, "多次预取必须共享并发上限，不能每次新开一组下载");
+  for (let i = 0; i < 8 && active.size; i++) {
+    const [src, resolve] = active.entries().next().value;
+    active.delete(src);
+    resolve({});
+    await settle(1);
+  }
+  assert.ok(peak <= 2);
+}
+
+// 下一镜头还在路上时，不能让旧画面继续冒充当前画面。
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  await e.renderVisual(PIC_A);
+  const pending = e.renderVisual(PIC_B);
+  assert.equal(e.ui.visual.hidden, true, "等待新图时收起上一镜头");
+  assert.equal(e._activeImage, null);
+  await pending;
+  assert.equal(lastDrawn(), PIC_B.src);
+}
+
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  for (let i = 0; i < 24; i++) await e.loadImage(`test-memory-${i}.png`);
+  assert.ok(e._imageCache.size <= 12, "长篇体验不能把全部高清解码图一直留在手机内存");
+}
+
+// 打开时先确认最新剧情；只有联网失败才启用缓存。
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  const cached = { manifest: { start: "old" }, characters: {}, lore: {}, scenes: [{ id: "old", steps: [] }] };
+  e._readCache = () => cached;
+  e._warmAll = () => {};
+  let checked = false;
+  e._refresh = async (required) => {
+    assert.equal(required, true);
+    await settle(1);
+    checked = true;
+    e._applyData({ ...cached, manifest: { start: "new" }, scenes: [{ id: "new", steps: [] }] });
+  };
+  await e.load();
+  assert.equal(checked, true, "不能尚未检查更新就允许开始旧版剧情");
+  assert.equal(e.manifest.start, "new");
+  e._refresh = async () => { throw new Error("offline"); };
+  await e.load();
+  assert.equal(e.manifest.start, "old", "离线时仍可读缓存");
+}
 console.log(ok === 19 ? "\n全部通过" : `\n有断言没过（${ok}/19）`);
 process.exit(ok === 19 ? 0 : 1);

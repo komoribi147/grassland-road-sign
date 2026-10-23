@@ -6,6 +6,7 @@ import { AudioManager } from "./audio.js";
 import { Save } from "./save.js";
 import { frameOf, guttersFromProfiles, panelBoxes } from "./sheet-geometry.js";
 import { buildReflectionReport } from "./reflection-report.js";
+import { imageSource, visualLayout } from "./visual-delivery.js?v=20261023-visual2";
 
 const $ = (id) => document.getElementById(id);
 const PLAYER = "__player__";
@@ -105,14 +106,27 @@ export class StoryEngine {
     this._bgToken = 0;
     this._imageCache = new Map();
     this._imageDeadlines = new Map();  // 下载中的宽限期:预热用短超时开始,播出时放宽
+    this._prefetchQueue = [];
+    this._prefetching = new Set();
+    this._prefetchActive = 0;
     this._sheetBoxes = new Map();   // 分镜图 -> 量好的每格取景框（一轮游戏只量一次）
     this._activeVisual = null;
     this._activeImage = null;
     // "这一步该配哪张画面"——图还没到、甚至到不了的时候也记着，台词和回看都靠它
     this._wantedVisual = null;
     window.addEventListener("resize", () => {
-      if (this._activeVisual && this._activeImage) this.paintVisual(this._activeImage, this._activeVisual);
+      if (this._activeVisual && this._activeImage) {
+        this.paintVisual(this._activeImage, this._activeVisual);
+        // 横屏需要更大文件时重新选图；旧请求有 token 隔离，不会盖回前一镜头。
+        const source = this.imageSource(this._activeVisual.src || this._activeVisual.sheet);
+        if (source !== this._activeSource) this.renderVisual(this._activeVisual, this._visualDescription);
+      }
     });
+  }
+
+  imageSource(src) {
+    if (window.__STORYBOARDS__?.[src] || window.__PORTRAITS__?.[src]) return src;
+    return imageSource(src, { width: window.innerWidth || 1440, dpr: window.devicePixelRatio || 1 });
   }
 
   /** 下载并解码一次；分镜、背景和立绘切换时复用同一张已就绪的图。
@@ -120,31 +134,40 @@ export class StoryEngine {
    *  超时可调：后台预取用短超时好尽快重试，轮到播出时用默认的 25 秒；
    *  请求被掐断（卡顿时浏览器会这么干）则重试一次。 */
   loadImage(src, timeoutMs = 25000, attempt = 0) {
+    src = this.imageSource(src);
     // 预热用 12s 短超时先下；轮到真播出时把期限放宽——慢网下图还没下完，
     // 短超时会先把共享的这条 promise 烧断，播出拿到的就是一条已经失败的 promise
     //（「第一幕后没有画面」的根因）。只延长、不缩短。
     const live = this._imageDeadlines.get(src);
+    if (live && timeoutMs >= 25000) live.img.fetchPriority = "high";
     if (live && live.deadline - performance.now() < timeoutMs) {
       clearTimeout(live.timer);
       live.deadline = performance.now() + timeoutMs;
       live.timer = setTimeout(live.fail, timeoutMs);
     }
-    if (this._imageCache.has(src)) return this._imageCache.get(src);
+    if (this._imageCache.has(src)) {
+      const cached = this._imageCache.get(src);
+      this._imageCache.delete(src);
+      this._imageCache.set(src, cached);
+      return cached;
+    }
     const loaded = new Promise((resolve, reject) => {
       const img = new Image();
       img.decoding = "async";
+      img.fetchPriority = timeoutMs >= 25000 ? "high" : "low";
       const fail = () => {
         this._imageCache.delete(src);
         this._imageDeadlines.delete(src);
         reject(new Error(`图片加载超时：${src}`));
       };
-      const dead = { deadline: performance.now() + timeoutMs, timer: setTimeout(fail, timeoutMs), fail };
+      const dead = { deadline: performance.now() + timeoutMs, timer: setTimeout(fail, timeoutMs), fail, img };
       this._imageDeadlines.set(src, dead);
       img.onload = async () => {
         clearTimeout(dead.timer);
         this._imageDeadlines.delete(src);
         try { await img.decode?.(); } catch { /* onload 已确认图片可用 */ }
         resolve(img);
+        this._pruneImages();
       };
       img.onerror = () => {
         clearTimeout(dead.timer);
@@ -161,6 +184,13 @@ export class StoryEngine {
     });
     this._imageCache.set(src, loaded);
     return loaded;
+  }
+
+  _pruneImages() {
+    for (const key of this._imageCache.keys()) {
+      if (this._imageCache.size <= 12) break;
+      if (key !== this._activeSource && !this._imageDeadlines.has(key)) this._imageCache.delete(key);
+    }
   }
 
   /** 显示某个角色的统一立绘。没有这张图就自动不显示。 */
@@ -224,11 +254,20 @@ export class StoryEngine {
     if (!ctx) return false;
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
-    const cover = Math.max(width / frame.w, height / frame.h);
-    const cropWidth = Math.min(frame.w, width / cover);
-    const cropHeight = Math.min(frame.h, height / cover);
-    ctx.drawImage(img, frame.x + (frame.w - cropWidth) / 2, frame.y + (frame.h - cropHeight) / 2,
-      cropWidth, cropHeight, 0, 0, width, height);
+    const portrait = canvas === this.ui.visual && rect.height > rect.width && rect.width <= 900;
+    if (portrait) {
+      // 同一镜头做暗色衬底，清晰画面保留完整原构图，不裁去两侧人物与下沿动作。
+      const backdrop = visualLayout(frame, width, height);
+      const s = backdrop.source;
+      ctx.filter = `blur(${18 * dpr}px) brightness(.3)`;
+      ctx.drawImage(img, s.x, s.y, s.w, s.h, 0, 0, width, height);
+      ctx.filter = "none";
+    }
+    const layout = visualLayout(frame, width, height, {
+      portrait, top: Math.min(88 * dpr, height * .18), bottom: height * .58,
+    });
+    const s = layout.source, d = layout.destination;
+    ctx.drawImage(img, s.x, s.y, s.w, s.h, d.x, d.y, d.w, d.h);
     return true;
   }
 
@@ -245,6 +284,7 @@ export class StoryEngine {
     }
     canvas.hidden = false;
     canvas.parentElement.classList.add("showing-visual");
+    canvas.parentElement.classList.remove("loading-visual");
   }
 
   /**
@@ -264,6 +304,7 @@ export class StoryEngine {
     const canvas = this.ui.visual;
     const token = ++this._visualToken;
     const source = visual?.src || visual?.sheet;
+    this._visualDescription = description;
     // 先记下"这一步该配哪张"，再等图：慢网/卡顿时图会晚一大截才到，
     // 台词和回看得拿到正确的那张，不能等画上去才算数（_activeVisual 是画上去之后才有值）。
     this._wantedVisual = source ? visual : null;
@@ -273,16 +314,27 @@ export class StoryEngine {
       canvas.hidden = true;
       canvas.classList.remove("shot-a", "shot-b");
       canvas.parentElement.classList.remove("showing-visual");
+      canvas.parentElement.classList.remove("loading-visual");
       return;
     }
+    this._activeVisual = null;
+    this._activeImage = null;
+    canvas.hidden = true;
+    canvas.parentElement.classList.remove("showing-visual");
+    canvas.parentElement.classList.add("loading-visual");
     canvas.setAttribute("aria-label", `我看见：${(description || "草地上的景象").replaceAll("你", "我")}`);
     // 图没下好之前，这一格的故事内容先用描述文字撑着；点击照常推进，不等图
     this.ui.visualHint.textContent = description ? `${description}（画面加载中…）` : "画面加载中…";
+    const delivered = this.imageSource(source);
     try {
-      const img = await this.loadImage(source);
+      const img = await this.loadImage(delivered);
       if (token !== this._visualToken) return;   // 已经翻到别的画面去了，晚到的图别画上来
+      if (delivered !== this.imageSource(source)) return this.renderVisual(visual, description);
       this._activeVisual = visual;
       this._activeImage = img;
+      this._activeSource = delivered;
+      canvas.dataset.imageSource = this._activeSource;
+      canvas.dataset.originalSource = source;
       this.paintVisual(img, visual);
       this.ui.visualHint.textContent = "点击画面继续";
     } catch {
@@ -359,13 +411,14 @@ export class StoryEngine {
 
   async load() {
     const cached = this._readCache();
-    if (cached) {
+    try {
+      // 先确认最新剧情再允许开始；旧存档的数据只在网络失败时作为离线退路。
+      await this._refresh(true);
+    } catch (err) {
+      if (!cached) throw err;
       this._applyData(cached);
       this._warmAll();
-      this._refresh(false);   // 后台静默更新，失败不打扰正在玩的人
-      return;
     }
-    await this._refresh(true);  // 第一次打开必须联网，失败往上抛给 boot 弹重试页
   }
 
   _readCache() {
@@ -381,16 +434,20 @@ export class StoryEngine {
     const j = async (path) => {
       let last;
       for (let i = 0; i < 2; i++) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 6500);
         try {
           // 每次打开都带一个本次会话的随机戳：绕开浏览器缓存与 CDN 缓存。
           // 不带的话，刚部署完还可能拿到上一版的剧本——回看里就会出现"上一个版本"
           // 的句子和画面。剧情数据一共 42KB，重新下一次的代价可以忽略。
-          const res = await fetch(`${path}?t=${SNAPSHOT}`, { cache: "no-store" });
+          const res = await fetch(`${path}?t=${SNAPSHOT}`, { cache: "no-store", signal: controller.signal });
           if (!res.ok) throw new Error(`读取 ${path} 失败（HTTP ${res.status}）`);
           return await res.json();
         } catch (err) {
           last = err;
           await new Promise((r) => setTimeout(r, 600));
+        } finally {
+          clearTimeout(timer);
         }
       }
       throw last;
@@ -806,12 +863,11 @@ export class StoryEngine {
     if (scene.bg || scene.tone) this.setBg(scene.bg, scene.tone);
     if (scene.ambient !== undefined) this.setAmbient(scene.ambient, scene.ambientLevel);
     this.updateTrust();
-    this.warmScene(id);   // 提前把这一幕和下一幕的图和声音下下来
+    this.warmScene(id);
   }
 
   /**
-   * 预热：这一幕 + 下一幕要用的背景图与音频，提前下载。
-   * 不预热的话，换背景会先看到渐变底、音效要等下载完才响（音画不同步）。
+   * 音频按幕预热；图片只预取接下来几个镜头，避免两幕图片抢占首屏带宽。
    */
   warmScene(sceneId) {
     const order = Object.keys(this.scenes);
@@ -820,51 +876,56 @@ export class StoryEngine {
       const scene = this.scenes[id];
       if (!scene) continue;
       const sfx = [];
-      const images = [];
-      const sheets = [];   // 只需要分镜才量格线（背景图不分格）
-      if (scene.bg) images.push(scene.bg);
       for (const s of scene.steps || []) {
         if (s.t === "sfx" && s.name) sfx.push(s.name);
-        if (s.t === "bg" && s.src) images.push(s.src);
-        if (s.visual?.sheet || s.visual?.src) images.push(s.visual.sheet || s.visual.src);
-        if (s.visual?.sheet) sheets.push(s.visual.sheet);
         for (const sub of s.after || []) if (sub.t === "sfx" && sub.name) sfx.push(sub.name);
-        for (const sub of s.after || []) if (sub.visual?.sheet || sub.visual?.src) images.push(sub.visual.sheet || sub.visual.src);
-        for (const sub of s.after || []) if (sub.visual?.sheet) sheets.push(sub.visual.sheet);
         for (const o of s.options || []) {
-          if (o.visual?.sheet || o.visual?.src) images.push(o.visual.sheet || o.visual.src);
-          if (o.visual?.sheet) sheets.push(o.visual.sheet);
           for (const sub of o.after || []) if (sub.t === "sfx" && sub.name) sfx.push(sub.name);
-          for (const sub of o.after || []) if (sub.visual?.sheet || sub.visual?.src) images.push(sub.visual.sheet || sub.visual.src);
-          for (const sub of o.after || []) if (sub.visual?.sheet) sheets.push(sub.visual.sheet);
         }
       }
       if (scene.ambient) this.audio.warm([scene.ambient], "ambient");
       this.audio.warm(sfx, "sfx");
-      this._prefetchImages(images);
-      // 顺手把分镜的取景框量出来：量一次要读一遍像素，放在预热阶段做，
-      // 真轮到这张画面时就不用现场算了
-      for (const src of new Set(sheets)) this._warmGeometry(src);
     }
+    this.warmVisuals(sceneId, this.state?.sceneId === sceneId ? this.state.step : 0);
+  }
+
+  warmVisuals(sceneId, start = 0) {
+    const scene = this.scenes[sceneId];
+    if (!scene) return;
+    const images = [];
+    const visit = (value) => {
+      if (!value || typeof value !== "object") return;
+      if (value.visual) images.push(value.visual.src || value.visual.sheet);
+      if (value.t === "bg" && value.src) images.push(value.src);
+      for (const sub of value.after || []) visit(sub);
+      for (const option of value.options || []) visit(option);
+    };
+    for (let i = start; i < scene.steps.length && new Set(images).size < 4; i++) visit(scene.steps[i]);
+    this._prefetchImages([...new Set(images.filter(Boolean))].slice(0, 4));
   }
 
   /**
-   * 幕内图片预取：按出场顺序排队（并发 3，先出场先占带宽，不再是十几张一起抢），
-   * 失败或超时自动重试。移动网络请求容易挂起，重试几次比一次失败就放弃强得多；
-   * 预取用 12 秒短超时，好尽快重试，轮到播出时才用完整的 25 秒。
+   * 所有幕共享两个后台下载名额，新落点优先；预取仅用 12 秒期限。
    */
   _prefetchImages(srcs) {
-    const queue = [...new Set(srcs)];
-    const worker = async () => {
-      while (queue.length) {
-        const src = queue.shift();
-        for (let attempt = 0; attempt < 3; attempt++) {
-          try { await this.loadImage(src, 12000); break; }
-          catch { if (attempt < 2) await new Promise((r) => setTimeout(r, 1200 * (attempt + 1))); }
-        }
-      }
-    };
-    Promise.all(Array.from({ length: 3 }, worker)).catch(() => {});
+    const pending = srcs.map((src) => this.imageSource(src));
+    this._prefetchQueue = [...new Set([...pending, ...this._prefetchQueue])]
+      .filter(src => !this._imageCache.has(src) && !this._prefetching.has(src)).slice(0, 8);
+    this._pumpImages();
+  }
+
+  _pumpImages() {
+    while (this._prefetchActive < 2 && this._prefetchQueue.length) {
+      const src = this._prefetchQueue.shift();
+      if (this._imageCache.has(src) || this._prefetching.has(src)) continue;
+      this._prefetchActive++;
+      this._prefetching.add(src);
+      this.loadImage(src, 12000).catch(() => {}).finally(() => {
+        this._prefetchActive--;
+        this._prefetching.delete(src);
+        this._pumpImages();
+      });
+    }
   }
 
   /** 预热阶段把某张分镜的格线量好并记下来 */
@@ -1443,6 +1504,7 @@ export class StoryEngine {
         if (!scene) break;
         const step = scene.steps[this.state.step];
         if (!step) { this.finish({}); break; }
+        this.warmVisuals(scene.id, this.state.step);
         this.markSeen();
         const result = await this.play(step);
         if (result === "stop") break;

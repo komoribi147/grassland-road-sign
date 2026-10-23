@@ -10,6 +10,7 @@
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { IMAGE_ASSETS } from "../js/image-assets.js";
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const outPath = process.argv[2] || path.join(root, "..", "草地上的路标-单文件版.html");
@@ -17,8 +18,9 @@ const read = (rel) => readFile(path.join(root, rel), "utf8");
 
 const mime = { ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".mp3": "audio/mpeg" };
 const toDataURI = async (rel) => {
-  const buf = await readFile(path.join(root, rel));
-  const ext = path.extname(rel).toLowerCase();
+  const delivered = IMAGE_ASSETS[rel]?.full || rel;
+  const buf = await readFile(path.join(root, delivered));
+  const ext = path.extname(delivered).toLowerCase();
   return `data:${mime[ext] || "application/octet-stream"};base64,${buf.toString("base64")}`;
 };
 
@@ -90,7 +92,7 @@ const stripModule = (src) => src
   .replace(/^export\s+(class|const|function|let)\s/gm, "$1 ");
 
 const parts = [];
-for (const f of ["js/save.js", "js/audio.js", "js/ai.js", "js/sheet-geometry.js", "js/reflection-report.js", "js/reflection-view.js", "js/engine.js", "js/ask.js", "js/landscape.js", "js/main.js"]) {
+for (const f of ["js/save.js", "js/audio.js", "js/ai.js", "js/sheet-geometry.js", "js/image-assets.js", "js/visual-delivery.js", "js/reflection-report.js", "js/reflection-view.js", "js/engine.js", "js/ask.js", "js/landscape.js", "js/main.js"]) {
   parts.push(`/* ===== ${f} ===== */\n` + stripModule(await read(f)));
 }
 let bundle = parts.join("\n\n");

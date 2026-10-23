@@ -23,7 +23,7 @@
     { "t": "action", "label": "抓住绑腿布", "visual": {"src":"assets/stills/bog-cloth-grip.png"}, "hint": "抓牢，等何大姐过来" , "after": [{ "t": "sfx", "name": "cloth-strain", "level": 0.5 }]},
     { "t": "visual", "description": "何大姐扶住老班长，站在一块较实的草甸上，和你一同握紧绑腿布。", "visual": {"src":"assets/stills/bog-medic-brace.png"} },
     { "t": "say", "who": "li-changhe", "text": "石头，抓稳。听我数，一、二、三！" },
-    { "t": "action", "label": "和大家一起拉", "visual": {"src":"assets/stills/bog-rescue.png"}, "hint": "一起用力" , "after": [{ "t": "sfx", "name": "mud-churn", "level": 0.6 }]},
+    { "t": "action", "label": "和大家一起拉", "visual": {"src":"assets/stills/bog-rescue.png", "crop":{"x":0.44,"y":0.28,"w":0.56,"h":0.6}}, "hint": "一起用力" , "after": [{ "t": "sfx", "name": "mud-churn", "level": 0.6 }]},
     { "t": "visual", "description": "老班长把绑腿布甩给石头，他自己一只脚已经踩进泥里。", "visual": {"src":"assets/stills/bog-cloth-toss.png"} },
     { "t": "say", "who": "he-xiuying", "text": "老李！你脚底下在往下陷！" },
     { "t": "say", "who": "he-xiuying", "text": "石头抓牢！老李，把手给我。两个都得上来。" },

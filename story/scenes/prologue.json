@@ -26,7 +26,7 @@
         { "text": "我跟队伍走散了。您先看看我能不能跟上。", "trust": 2, "why": "愿意接受观察", "reply": "中。跟在后头，别乱走。" },
         { "text": "我说不清。可前面有伤员，我能搭把手。", "trust": 2, "why": "先提出帮忙", "reply": "话先放着。起来，跟上。" }
       ],
-      "after": [{ "t": "visual", "description": "（他用木棍戳了戳你身边的泥，没再追问。）", "visual": {"src":"assets/stills/stick-in-mud.png"} }]
+      "after": [{ "t": "visual", "description": "（他用木棍戳了戳你身边的泥，没再追问。）", "visual": {"src":"assets/stills/stick-in-mud.png", "crop":{"x":0.42,"y":0.2,"w":0.58,"h":0.74}} }]
     },
     { "t": "visual", "description": "老班长没有再追问。\n他站起身，往旁边让了半步——不是拉你，是给你留了个站起来的地方。", "visual": {"src":"assets/stills/cook-steps-aside.png"} },
     { "t": "visual", "description": "石头在旁边小声嘀咕。", "visual": {"src":"assets/stills/shitou-murmur.png"} },

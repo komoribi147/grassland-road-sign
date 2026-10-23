@@ -1,9 +1,9 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261023-askchoice";
+import { StoryEngine } from "./engine.js?v=20261023-visual2";
 import { Save } from "./save.js";
 import { initAsk } from "./ask.js?v=20261023-askchoice";
 import { buildReflectionText } from "./reflection-report.js";
-import { renderReflectionReport } from "./reflection-view.js";
+import { renderReflectionReport } from "./reflection-view.js?v=20261023-visual2";
 
 const $ = (id) => document.getElementById(id);
 const screens = ["screenTitle", "screenLore", "screenReplay", "screenMenu", "screenAbout", "screenReport", "screenTalk", "screenError"];

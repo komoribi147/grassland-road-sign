@@ -1,3 +1,4 @@
+import { imageSource } from "./visual-delivery.js?v=20261023-visual2";
 // 全部原话用 textContent 呈现，玩家输入不会成为页面标记。
 function reflectionNode(tag, className, text) {
   const node = document.createElement(tag);
@@ -10,7 +11,10 @@ export function renderReflectionReport(container, report, { onChange = () => fal
   container.replaceChildren();
   const cover = reflectionNode("div", "reflection-cover");
   const image = reflectionNode("img", "reflection-cover-image");
-  image.src = globalThis.__REFLECTION_COVER__ || "assets/stills/today-path-monument.png";
+  image.src = globalThis.__REFLECTION_COVER__ || imageSource("assets/stills/today-path-monument.png", {
+    width: globalThis.innerWidth || 1440, dpr: globalThis.devicePixelRatio || 1,
+  });
+  image.decoding = "async";
   image.alt = "今天的草地，小路旁的纪念碑";
   image.addEventListener("error", () => { image.hidden = true; });
   const coverText = reflectionNode("div", "reflection-cover-text");
