@@ -245,6 +245,10 @@ export function initAsk(engine) {
       if (!await engine.ai.check()) throw new Error("offline");
       aiReady = true;
       openBtn.title = "";
+      // 健康检查晚于选项渲染时，把入口补挂到已经显示出来的选项上
+      if (choicesEl && !choicesEl.hidden) {
+        try { engine.appendAskEntry?.(choicesEl); } catch { /* 引擎不支持就跳过 */ }
+      }
     } catch {
       aiReady = false;
       openBtn.title = "AI 未连接";

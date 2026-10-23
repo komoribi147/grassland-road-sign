@@ -1279,6 +1279,7 @@ export class StoryEngine {
    *  只打开提问面板，不解决当前选项；怎么收场由 ask.js 关闭面板时决定。 */
   appendAskEntry(box) {
     if (!this.ai.online) return;
+    if (box.querySelector(".ask-entry")) return;   // 已经挂过就不重复挂
     let near = [];
     try { near = this.presentNpcs(); } catch { /* 没有场景时不加 */ }
     if (!near.length || !this.on.askOpen) return;
