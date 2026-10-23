@@ -6,7 +6,7 @@ import { AudioManager } from "./audio.js";
 import { Save } from "./save.js";
 import { frameOf, guttersFromProfiles, panelBoxes } from "./sheet-geometry.js";
 import { buildReflectionReport } from "./reflection-report.js";
-import { imageSource, visualLayout } from "./visual-delivery.js?v=20261023-hair1";
+import { imageSource, visualLayout } from "./visual-delivery.js?v=20261023-hair2";
 
 const $ = (id) => document.getElementById(id);
 const PLAYER = "__player__";

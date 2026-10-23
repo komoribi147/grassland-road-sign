@@ -1,4 +1,4 @@
-import { imageSource } from "./visual-delivery.js?v=20261023-hair1";
+import { imageSource } from "./visual-delivery.js?v=20261023-hair2";
 // 全部原话用 textContent 呈现，玩家输入不会成为页面标记。
 function reflectionNode(tag, className, text) {
   const node = document.createElement(tag);
