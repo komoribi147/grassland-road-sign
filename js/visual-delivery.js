@@ -1,4 +1,4 @@
-import { IMAGE_ASSETS } from "./image-assets.js?v=20261023-visual2";
+import { IMAGE_ASSETS } from "./image-assets.js?v=20261023-hair1";
 
 // Canonical PNG paths remain in the story/save. Only the delivered file varies.
 export function imageSource(src, { width = 1440, dpr = 1 } = {}, assets = IMAGE_ASSETS) {
