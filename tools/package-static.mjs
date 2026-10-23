@@ -13,7 +13,7 @@ await rm(out, { recursive: true, force: true });
 await mkdir(out, { recursive: true });
 await copyFile(path.join(root, "index.html"), path.join(out, "index.html"));
 await copyFile(path.join(root, "rescue-demo.html"), path.join(out, "rescue-demo.html"));
-for (const dir of ["css", "js", "story"]) {
+for (const dir of ["css", "js", "story", "voice"]) {
   await cp(path.join(root, dir), path.join(out, dir), { recursive: true });
 }
 await mkdir(path.join(out, "assets"));
