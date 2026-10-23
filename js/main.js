@@ -21,6 +21,10 @@ initAsk(engine);
 let toastTimer = 0;
 function showToast(text) {
   const el = $("toast");
+  // 顶栏会因窄屏换行变高：按它此刻的实际底边定位，提示始终落在按钮那一排下面
+  const bar = $("topbar");
+  const top = bar && !bar.hidden ? Math.round(bar.getBoundingClientRect().bottom + 8) : 12;
+  document.documentElement.style.setProperty("--toast-top", top + "px");
   el.textContent = text;
   el.hidden = false;
   clearTimeout(toastTimer);

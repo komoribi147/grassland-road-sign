@@ -646,16 +646,18 @@ button { font-family: var(--font-sans); cursor: pointer; }
 .toast {
   position: absolute;
   left: 50%;
-  bottom: 26px;
+  /* 落在顶栏（「开口说话」那一排）下方；具体高度由 main.js 按顶栏实际高度写入 */
+  top: var(--toast-top, 64px);
   transform: translateX(-50%);
   z-index: 40;
-  padding: 10px 18px;
+  padding: 8px 16px;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: rgba(12,16,14,0.94);
   font-family: var(--font-sans);
   font-size: 13px;
   color: var(--ink-dim);
+  pointer-events: none;   /* 纯提示，任何情况下都不挡住点击 */
   animation: fadein 0.3s ease;
 }
 
