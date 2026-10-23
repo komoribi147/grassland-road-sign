@@ -7,6 +7,7 @@ import { Save } from "./save.js";
 import { frameOf, guttersFromProfiles, panelBoxes } from "./sheet-geometry.js";
 import { buildReflectionReport } from "./reflection-report.js";
 import { imageSource, visualLayout } from "./visual-delivery.js?v=20261023-hair2";
+import { VoicePlayer } from "./voice.js?v=20261024-voice1";
 
 const $ = (id) => document.getElementById(id);
 const PLAYER = "__player__";
@@ -98,9 +99,11 @@ export class StoryEngine {
       trustAddress: $("trustAddress"), trustFill: $("trustFill"),
       dialogue: $("dialogue"), speaker: $("speakerName"),
       text: $("dialogueText"), choices: $("choices"), hint: $("clickHint"),
+      voiceBtn: $("voiceBtn"),
       portrait: $("portrait"),
       visual: $("storyVisual"), visualHint: $("visualHint"),
     };
+    this.voice = new VoicePlayer(this.ui.voiceBtn);
     this._portraitToken = 0;
     this._visualToken = 0;
     this._bgToken = 0;
@@ -1101,6 +1104,11 @@ export class StoryEngine {
   async speak(step, opts = {}) {
     this.ui.dialogue.hidden = false;
     this.ui.visualHint.hidden = true;
+    // 上一句的配音先停，避免两句叠在一起。
+    this.voice.stop();
+    const voiceId = opts.voiceId || (this.state?.sceneId
+      ? `${this.state.sceneId}-${String(this.state.step).padStart(3, "0")}`
+      : null);
     const isPlayer = step.who === PLAYER;
     const who = isPlayer
       ? "我"
@@ -1136,6 +1144,7 @@ export class StoryEngine {
       if (!isPlayer) this.remember(step.who, "npc", text, step.mood);
     }
     await this.type(text);
+    if (!isPlayer && voiceId) this.voice.play(voiceId);
     if (opts.autoNext) return "next";
     this.ui.hint.hidden = false;
     await this.waitClick();
@@ -1146,6 +1155,7 @@ export class StoryEngine {
   async choose(step) {
     this.ui.dialogue.hidden = false;
     this.ui.visualHint.hidden = true;
+    this.voice.stop();
     const box = this.ui.choices;
     box.hidden = false;
     box.innerHTML = "";
@@ -1170,7 +1180,9 @@ export class StoryEngine {
 
     box.hidden = true;
     box.innerHTML = "";
-    this.markSeen(`${this.state.step}:o${step.options.indexOf(picked)}`);
+    this.voice.stop();
+    const pickedIndex = step.options.indexOf(picked);
+    this.markSeen(`${this.state.step}:o${pickedIndex}`);
     this.state.picks.push(picked.text);
     this.state.history.push({ role: "player", name: "我", text: picked.text });
     if (picked.visual) await this.visualBeat({ visual: picked.visual, description: picked.text });
@@ -1178,7 +1190,12 @@ export class StoryEngine {
     if (picked.trust) this.addTrust(picked.trust, picked.why);
     if (picked.reply) {
       const who = picked.replyWho || step.replyWho;
-      if (who) await this.speak({ t: "say", who, text: picked.reply });
+      if (who) {
+        const voiceId = this.state?.sceneId
+          ? `${this.state.sceneId}-${String(this.state.step).padStart(3, "0")}o${pickedIndex}`
+          : null;
+        await this.speak({ t: "say", who, text: picked.reply }, { voiceId });
+      }
     }
     if (await this.runAfter(picked)) return "moved";
     return this.applyMove(picked);
@@ -1225,7 +1242,10 @@ export class StoryEngine {
     if (!Array.isArray(step.after)) return false;
     for (const sub of step.after) {
       if (skipSfx && sub.t === "sfx") continue;
-      const r = await this.play(sub);
+      const opts = sub.t === "say" && this.state?.sceneId
+        ? { voiceId: `${this.state.sceneId}-${String(this.state.step).padStart(3, "0")}a` }
+        : {};
+      const r = await this.play(sub, opts);
       if (r === "moved") return true;
     }
     return false;
@@ -1244,6 +1264,7 @@ export class StoryEngine {
   async selectStep(step) {
     this.ui.dialogue.hidden = false;
     this.ui.visualHint.hidden = true;
+    this.voice.stop();
     const box = this.ui.choices;
     box.hidden = false;
     box.innerHTML = "";
@@ -1267,7 +1288,8 @@ export class StoryEngine {
     this._resolveSelect = null;
     if (picked.aborted) return "stop";   // 中途重开：旧循环直接收场
     const spoken = !!picked.spoken;
-    if (!spoken && step.options.includes(picked)) this.markSeen(`${this.state.step}:o${step.options.indexOf(picked)}`);
+    const pickedIndex = !spoken ? step.options.indexOf(picked) : -1;
+    if (!spoken && pickedIndex >= 0) this.markSeen(`${this.state.step}:o${pickedIndex}`);
     if (!spoken) this.state.picks.push(picked.text);
     this.state.answers.push(picked.text);
     this.state.turns++;
@@ -1292,7 +1314,17 @@ export class StoryEngine {
 
     let reply = "";
     let aiTrust = 0;
-    if (this.ai.online) {
+    let fixedReply = false;
+    await this.voice.ready;
+    const fixedReplyId = !spoken && pickedIndex >= 0 && this.state?.sceneId
+      ? `${this.state.sceneId}-${String(this.state.step).padStart(3, "0")}o${pickedIndex}`
+      : null;
+    // 这句话有确认配音时，优先用回放对应的原台词，避免 AI 改写后和声音对不上。
+    if (fixedReplyId && picked.reply && this.voice.has(fixedReplyId)) {
+      reply = picked.reply;
+      fixedReply = true;
+      aiTrust = picked.trust ?? step.trust ?? 0;
+    } else if (this.ai.online) {
       try {
         const previous = this.memoryOf(step.ai).slice(0, -1);
         const out = await this.ai.reply({
@@ -1317,11 +1349,13 @@ export class StoryEngine {
         aiTrust = step.trust ?? 0;
       } else {
         reply = picked.reply || this.pickFallback(step);
+        fixedReply = !!picked.reply;
         aiTrust = picked.trust ?? step.trust ?? 0;
       }
     }
 
-    await this.speak({ t: "say", who: step.ai, text: reply, raw: true });
+    const replyVoiceId = fixedReply ? fixedReplyId : null;
+    await this.speak({ t: "say", who: step.ai, text: reply, raw: true }, { voiceId: replyVoiceId });
     if (this.lastMood) this.setPortrait(step.ai);
     if (aiTrust) {
       this.addTrust(aiTrust, this.ai.online
@@ -1428,7 +1462,7 @@ export class StoryEngine {
 
   // ---------- 主循环 ----------
 
-  async play(step) {
+  async play(step, opts = {}) {
     switch (step.t) {
       case "visual": {
         const pending = this.visualBeat(step);
@@ -1438,7 +1472,7 @@ export class StoryEngine {
         return done;
       }
       case "say": {
-        const pending = this.speak(step);
+        const pending = this.speak(step, opts);
         this.playCues(step);
         const done = await pending;
         if (step.after && await this.runAfter(step, true)) return "moved";
