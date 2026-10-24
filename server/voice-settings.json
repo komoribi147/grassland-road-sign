@@ -1,0 +1,4 @@
+{
+  "provider": "qwen-clone",
+  "note": "本地角色音色配音，依赖 node_modules 中的 Qwen Base 模型和 Python 环境；首次生成较慢，不自动退回其他音色。"
+}

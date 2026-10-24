@@ -1,0 +1,40 @@
+{
+  "li-changhe": {
+    "file": "voice/audio/prologue-020o0.mp3",
+    "text": "草地吃鞋。先穿我的，过了泥地再说。",
+    "source": "组员选定的老班长录音",
+    "seed": 147,
+    "moods": {
+      "坚定": {
+        "file": "voice/audio/act2-009.mp3",
+        "text": "别动！石头！别动！"
+      },
+      "难过": {
+        "file": "voice/audio/act3-042.mp3",
+        "text": "老家还有个闺女，闹灾那年走散了。等我出去，还想再找她。"
+      },
+      "疲惫": {
+        "file": "voice/audio/act1-012o0.mp3",
+        "text": "我胃小。你喝吧。"
+      }
+    }
+  },
+  "shitou": {
+    "file": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+    "text": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+    "source": "石头的少年声候选",
+    "seed": 148
+  },
+  "he-xiuying": {
+    "file": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+    "text": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+    "source": "用户确认的何大姐朴实关切成年女声 caring-v4",
+    "seed": 149
+  },
+  "he-xiuying-old": {
+    "file": "voice/audio/epilogue-007.mp3",
+    "text": "李长河，河南信阳人。桂香，给伤员留过麦粒。还有许多人的名字，我记了一辈子。",
+    "source": "组员选定的晚年何秀英录音",
+    "seed": 150
+  }
+}

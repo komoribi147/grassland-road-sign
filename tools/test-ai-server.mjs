@@ -97,6 +97,20 @@ try {
   assert.equal(trusted.status, 200);
   assert.match(modelRequest.messages.at(-1).content, /哥哥/);
 
+  const elderly = await fetch(`${base}/api/npc`, {
+    method: "POST", headers: { Origin: origin, "Content-Type": "application/json" },
+    body: JSON.stringify({ npc: "he-xiuying-old", mode: "free", playerText: "您还记得草地上的事吗？", trust: 50 }),
+  });
+  assert.equal(elderly.status, 200, "声音试听页可与晚年何秀英自由对话");
+  assert.ok((await elderly.json()).text);
+  assert.match(modelRequest.messages.at(-1).content, /时间地点：多年以后，何秀英晚年/);
+  assert.doesNotMatch(modelRequest.messages.at(-1).content, /时间地点：1935年8月，川西北松潘草地/);
+  const elderlyInStory = await fetch(`${base}/api/npc`, {
+    method: "POST", headers: { Origin: origin, "Content-Type": "application/json" },
+    body: JSON.stringify({ npc: "he-xiuying-old", mode: "beat", playerText: "我们继续赶路。" }),
+  });
+  assert.equal(elderlyInStory.status, 400, "晚年人物不能混入行军时期剧情互动");
+
   const gatewayNpc = await fetch(`${base}/npc`, {
     method: "POST", headers: { Origin: origin, "Content-Type": "application/json" },
     body: JSON.stringify({ npc: "li-changhe", playerText: "班长，我们一起走。" }),

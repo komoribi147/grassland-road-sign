@@ -12,6 +12,7 @@ import { readFile, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadVoiceService } from "./voice-service.mjs";
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -20,6 +21,7 @@ try { process.loadEnvFile(path.join(root, ".env")); } catch { /* 没有 .env 就
 const PORT = Number(process.env.PORT || 8787);
 const characters = JSON.parse(await readFile(path.join(root, "story/characters.json"), "utf8"));
 const aiConfig = JSON.parse(await readFile(path.join(root, "server/ai-config.json"), "utf8"));
+const { provider: voiceProvider, profiles: voiceProfiles, service: voiceService } = await loadVoiceService();
 
 /** 把 default 和某个角色的单独配置合起来 */
 function configFor(npc) {
@@ -80,7 +82,9 @@ function buildMessages({
 
   const system = [
     "你在沉浸式历史叙事作品《草地上的路标》里扮演一个角色，和玩家对话。",
-    "时间地点：1935年8月，川西北松潘草地，连日阴雨，队伍正在往外走。",
+    npc === "he-xiuying-old"
+      ? "时间地点：多年以后，何秀英晚年，向来访者回忆当年的草地行军。你已走出草地，此刻不是正在行军。只讲设定中已有的经历，不编造回忆。"
+      : "时间地点：1935年8月，川西北松潘草地，连日阴雨，队伍正在往外走。",
     `你扮演：${c.display || c.name}（本名${c.name}）。`,
     `身份：${c.identity}`,
     `性格：${c.persona}`,
@@ -198,7 +202,7 @@ async function askModel(payload) {
       max_tokens: cfg.maxTokens,
       ...(payload.mode === "ask" ? {} : { response_format: { type: "json_object" } }),
     }),
-    signal: AbortSignal.timeout(30000),
+    signal: AbortSignal.timeout(["localhost", "127.0.0.1", "[::1]"].includes(new URL(cfg.baseUrl).hostname) ? 120000 : 30000),
   });
   const raw = await res.text();
   if (!res.ok) throw new Error(`模型接口返回 ${res.status}`);
@@ -222,8 +226,8 @@ const send = (res, code, body, type = "application/json; charset=utf-8") => {
 };
 
 // 只发布网页需要的文件。尤其不能让浏览器读取根目录的 .env、.git 或 server/。
-const PUBLIC_FILES = new Set(["index.html", "rescue-demo.html", "favicon.ico"]);
-const PUBLIC_DIRS = new Set(["assets", "css", "js", "story", "docs", "openworld"]);
+const PUBLIC_FILES = new Set(["index.html", "rescue-demo.html", "voice-preview.html", "voice-candidates.html", "favicon.ico"]);
+const PUBLIC_DIRS = new Set(["assets", "voice", "css", "js", "story", "docs", "openworld"]);
 const allowedOrigins = new Set((process.env.AI_ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean));
 // 部分 CloudBase 网关会为已登记域名自动注入 CORS。仅对显式配置的域名交由网关写该响应头。
 const gatewayCorsOrigins = new Set((process.env.AI_GATEWAY_CORS_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean));
@@ -257,7 +261,7 @@ function withinRateLimit(req) {
 }
 
 function validatePayload(input) {
-  if (!input || typeof input !== "object" || !characters[input.npc] || input.npc === "he-xiuying-old") return null;
+  if (!input || typeof input !== "object" || !characters[input.npc] || (input.npc === "he-xiuying-old" && input.mode !== "free")) return null;
   const playerText = typeof input.playerText === "string" ? input.playerText.trim() : "";
   if (!playerText || playerText.length > 200) return null;
   const shortText = (value, max) => typeof value === "string" ? value.slice(0, max) : "";
@@ -373,6 +377,33 @@ const server = http.createServer(async (req, res) => {
     } catch (err) {
       console.error("[AI] 出错：", err.message);
       return send(res, 502, JSON.stringify({ error: "角色暂时无法回答" }));
+    }
+  }
+
+  if (url.pathname === "/api/voices" && req.method === "GET") {
+    return send(res, 200, JSON.stringify({ provider: voiceProvider, profiles: voiceProfiles }));
+  }
+
+  if (url.pathname === "/api/tts" && req.method === "POST") {
+    if (!withinRateLimit(req)) return send(res, 429, JSON.stringify({ error: "配音请求太快，请稍后再试" }));
+    let payload;
+    try { payload = await readBody(req); }
+    catch { return send(res, 400, JSON.stringify({ error: "配音请求格式不正确" })); }
+    if (!payload || !Object.hasOwn(voiceProfiles, payload.npc) || typeof payload.text !== "string" || !payload.text.trim() || payload.text.length > 1200) {
+      return send(res, 400, JSON.stringify({ error: "配音角色或文本不合要求" }));
+    }
+    const voiceRequest = new AbortController();
+    res.once("close", () => { if (!res.writableEnded) voiceRequest.abort(); });
+    try {
+      const mood = MOODS.includes(payload.mood) ? payload.mood : "平静";
+      const audio = await voiceService.speak(payload.npc, payload.text, mood, voiceRequest.signal);
+      if (voiceRequest.signal.aborted || res.destroyed) return;
+      res.setHeader("X-Voice-Provider", voiceProvider);
+      return send(res, 200, audio, audio.subarray(0, 4).toString() === "RIFF" ? "audio/wav" : "audio/mpeg");
+    } catch (err) {
+      if (voiceRequest.signal.aborted || res.destroyed) return;
+      console.error("[VOICE]", err.message);
+      return send(res, 503, JSON.stringify({ error: "AI 配音暂时不可用，文字仍可继续阅读" }));
     }
   }
 

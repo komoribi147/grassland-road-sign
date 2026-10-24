@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>草地上的路标 · 沉浸式叙事</title>
 <meta name="description" content="1935年8月，松潘草地。我从泥水里醒来，记不起自己的番号，只能跟着他们走。" />
-<link rel="stylesheet" href="css/style.css?v=20261023-visual2" />
+<link rel="stylesheet" href="css/style.css?v=20261024-voice-public" />
 <link rel="stylesheet" href="css/landscape.css?v=20261023-toasttop" />
 <link rel="stylesheet" href="css/ask.css?v=20261023-askchoice" />
 </head>
@@ -48,6 +48,7 @@
     <div class="dialogue-inner">
       <div class="speaker" id="speakerName" hidden></div>
       <div class="text" id="dialogueText"></div>
+      <div class="voice-controls"><button class="voice-btn" id="voiceBtn" type="button" hidden>▶ 回放本句</button><span class="voice-source" id="voiceStatus" aria-live="polite"></span></div>
       <div class="choices" id="choices" hidden></div>
       <div class="click-hint" id="clickHint" hidden>点击继续</div>
     </div>
@@ -126,7 +127,11 @@
           <input id="volSlider" class="vol-slider" type="range" min="0" max="100" step="5" value="100" aria-label="音量" />
           <b class="vol-value" id="volValue">100%</b>
         </div>
-        <button class="ghost-btn wide" id="btnToggleSound" type="button">音效：开</button>
+        <button class="ghost-btn wide" id="btnToggleSound" type="button">声音：开</button>
+        <button class="ghost-btn wide" id="btnToggleVoice" type="button" aria-pressed="true">角色配音：开</button>
+        <button class="ghost-btn wide" id="btnToggleRealtime" type="button" aria-pressed="true">回复语音：开</button>
+        <a class="ghost-btn wide" href="voice-preview.html" target="_blank" rel="noopener">配音融合预览</a>
+        <a class="ghost-btn wide" href="voice-candidates.html" target="_blank" rel="noopener">试听年龄与情绪候选声线</a>
         <button class="ghost-btn wide" id="btnRestart" type="button">从头开始</button>
         <button class="ghost-btn wide" id="btnAbout2" type="button">关于本作品</button>
       </div>
@@ -142,6 +147,7 @@
         <button class="ghost-btn" data-close="screenTalk" type="button">关闭</button>
       </div>
       <p class="panel-note">他们各想各的，也各记各的：你在谁面前说过什么，只有那个人记得。</p>
+      <p class="panel-note" id="replyVoiceNote">新回答按角色参考声音生成配音，首次等待较长；可在菜单中单独关闭回复语音。</p>
       <div class="talk-who" id="talkWho"></div>
       <div class="talk-log" id="talkLog"></div>
       <div class="input-row" id="talkRow">
@@ -202,7 +208,7 @@
   <div class="chapter-card" id="chapterCard" hidden><span id="chapterCardText"></span></div>
 
   <script src="js/site-config.js?v=20261021-network-check"></script>
-  <script type="module" src="js/main.js?v=20261023-hair2"></script>
+  <script type="module" src="js/main.js?v=20261024-voice-public"></script>
   <script src="js/landscape.js?v=20261020-1"></script>
 </body>
 </html>

@@ -9,10 +9,14 @@
     "check": "node tools/check-story.mjs",
     "test": "node tools/test-engine.mjs && node tools/test-audio.mjs && node tools/test-reflection-report.mjs && node tools/test-visual-delivery.mjs && node tools/test-image-package.mjs",
     "test:ai": "node tools/test-cloud-settings.mjs && node tools/test-ai-client.mjs && node tools/test-ask.mjs && node tools/test-ai-server.mjs",
+    "test:voice": "node tools/test-story-voice-lines.mjs && node tools/test-local-voice-checkpoint.mjs && node tools/test-voice-service.mjs && node tools/test-voice-player.mjs && node tools/test-voice-integration.mjs && node tools/test-fixed-voice-assets.mjs",
+    "voices:generate": "node tools/generate-voices.mjs",
     "package:static": "node tools/package-static.mjs",
     "package:ai": "node tools/package-ai-function.mjs",
     "deploy:ai": "node tools/deploy-ai.mjs",
     "check:public-ai": "node tools/check-public-ai.mjs",
-    "gen": "node tools/gen-image.mjs"
+    "gen": "node tools/gen-image.mjs",
+    "voices:prepare-local": "node tools/complete-local-voices.mjs --prepare",
+    "voices:finalize-local": "node tools/complete-local-voices.mjs --finalize"
   }
 }

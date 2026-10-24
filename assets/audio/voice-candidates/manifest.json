@@ -1,0 +1,40 @@
+{
+  "provider": "Qwen3-TTS VoiceDesign 1.7B (local GPU)",
+  "status": "角色参考试听；何大姐 caring-v4 已获用户确认，整剧配音见 voice/manifest.json",
+  "clips": [
+    {
+      "npc": "li-changhe",
+      "name": "老班长",
+      "age": "52 岁",
+      "description": "Male, 52 years old, weathered working-class Chinese man. A distinctly mature and worn low baritone with a dry husky grain, audible breath from fatigue, natural chest resonance. A slight Henan accent in otherwise clear Mandarin. He speaks to a frightened younger companion at very close distance: tired but dependable, gentle concern held under a firm surface. Small irregular pauses and restrained natural inflection. No announcer delivery, no theatrical recitation, no youthful smoothness. The final reassurance is quieter and warm. Preserve intelligibility; do not exaggerate rasp.",
+      "sample": "别怕。踩着我的脚印走。你那脚还伤着……先穿我的。我站得稳。",
+      "url": "assets/audio/voice-candidates/li-changhe-qwen-local.wav"
+    },
+    {
+      "npc": "shitou",
+      "name": "石头",
+      "age": "16 岁",
+      "description": "Male Chinese teenager, 16 years old, genuinely adolescent voice just after voice breaking. Light and thin youthful tenor, not a deep adult man. Slightly breathless, spontaneous and uneven, with a mild Sichuan accent. He is trying to sound brave to a friend but he is hungry and afraid. Begin with lively, quick, almost eager speech, then hesitate on the admission of fear and soften at the end. Youthful vulnerability and nervous little changes of pitch; conversational and unpolished. No broadcaster or formal reading style, no adult bass voice, no cartoon baby voice.",
+      "sample": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+      "url": "assets/audio/voice-candidates/shitou-qwen-local.wav"
+    },
+    {
+      "npc": "he-xiuying",
+      "name": "何大姐",
+      "age": "25 岁",
+      "description": "Chinese woman aged 25 to 30, a dependable wartime nurse looking after a younger injured teammate. Plain, kind, down-to-earth everyday speech. A clear, rounded adult female voice in a comfortable middle register, with full natural voicing, steady breath support and clear consonants. Warmth comes from patient attentiveness and sincere concern, like an ordinary mother helping a child with a scraped knee. Practical and reassuring delivery at a normal conversational pace. Gentle speaking volume, naturally connected words, short ordinary pauses. Complete each sentence with a settled falling ending, without prolonging the last syllable. Keep vowels compact and evenly voiced. She sounds approachable and caring while doing her work, with modest natural inflection, no performance. Avoid whispering, airy breathiness, vocal fry, sighs, intimate crooning, coy upward turns, lingering vowels or sing-song sweetness. Never stern or clinical, never flirtatious, no exaggerated affection or dramatic recitation.",
+      "sample": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+      "url": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+      "previousUrl": "assets/audio/voice-candidates/he-xiuying-maternal-v3.wav",
+      "status": "user-approved-reference"
+    },
+    {
+      "npc": "he-xiuying-old",
+      "name": "何秀英（晚年）",
+      "age": "约 70 多岁的声音",
+      "description": "Elderly Chinese woman in her seventies, recognizably old in vocal texture rather than simply slow speech. A thin, breathy, softly grainy low-to-mid female voice, slight natural frailty and gentle age-related tremor at phrase endings. Breath support is limited and she pauses to gather breath. She is quietly remembering people she lost many decades ago, with restrained grief and deep affection. Intimate, unperformed, like speaking to one listener. Let the memory soften the last sentence, with a meaningful pause before it. No youthful bright smooth voice, no announcer delivery, no melodramatic sobbing, no extreme pitch shifting.",
+      "sample": "后来……我继续认字，也学了医。那些名字啊……这么多年，我一直记着。",
+      "url": "assets/audio/voice-candidates/he-xiuying-old-qwen-local.wav"
+    }
+  ]
+}

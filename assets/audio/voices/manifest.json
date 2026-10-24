@@ -1,0 +1,751 @@
+{
+  "version": 2,
+  "provider": "Microsoft Edge Neural",
+  "generatedAt": "2026-10-23T11:12:30.879Z",
+  "profiles": {
+    "li-changhe": {
+      "name": "老班长",
+      "voice": "zh-CN-YunjianNeural",
+      "rate": "-15%",
+      "pitch": "-8Hz",
+      "description": "沉厚男声，语速偏慢，短句克制",
+      "sample": "不碍事。你踩着我的脚印走，别踩偏了。先走出去再说。"
+    },
+    "shitou": {
+      "name": "石头",
+      "voice": "zh-CN-YunxiaNeural",
+      "rate": "+8%",
+      "pitch": "+4Hz",
+      "description": "清亮少年男声，说话稍快，带一点逞强",
+      "sample": "我跟你说，前面就是河了。你说嘛，我听着呢。我不怕，真的。"
+    },
+    "he-xiuying": {
+      "name": "何大姐",
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "-7%",
+      "pitch": "-4Hz",
+      "description": "清晰温和女声，语气平稳，安排事情干脆",
+      "sample": "坐下，我看看。把那块布收好，到了干处再换。伤员要紧。"
+    },
+    "he-xiuying-old": {
+      "name": "何秀英（晚年）",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "rate": "-24%",
+      "pitch": "-12Hz",
+      "description": "低缓成熟女声，停顿较长，平静回忆",
+      "sample": "后来，我继续认字，也学了医。那些名字，我一直记着。"
+    }
+  },
+  "clips": [
+    {
+      "npc": "he-xiuying",
+      "text": "把那根木棍插在他身旁。后面的人还能看见。",
+      "url": "assets/audio/voices/046053b01aa9118f021f62609af0f2b407a45ec2931de0f08b2b8e34d44320de.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "好，托住他的肩。我把药箱收起来。",
+      "url": "assets/audio/voices/086cd64100a0ab1f91631647b97cb0237b1edb03f74f93e31d5cc5a818237c26.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "嗯，我盯着木棍，不乱跑。",
+      "url": "assets/audio/voices/0bf3748595acce76b4a0e726d3293311b7e7c4313480ae047ef05d55f3be8e1e.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "没绕回来。刚才的泥发黄，这儿是黑的。再找找前头的记号。",
+      "url": "assets/audio/voices/0e5d7434661fe4ada019ed8205fbbea8c99c1a24786e9c347443ccc36e7c9958.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "别瞎说。老班长有数。",
+      "url": "assets/audio/voices/102d5e259fa51d215efa417da8559df302004dab2882f354a2b0fde41e935a68.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "你这脚若走不了，后面的人也得停。让我看。",
+      "url": "assets/audio/voices/119a92a120798915ae55f478a281cae3d518212bb32df07deb38cd2261d209fe.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "你那勺也少。收着，明天要赶路。",
+      "url": "assets/audio/voices/1228605ada5689a81948e6da67c75bd5dbd056689d15cc8041e1b639e11e78d8.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "锅沉。先把自己的脚养好，明早再说。",
+      "url": "assets/audio/voices/13f1549436dab92d93c245d81c7ad02242a1b8ed8415ed2058ee51408ba3afde.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "认得名字，好。总得先把名留下。",
+      "url": "assets/audio/voices/1558b4752b36cbf3745785fb4982f8523f65153b5f0b09bd6cd915cd7737dc97.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "中。都走出去。",
+      "url": "assets/audio/voices/15ee5248e4474ff3db5d1a7945dab2bf9892a5b15e6499ae624614c8c27c835b.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "石头。你那勺已经盛了。伤员还没喝。",
+      "url": "assets/audio/voices/1cd02b6cfcb90cb0b0ec7fecc5dcfd880a3a56b04b63918c0772ff89996176c3.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "还有——后面的人，看着我们的脚印走。你刚才踩的那个地方，插根棍子，做个记号。",
+      "url": "assets/audio/voices/2099e9a425517af8e7a56444abb5d0f6264fc359ada950da52dbe0873da3e62b.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "先把路走稳了，称呼往后再说。",
+      "url": "assets/audio/voices/20feac73e8c4f93e1b3f4c45bf5d8bfb961561cc1ee8014f0c1ad0f4f95323cd.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "何大姐……这人哪来的？会不会是……",
+      "url": "assets/audio/voices/23649e8b719cce4aa686792e33d877f6fafe0bdbcb946f5120cf33556504ecc2.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "好。先问有没有人见过她。",
+      "url": "assets/audio/voices/236beab108882b5f09f644e1e5cf9e83a44c37b193c03a24b6b6cf4074975dc0.mp3"
+    },
+    {
+      "npc": "he-xiuying-old",
+      "text": "那年在草地上，我说想继续念书，学医。后来我学成了，在延安的医院工作，也带过年轻的护士。每教她们认一个名字，我都会想起那天夜里。",
+      "url": "assets/audio/voices/25c2dab8e303ce7490ffe3ee042368a725881731c39f66140c142e61915bcd0c.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "文书。你还认得字。你说，等这仗打完，孩子们是不是都能进学堂？",
+      "url": "assets/audio/voices/28ae2ef8070b8284a65ca70c74870d2e4835e2fc8f10177ab6cb522567b91475.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "绳子有。鞋也有。都拿着，别让脚烂了。",
+      "url": "assets/audio/voices/29a918765d566cc0e449a611c5b667d2272ed7ddd7169715335606cf7b989430.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "老李，光脚那边我给你裹一层。你也别逞强。",
+      "url": "assets/audio/voices/29f2179c057681805b6023cdab5d023969ecf18e4fa2dac6b1a1fd86dcce3cf0.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "老班长！你看见河没有？",
+      "url": "assets/audio/voices/2e44a5f90fb73358586d304c96ed0d26ec69e22eb418a414a0b2378958908715.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "老班长，我不该离开脚印。还害你伤了脚。",
+      "url": "assets/audio/voices/2e546203bf8c00bb78489fc4a23c76e367d23c730c4ba192b022472986e496da.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "原来你也怕。那我不装了，我也怕。",
+      "url": "assets/audio/voices/2f472558539716c93b21fa0381946718c0ab90c0ee2cd804645bad3c2c0be38a.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "昨夜他把油布留给伤员，自己守在这里。我说来换他，他让我先歇。",
+      "url": "assets/audio/voices/3494678f2809c14f3b8c8464b13561f4a9dd4319eb81b47a5e79d2fbcb8a2740.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "还得多留个心眼。",
+      "url": "assets/audio/voices/3799883e1bcbeadafdd0b766572e65cef47bc8415e0d2fe85504daa95f849e0e.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "这地方，哪儿有干处？",
+      "url": "assets/audio/voices/3813b174e67838676c392cc39edd4b7f238f4ea0548bbf73573f9e54d326d2b6.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "就嚼两口。",
+      "url": "assets/audio/voices/392e713da41449510c66a9d89b642a674b58886906952fe42bb28729f75adf73.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "班佑就在前面。快到了。",
+      "url": "assets/audio/voices/3b4a1d49a90532bb00e8d6b3494acd90e530e36d05aca5b3ae712087278a6ff1.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "先带着。",
+      "url": "assets/audio/voices/3d4d028cd80c2971a3822297fb4b9dae177d99c112edd9c61bb7cf97691e4ebb.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "我胃小。你喝吧。",
+      "url": "assets/audio/voices/3e19f74b8eb73ec6de4783cd5312c1325c23c4a95ac1597c1664fc2c0e223eb2.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "中。听你的，何大姐。",
+      "url": "assets/audio/voices/3f631a204572caf65571450c9451d72d415266f23a40e83b12fd450d5de01b0a.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "老家还有个闺女，闹灾那年走散了。等我出去，还想再找她。",
+      "url": "assets/audio/voices/4205bdad818765b95e2450160d09aa1fa6290090649db3f3ea25a5e546405a06.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "好。找到后先烧开。",
+      "url": "assets/audio/voices/42710ceb854a730fbb0aea82c508c765646bee7a99d568d48982263ad0f9f4d1.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "你喝。",
+      "url": "assets/audio/voices/474f514c72e72fce5c8b7ce4b5478ee69afc1204eb337a915160a0ba78e61fd3.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "好。先把这一路的人名记全。",
+      "url": "assets/audio/voices/49b13dd0ed5c1e2bd0f32c6025411349e6a9415b2c3dd5f10746eb6bd2c6dba9.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "是。前面的人顾着后面的人。",
+      "url": "assets/audio/voices/4b442d5acee05e8c9a9a96bd67dfc7a3d4534b49094b6ae87c3a866e74f8916e.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "你，你说……革命胜利了，是不是天天吃白面馍？",
+      "url": "assets/audio/voices/508b1ad8c378bd90d37d81e25b2dab8fd48c59d28001a59d022c9be3d6d1a0e1.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "中。你先看伤员，我跟着。",
+      "url": "assets/audio/voices/52efd593efe5d5314a30c6fbfb18315f0d4158efabbc941b785240f7a4c211cb.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "鞋绳断了。先收起来，天亮再想办法。",
+      "url": "assets/audio/voices/55fadb6af9ffc7879a44866ea8494da1646c3382ed48346b26161c00f5b8b9cf.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "中。跟在后头，别乱走。",
+      "url": "assets/audio/voices/575c0e876e6a75a83e1b98f97e30132c4055182f517acdd49a99fe8e38d86b65.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "那我娘也得有白面馍吃。",
+      "url": "assets/audio/voices/57ca8d9e9fb6d76b0a56bb8ccc82a1e96bd64fe10259cd18852fa02b05c594f5.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "记住就好。剩下的路，咱们一起走。",
+      "url": "assets/audio/voices/5b7f30b64b90d7769a343ec6cae83d7f5a53a0fa0155630584a38ca4572f02b3.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "老班长，我们看见河了。",
+      "url": "assets/audio/voices/5d1a45676167b16a5383e2d82f67f6e37d66ec5b63e12532f733ff602fb26f75.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "石头，抓稳。听我数，一、二、三！",
+      "url": "assets/audio/voices/601fbe964915bf59fad1f94f34c326631ba1728395aceef71a39582faa0e0187.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "有个女同志叫桂香，先前跟我们同行。她怕伤员饿，总往自己袋里省麦粒。后来走散了，我还不知道她到哪儿了。",
+      "url": "assets/audio/voices/641dc1d204c530239610a4a776d4c1acc9a131ecd155fb17a08926c6c6fe2e9f.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "文书，你说……革命胜利了，是不是天天吃白面馍？",
+      "url": "assets/audio/voices/669dc050cbfa8d3eaed22f6d7137a50f783c9c57d8453443db5ba9f0fa51fa15.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "离了脚印，下回要告诉大家。刚才你喊得对，我们才听见。",
+      "url": "assets/audio/voices/677e6f1c70446cc44f38dadf5a5e452600cf7c1dfcea30f56ddab4cdd54a4951.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "那你背着。我扶着伤员。",
+      "url": "assets/audio/voices/6cf4a1c9ca8fbd7fcd7d3e120ffdf2eb7c12ebbc2769f1763f679dd5c709ed8b.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "老李。你那口锅，还背得动吗？",
+      "url": "assets/audio/voices/6da5f1e4234b52731d928db7bf684e14a1c96682e77485acf89e7c430ac8205c.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "看到那棵歪树没有？树后头有根绑布的木棍。往那儿走。",
+      "url": "assets/audio/voices/6fe42dbdb2d8099710238426185246462a016897e5efaa82e4ca1db652bc1c66.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "老李让你记他的名字？",
+      "url": "assets/audio/voices/71f61bfccac5dabb01560125248594dbc2d1fe19eb9ed32a6ad5844eff353179.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "嗯。我跟紧你们。",
+      "url": "assets/audio/voices/7283dd89131756ccf78ad188ec54e6b277711a2be7e82c9fd3bdedef8a8b3a17.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "中。睡吧。",
+      "url": "assets/audio/voices/74e2291151315c936ebf815319c9166377bef2208d074a8c6df7f8dbd839758b.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "湘江那一仗，我丈夫没回来。他从前教我认过一些字。往后我又自己学，能认名册，还想学更多。",
+      "url": "assets/audio/voices/75951bfa8d90a496443957f9e824e996585bfd7a9ee9800197f3151e98d95ef4.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "老李！你脚——",
+      "url": "assets/audio/voices/7608d840ba259d571846b1b11d0ac17148a5393b6342b1a8c032d0e7d07cad34.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "同志，你说……革命胜利了，是不是天天吃白面馍？",
+      "url": "assets/audio/voices/77032434124c6adc8aba95b81fd32825816f14f83fa96ba7b8a84ac335a319f2.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "我把军号抱紧。明早我叫醒你。",
+      "url": "assets/audio/voices/784b7e599ea60a51dd8038d1399360bf7efe64f583c79efc99bab059e2cf4f00.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "别乱挖。草根有的不能吃。",
+      "url": "assets/audio/voices/7a8a9641c89dc94f419aff09c41970cb7a3d4265edbeac1a53f44f6bf6830f74.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "就这几颗……",
+      "url": "assets/audio/voices/7c4bce6f3443d2f3a4810fcf7d7d8b683034419192860a8c22c46b13f6c671bf.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "把这三个名字先记住。队伍走散了，好一个个找。",
+      "url": "assets/audio/voices/7cd15ec7fa58aa083c36091304a274a8d3fab7fc032f3a522501d90847ee8890.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "……我知道了。",
+      "url": "assets/audio/voices/7e11260bd4935797d391ef26a84450d24c265cf03380ec83beff4920f66a5ebb.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "学医。能看病、能教人的那种。",
+      "url": "assets/audio/voices/7f24210ce4a84a016728848aa9b63e02e58d65304c603a3eda97f12b53b167f1.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "要是再走散了，替我跟前队说一声：炊事班李长河，河南信阳人。",
+      "url": "assets/audio/voices/7faf6d7e0115795dfe05d0b04d0ed1ada964f4f6517c70496a4ab52edc364cb0.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "知道。走出这片泥地，就能想法子找粮。",
+      "url": "assets/audio/voices/8039ddfddfdd022e15fdac9d715ee10424decd01c6e6ec9698da789012b47d76.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "那我得活着走出去。我娘还等我呢。",
+      "url": "assets/audio/voices/80ce5fefa91a1df85b9afa61c1638e709c77e87b07d045faf16f3785c842f468.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "我扶着老田。咱们接着走。",
+      "url": "assets/audio/voices/816398ebd37b6d4515d8fd09a7f03e4ae6e553e5d45255e3c374a947c530bf2a.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "中。泥沼边那根留给后队，这根咱们带着走。",
+      "url": "assets/audio/voices/82006cb428249e4fc0380f89c948c6458c7143ab358f05e2c78bf10936425687.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "草地吃鞋。先穿我的，过了泥地再说。",
+      "url": "assets/audio/voices/82f2108522411379d087bd841d28195e81701e8511b16db2b30e35f6b7481767.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "不碍事。你踩着我的脚印走，别踩偏了。先走出去再说。",
+      "url": "assets/audio/voices/85eeda5c08b28d78f9f17ead70908e042d2157bfd837fd2522334ae629c4e22b.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "你那脚包不住。穿上，我还站得稳。",
+      "url": "assets/audio/voices/867924095899c2c3dbf00bb29dcdb3743a186c2b7a34e641a5d9928189a98970.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "最后一口刚喂了。明天得找水。",
+      "url": "assets/audio/voices/86cebe09ea53b306cbbee2ce3628debffe0abae7f07937dac9fad4c7690a5ce4.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "鞋呢？",
+      "url": "assets/audio/voices/8759fc35b3eb88379f3c41f570f838d38f6ed63360ebc56567a0e34e31669735.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "坐下。",
+      "url": "assets/audio/voices/892d00277b402ea3cdd6a2862b73ad7dff2f1f5f3bd6e35205ace8f858d0b6aa.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "我也担心。天亮我再看看他的脚。",
+      "url": "assets/audio/voices/8b1a9dcecc002b0dd636be5762edf8ba23b04a1486a8aa075111d2c06a04c7ea.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "背得动。",
+      "url": "assets/audio/voices/8c6e2388a9c2993575084ca2b2c502270a66bace186cf628493953efd442b9d7.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "别跟石头说。那小子嘴碎。",
+      "url": "assets/audio/voices/9cec4ab4dcd0df642fb5fb508a94bd6e906b4b5184f4cc5fda1ffa4ad8bd8357.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "可他连自己哪个连的都不知道……",
+      "url": "assets/audio/voices/9d7f6ad7153e094eabb1c8fcc21320fde4555f13533f2a029c7e8e2373092f4c.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "醒了？醒了就爬起来。这地方不能躺，躺下就起不来了。",
+      "url": "assets/audio/voices/9e7506f30da352d63ced9646c582b4cc1a94e8f9d88502d70e895c33d6ca10ba.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "先站稳！老李，把木棍递给他。",
+      "url": "assets/audio/voices/a03668708ea060f653a5ba00398af06ff8f09916b1bcef9f18f7e9eda0702531.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "你是哪个连的？",
+      "url": "assets/audio/voices/a2186e9077b877646cf3ede7366342655830f106872f352e049ea1abeba423aa.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "你识字？那往后我叫你文书，好不好？",
+      "url": "assets/audio/voices/a48b7166ed63cb36d1681916484d3ccfb7111fb8f738a9b5aa86af6b2ba07816.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "伤员的名册淋花了。你认得字吗？",
+      "url": "assets/audio/voices/aa844aaa93abdd98946d97973cf6acb73f8545c52d47fb70abdab748a998ceb0.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "又拿草根顶饿？",
+      "url": "assets/audio/voices/aed3bdc02b3818e0a5fd8f80da79d442bc4f7075751c9bbefb3524d19443875c.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "不清楚。",
+      "url": "assets/audio/voices/b03c25d22494fe2d4256d2e16aee23848b1ff2219335f9268ba2300b093a243a.mp3"
+    },
+    {
+      "npc": "he-xiuying-old",
+      "text": "后来，我继续认字，也学了医。那些名字，我一直记着。",
+      "url": "assets/audio/voices/b2c1af0fc8822dfaedad16158e17be72ff65f18bedced037ba75eb3f8128b13c.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "你上回肚子疼了一宿。明天还得带路，别硬撑。",
+      "url": "assets/audio/voices/b9f49de9d7d2618d5d06ae7fd50bcb426e873267a508f2c0f6dbfa8ffb7ce951.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "是。我也盼着她在前面。",
+      "url": "assets/audio/voices/bad43e02acc9672c837d3b0b72b9ca895908c616bbe983c13ec1a99bc04ec919.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "你……你说，天亮了还能找到前队吗？",
+      "url": "assets/audio/voices/baedbcb4bcae228b31d1ec562c5cb96d6f7d33c10344ab18f05525823341f4bd.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "我跟你说，前面就是河了。你说嘛，我听着呢。我不怕，真的。",
+      "url": "assets/audio/voices/bbc04726ae373299023af0a37c61c8e63c04e336688175fcfa563cc9bf63acfb.mp3"
+    },
+    {
+      "npc": "he-xiuying-old",
+      "text": "李长河，河南信阳人。桂香，给伤员留过麦粒。还有许多人的名字，我记了一辈子。",
+      "url": "assets/audio/voices/bcad95f587b6463341937675af2c8de44dd540dd39cf9157bf9dcfee48cf33da.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "嗯。他还惦记着后面的人。",
+      "url": "assets/audio/voices/bcd8144a512ab17259330a024895f1744ce941bee0765b76165bfb9d1bc7282c.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "老李！你脚底下在往下陷！",
+      "url": "assets/audio/voices/bf5ed52c91972e2898e217a6810739a39233e74a28837584fc1f72bf7d9e4afa.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "一人一勺。伤员两勺。这是规矩。",
+      "url": "assets/audio/voices/c0c69a5f9b9c40fca1e4475d89e666c9c64f9ff464f5d1162fc86ddc43eb988e.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "收好。洗净煮熟，给伤员添一口。",
+      "url": "assets/audio/voices/c27ac335e7f06ce855847a280d5c8fa1e6d9fea6ea0ba48b876b553863387a21.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "同志。你还认得字。你说，等这仗打完，孩子们是不是都能进学堂？",
+      "url": "assets/audio/voices/c4a408094b9dd2d799ebfaed488c15b44d8aca0dd3a4655e71c0f5af14720d03.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "那个新来的……你打算怎么办？",
+      "url": "assets/audio/voices/c5122d9c796426979c0ee2f029a697909a7c73105d7687c706fc5ef3ba84e8ef.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "先起来。想起来了再告诉我。",
+      "url": "assets/audio/voices/c5b87aca95e1d9abf53df3ecb55c7d6ec506bd80076575e1d2408643e6dd1509.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "别怪他。他哥在毛儿盖没了，心里还没缓过来。",
+      "url": "assets/audio/voices/c8eafb8f125e2d6b56193dee1cbb790cd04109525d4fbb495934036042469567.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "有口热汤就成。馍以后再想。",
+      "url": "assets/audio/voices/cacf45cede4d00fc0f67d5ac59730f0e1d1e0ec787e5763131503df28d3a216f.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "石头抓牢！老李，把手给我。两个都得上来。",
+      "url": "assets/audio/voices/cbc7f838a36f9f389e1de0992fcd5ccf2d57752c69dd4aaeccadc7eb71ebbf0d.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "明天得找水，烧开了再装壶。",
+      "url": "assets/audio/voices/cc5428894c0a82f4e6443f85d1b20e58dcb7132e1e2e218f9c3461200393b1b7.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "老班长，我把军号上的红布系在你的探路棍上。雾里我能认出来。",
+      "url": "assets/audio/voices/d11447c72ea3922bf51a084f5452c31366c6008c1a37643396e6576df76ebdac.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "中。等到了能读书的地方，我陪你去问。",
+      "url": "assets/audio/voices/d18da8010f500aa3084dedcf19bac3e7389559c238eaf0aec85fec6bd9186cc1.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "那我先告诉你一个名字。",
+      "url": "assets/audio/voices/d2b84e0a579863ebed8ac43b222bdf3da858b89b73e63875acf0493301fafc2c.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "也别学我。吃错了，连路都走不了。",
+      "url": "assets/audio/voices/d612f87be3b1d302f0517ad32b7e7a1979a39f4e9d60ddf5b47324443c3411bb.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "伤口先包住。到干处再换一回布。",
+      "url": "assets/audio/voices/d85d38595fbc10a332fa9271beaa392aa3dbf2dd20321f1f3a7bb463482c8490.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "就这几颗，也是粮食。",
+      "url": "assets/audio/voices/daaef761e82e62e0ca0f23b8d3181a30e37a28f363e453f8bfb0d15be8862bc3.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "中。过了这片泥地就插一根。",
+      "url": "assets/audio/voices/dbde6dc033050e34c10ed76d72a6fe244b52f781ac45a91fc8952a772415ec0a.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "坐下，我看看。把那块布收好，到了干处再换。伤员要紧。",
+      "url": "assets/audio/voices/dcbe00719e3499b1714b782efa6c6c3d38770df29b69c89541e9ff1a075d8dd2.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "看何大姐一夜还在认名册，想起这个了。",
+      "url": "assets/audio/voices/dcc124cff6b7ba8a16ab41f49989b7f9acb1e924a7f9635ee5c3b5bab072479a.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "别动！石头！别动！",
+      "url": "assets/audio/voices/dea0026911e9c878a98d675abbbf18ef227d92cd9537eb5d456f5d15d5d9d45f.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "可香了。等见着她，让她烙给你尝。",
+      "url": "assets/audio/voices/deed382c1383138aa23ac3a24cb411a06bc6acbc2583ef9d378bd6459444598d.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "我知道。让他跟着走，慢慢看。",
+      "url": "assets/audio/voices/df71fa7de382d7964574f491ed9148162db2a3aa3ef82b6dc661e9e5787283b3.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "河！河——！看到河了——！",
+      "url": "assets/audio/voices/dfefa26e8dd0382ebbeca85d76809bd64a47860fbbaed1ffeb8cc85a38356738.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "你。你还认得字。你说，等这仗打完，孩子们是不是都能进学堂？",
+      "url": "assets/audio/voices/e004b795b4091cf49aacf06d53204309afcbc29f62a8ab6e2ebd9b5132a40a13.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "皮外伤。走。",
+      "url": "assets/audio/voices/e060ca91e6c79e9f8211fa32e2a04ee8aab665b5833880b86af775d4b33bd2e6.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "先到那棵树下。那儿地实，能歇。",
+      "url": "assets/audio/voices/e126682324a4014c49c0190f0179766167d59b2675d73d2734e6f9fd265f2040.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "底细清楚吗？",
+      "url": "assets/audio/voices/e141e7329d4be52e7ab1f03d7d820c32ef1a109f476f498137d5bad9a689209b.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "啊——！",
+      "url": "assets/audio/voices/e20f275df85e86219126916d426afbca8acbb602cd4f92f14d112a3704aa3007.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "同志……你说，天亮了还能找到前队吗？",
+      "url": "assets/audio/voices/e29a4423d77eb884c4d04a2dda295da3d9049087722a8445e0a913ccc9b5a6c8.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "漱口。",
+      "url": "assets/audio/voices/e3762cab33e9d4bc95bc1958d4bc9aae363fec17268322ef46409b808c02047e.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "老班长，你左脚那只草鞋也散了。",
+      "url": "assets/audio/voices/e4fa09f4366e5af8af88233c4868c265cebac94b142a67ee2a28a8da8eded578.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "何大姐，你捡这个干啥？",
+      "url": "assets/audio/voices/e67da4b7e80f5c671602af227c440e3e2844fa06024d2914c9d3b24ad1d6545b.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "老李，方向不对。我们是不是绕回来了？",
+      "url": "assets/audio/voices/e6f35820cfbc6e66bf8838f7ceef4533dc3810b05c543089a10531a9213d0e36.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "我知道……我就是问问。",
+      "url": "assets/audio/voices/e802cf57dd11c22fd0b925bcb4a94a976ffd2b56eebbae09fbf65be845228672.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "桂香。桂花的桂，香气的香。",
+      "url": "assets/audio/voices/ea630529356715699af8d43d39df7beea2fa240ae9b91459634cfcd4179855b6.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "我昨天晚上梦见我娘了。她给我烙饼，白面的。我一口咬下去——醒了，嘴里全是草。",
+      "url": "assets/audio/voices/ea72c1d786a21e90573467edc33fc9a89b259f1970313ab02bdd7622b4180bb2.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "老班长……今天能多给我一口不？我……我不多要，就一口。",
+      "url": "assets/audio/voices/eba300c4bfe03f8687154d88f4ccd1598d19a7afeaa54dca0b68ef2adc858ae4.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "石头。去前面探路。",
+      "url": "assets/audio/voices/ee2a4f489a36468918fc72bf9d3d07d5fa986f140474076dd4f512f29fcbd256.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "桂香。这个名字也替我记着。",
+      "url": "assets/audio/voices/ee2dd9b26041ede0cc9b670d2b1096291dc1e73d34e0ea8b77d77b91d4acaebe.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "老班长！老班长——！",
+      "url": "assets/audio/voices/f00f1a1e3a720403e4c907b322745add342ed8fe0ac27250f8049717fff169b8.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "话先放着。起来，跟上。",
+      "url": "assets/audio/voices/f08283b2396b78b7e0682404461856b94c5f0d0340279da27a0b0a46dcf01fd7.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "中。一个都别落下。",
+      "url": "assets/audio/voices/f2207a2208e9b1430082fd2f921f7702d7591516636bf556586a6c2491d6e08e.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "何大姐，队伍——",
+      "url": "assets/audio/voices/f58a0ada44822bdd4218635ff6d45eede00ef14160587498e4a41fa9da18a4e2.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "跟着前面的脚印。看着是草，底下有的地方全是泥。别自己找近路。",
+      "url": "assets/audio/voices/f841becfe76e0fb654eecd11a20019cdc9971da977749a02da6f60d8f176c506.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "听见没？队伍在前面。走。",
+      "url": "assets/audio/voices/f9429938882ad252cb49f38b97a50730fa5e7f954fba3701eb1dae379eaf20ad.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "那就找一处。你先坐稳。",
+      "url": "assets/audio/voices/f991e0ff11a0a43b60183af30e697f75e04ae1b47dc09179d9a7cef40445916f.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "老班长……？",
+      "url": "assets/audio/voices/fb5898ea87bfc75cd46abb013769a8450818f51e545008aaac876ce26f630be1.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "等走出去，我想继续念书，学医。下回伤员发烧，我能做的不该只有等。",
+      "url": "assets/audio/voices/fdc1a99eac47511b2b26a1ff78f208e221c6999e31ee84319290eb519ac825ec.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "我叫何秀英，江西瑞金人。你连我也一块记上。",
+      "url": "assets/audio/voices/ffaf5f8201b1f08564c675a6dfa45b88f1dcea345e75723987885a7c6f3eb722.mp3"
+    },
+    {
+      "npc": "li-changhe",
+      "text": "看见了吧？他们留给咱们的。走过去，咱们也给后面的人留。",
+      "url": "assets/audio/voices/ffb281061e4a7cf00abc8db47ec51c4fa8b521fbf556dc928a51940aa3f639c3.mp3"
+    },
+    {
+      "npc": "he-xiuying",
+      "text": "我自己也会问。你到时候可得好好养脚。",
+      "url": "assets/audio/voices/ffd5078a26404b7e8d4c8fc703706cb6a967feb63ea33b7b205c6920b4ea5bbc.mp3"
+    },
+    {
+      "npc": "shitou",
+      "text": "文书……你说，天亮了还能找到前队吗？",
+      "url": "assets/audio/voices/ffdc145ff6a31b9ab6d1f7a5f53057c30aabac446c01efe53e82b1a770c4ecf5.mp3"
+    }
+  ]
+}

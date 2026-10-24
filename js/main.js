@@ -1,7 +1,7 @@
 // 界面接线：标题页、史料卡、菜单、结尾报告。
-import { StoryEngine } from "./engine.js?v=20261023-hair2";
+import { StoryEngine } from "./engine.js?v=20261024-voice-public";
 import { Save } from "./save.js";
-import { initAsk } from "./ask.js?v=20261023-askchoice";
+import { initAsk } from "./ask.js?v=20261023-voices";
 import { buildReflectionText } from "./reflection-report.js";
 import { renderReflectionReport } from "./reflection-view.js?v=20261023-hair2";
 
@@ -12,6 +12,7 @@ const engine = new StoryEngine({
   toast: showToast,
   report: showReport,
   stateChange: renderLoreCount,
+  voiceAllowed: () => screens.every(id => $(id).hidden) && (!$("askLayer") || $("askLayer").hidden),
 });
 
 initAsk(engine);
@@ -43,9 +44,13 @@ if (topbarEl) {
 }
 
 function openScreen(id) {
+  talkSession++;
+  engine.voice.stop({ clearReplay: id !== "screenMenu" });
   for (const s of screens) $(s).hidden = s !== id;
 }
 function closeScreens() {
+  talkSession++;
+  engine.voice.stop({ clearReplay: $("screenMenu").hidden });
   for (const s of screens) $(s).hidden = true;
   document.body.dataset.mode = "playing";
 }
@@ -117,6 +122,7 @@ function showReport(r) {
 
 let talkTarget = null;
 let talkBusy = false;
+let talkSession = 0;
 
 function renderTalkWho() {
   const box = $("talkWho");
@@ -134,6 +140,8 @@ function renderTalkWho() {
     btn.textContent = engine.characters[id]?.display || id;
     btn.disabled = talkBusy;
     btn.addEventListener("click", () => {
+      talkSession++;
+      engine.voice.stop();
       talkTarget = id;
       renderTalkWho();
       renderTalkLog();
@@ -159,6 +167,15 @@ function renderTalkLog() {
     const div = document.createElement("div");
     div.className = "bubble " + (m.role === "player" ? "me" : "npc");
     div.textContent = m.text;
+    if (m.role === "npc" && engine.voice.canSynthesize) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "voice-btn";
+      button.textContent = "▶ 听这句";
+      const npc = talkTarget;
+      button.addEventListener("click", event => { event.stopPropagation(); void engine.voice.speak(npc, m.text, { mode: "dynamic", mood: m.mood }); });
+      div.appendChild(button);
+    }
     if (m.mood) {
       const s = document.createElement("span");
       s.className = "mood";
@@ -193,8 +210,11 @@ async function sendTalkText(text) {
   const npc = talkTarget;
   const state = engine.state;
   const epoch = engine.epoch;
-  const current = () => engine.state === state && engine.epoch === epoch && talkTarget === npc;
+  const session = talkSession;
+  const current = () => engine.state === state && engine.epoch === epoch && talkTarget === npc && talkSession === session && !$("screenTalk").hidden;
   talkBusy = true;
+  engine.voice.stop();
+  const voiceIntent = engine.voice.serial;
   input.value = "";
   input.disabled = true;
   renderTalkWho();
@@ -216,6 +236,7 @@ async function sendTalkText(text) {
     const out = await engine.freeTalk(npc, text);
     if (!current() || out.stale) return;
     renderTalkLog();
+    if (!out.unavailable && !document.hidden && engine.voice.serial === voiceIntent) await engine.voice.speak(npc, out.text, { mood: out.mood });
     if (out.unavailable) {
       input.value = text;
       const status = document.createElement("p");
@@ -247,7 +268,7 @@ $("talkInput").addEventListener("keydown", (e) => {
 });
 
 // ---------- 语音入口：按住说话，松开发送 ----------
-// 用浏览器自带的语音识别（Chrome / Edge / Safari），不装任何东西、不经过第三方。
+// 用浏览器自带的语音识别（Chrome / Edge / Safari）；识别服务由浏览器提供。
 // 剧情弹预选项时：可以点选项，也可以按住麦克风说自己的话。
 // 「开口说话」面板开着时：说的话直接发给当前选中的 NPC。
 const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -308,6 +329,7 @@ function initVoice() {
   btn.addEventListener("pointerdown", (e) => {
     e.preventDefault();
     if (recording || !engine.state) return;
+    engine.voice.stop();
     try {
       rec.start();
       recording = true;
@@ -385,6 +407,7 @@ const VOLUME_KEY = "grassland-road-sign.volume.v1";
 
 function applyVolume(v, persist = true) {
   const vol = engine.audio.setVolume(v);
+  engine.voice.setVolume(vol);
   const pct = Math.round(vol * 100);
   $("volSlider").value = String(pct);
   $("volValue").textContent = `${pct}%`;
@@ -636,8 +659,39 @@ $("btnSave").addEventListener("click", () => {
 $("btnToggleSound").addEventListener("click", (e) => {
   const on = !engine.audio.enabled;
   engine.audio.setEnabled(on);
-  e.target.textContent = `音效：${on ? "开" : "关"}`;
+  engine.voice.setMasterEnabled(on);
+  e.target.textContent = `声音：${on ? "开" : "关"}`;
 });
+
+const VOICE_KEY = "grassland-road-sign.character-voice.v1";
+function applyVoice(on) {
+  engine.voice.setEnabled(on);
+  $("btnToggleVoice").textContent = `角色配音：${on ? "开" : "关"}`;
+  $("btnToggleVoice").setAttribute("aria-pressed", String(on));
+  try { localStorage.setItem(VOICE_KEY, String(on)); } catch {}
+}
+try { applyVoice(localStorage.getItem(VOICE_KEY) !== "false"); } catch { applyVoice(true); }
+$("btnToggleVoice").addEventListener("click", () => applyVoice(!engine.voice.enabled));
+const REALTIME_KEY = "grassland-road-sign.realtime-voice.v1";
+function applyRealtime(on) {
+  if (!engine.voice.canSynthesize) {
+    engine.voice.setRealtimeEnabled(false);
+    $("btnToggleRealtime").textContent = "在线回复语音尚未开通";
+    $("btnToggleRealtime").disabled = true;
+    $("btnToggleRealtime").setAttribute("aria-pressed", "false");
+    const note = $("replyVoiceNote");
+    if (note) note.textContent = "在线自由对话提供文字回复；132 处剧情配音可正常播放。同角色的新回复配音目前在本地版本提供。";
+    return;
+  }
+  engine.voice.setRealtimeEnabled(on);
+  $("btnToggleRealtime").textContent = `回复语音：${on ? "开" : "关"}`;
+  $("btnToggleRealtime").setAttribute("aria-pressed", String(on));
+  try { localStorage.setItem(REALTIME_KEY, String(on)); } catch {}
+}
+try { applyRealtime(localStorage.getItem(REALTIME_KEY) !== "false"); } catch { applyRealtime(true); }
+$("btnToggleRealtime").addEventListener("click", () => applyRealtime(!engine.voice.realtimeEnabled));
+document.addEventListener("visibilitychange", () => { if (document.hidden) engine.voice.stop({ clearReplay: false }); });
+window.addEventListener("pagehide", () => engine.voice.stop());
 
 $("btnRestart").addEventListener("click", () => {
   Save.clear();
@@ -675,6 +729,8 @@ document.addEventListener("pointerdown", resumeAudio);
 
 document.querySelectorAll("[data-close]").forEach((btn) => {
   btn.addEventListener("click", () => {
+    engine.voice.stop({ clearReplay: btn.dataset.close !== "screenMenu" });
+    talkSession++;
     $(btn.dataset.close).hidden = true;
     if (engine.state) document.body.dataset.mode = "playing";
   });

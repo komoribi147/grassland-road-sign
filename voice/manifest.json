@@ -1,0 +1,1870 @@
+{
+  "version": "2026-10-24-local-complete",
+  "count": 132,
+  "source": "组员选定的 56 句录音 + 本地角色声线补全；何大姐 caring-v4",
+  "lines": {
+    "prologue-002": {
+      "file": "audio/prologue-002.mp3",
+      "dur": 5.75,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "醒了？醒了就爬起来。这地方不能躺，躺下就起不来了。",
+      "version": "old"
+    },
+    "prologue-006": {
+      "file": "audio/prologue-006.mp3",
+      "dur": 2.75,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "你是哪个连的？",
+      "version": "old"
+    },
+    "prologue-007o0": {
+      "file": "audio/prologue-007o0-v2.mp3",
+      "dur": 4.42,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "先起来。想起来了再告诉我。",
+      "version": "old"
+    },
+    "prologue-007o1": {
+      "file": "audio/prologue-007o1.mp3",
+      "dur": 2.14,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "跟在后头，别乱走。",
+      "version": "old"
+    },
+    "prologue-007o2": {
+      "file": "audio/prologue-007o2.mp3",
+      "dur": 3.11,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "话先放着。起来，跟上。",
+      "version": "old"
+    },
+    "prologue-013": {
+      "file": "audio/prologue-013.mp3",
+      "dur": 3.15,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "石头。去前面探路。",
+      "version": "new"
+    },
+    "prologue-015": {
+      "file": "audio/prologue-015.mp3",
+      "dur": 5.86,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "别怪他。他哥在毛儿盖没了，心里还没缓过来。",
+      "version": "old"
+    },
+    "prologue-019": {
+      "file": "audio/prologue-019.mp3",
+      "dur": 1.79,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "鞋呢？",
+      "version": "old"
+    },
+    "prologue-020o0": {
+      "file": "audio/prologue-020o0.mp3",
+      "dur": 4.91,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "草地吃鞋。先穿我的，过了泥地再说。",
+      "version": "old"
+    },
+    "prologue-020o1": {
+      "file": "audio/prologue-020o1.mp3",
+      "dur": 4.91,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "你那脚包不住。穿上，我还站得稳。",
+      "version": "old"
+    },
+    "prologue-020o2": {
+      "file": "audio/prologue-020o2.mp3",
+      "dur": 4.27,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "绳子有。鞋也有。都拿着，别让脚烂了。",
+      "version": "old"
+    },
+    "prologue-022": {
+      "file": "audio/prologue-022.mp3",
+      "dur": 2.43,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "你先看伤员，我跟着。",
+      "version": "old"
+    },
+    "prologue-026": {
+      "file": "audio/prologue-026.mp3",
+      "dur": 3.4,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "听见没？队伍在前面。走！",
+      "version": "old"
+    },
+    "act1-005": {
+      "file": "audio/act1-005.mp3",
+      "dur": 3.91,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "一人一勺。伤员两勺。这是规矩。",
+      "version": "old"
+    },
+    "act1-011": {
+      "file": "audio/act1-011.mp3",
+      "dur": 1.56,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "你喝。",
+      "version": "old"
+    },
+    "act1-012o0": {
+      "file": "audio/act1-012o0.mp3",
+      "dur": 2.91,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "我胃小。你喝吧。",
+      "version": "old"
+    },
+    "act1-012o1": {
+      "file": "audio/act1-012o1.mp3",
+      "dur": 3.95,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "你那勺也少。收着，明天要赶路。",
+      "version": "old"
+    },
+    "act1-012o2": {
+      "file": "audio/act1-012o2.mp3",
+      "dur": 4.63,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "锅沉。先把自己的脚养好，明早再说。",
+      "version": "old"
+    },
+    "act1-017a": {
+      "file": "audio/act1-017a.mp3",
+      "dur": 4.27,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "别跟石头说。那小子嘴碎。",
+      "version": "old"
+    },
+    "act1-017o0": {
+      "file": "audio/act1-017o0.mp3",
+      "dur": 5.14,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "知道。走出这片泥地，就能想法子找粮。",
+      "version": "old"
+    },
+    "act1-017o1": {
+      "file": "audio/act1-017o1.mp3",
+      "dur": 3.67,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "别乱挖。草根有的不能吃。",
+      "version": "old"
+    },
+    "act1-017o2": {
+      "file": "audio/act1-017o2.mp3",
+      "dur": 4.19,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "也别学我。吃错了，连路都走不了。",
+      "version": "new"
+    },
+    "act1-026": {
+      "file": "audio/act1-026.mp3",
+      "dur": 2.51,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "就嚼两口。",
+      "version": "old"
+    },
+    "act1-030": {
+      "file": "audio/act1-030.mp3",
+      "dur": 2.4,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "听你的，何大姐。",
+      "version": "old"
+    },
+    "act1-033": {
+      "file": "audio/act1-033.mp3",
+      "dur": 1.75,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "先带着。",
+      "version": "old"
+    },
+    "act1-035": {
+      "file": "audio/act1-035.mp3",
+      "dur": 1.95,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "不清楚。",
+      "version": "old"
+    },
+    "act1-037": {
+      "file": "audio/act1-037.mp3",
+      "dur": 3.39,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "我知道。让他跟着走，慢慢看。",
+      "version": "old"
+    },
+    "act1-043": {
+      "file": "audio/act1-043.mp3",
+      "dur": 3.7,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "先把路走稳了，称呼往后再说。",
+      "version": "old"
+    },
+    "act2-002": {
+      "file": "audio/act2-002.mp3",
+      "dur": 6.99,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "跟着前面的脚印。看着是草，底下有的地方全是泥。别自己找近路。",
+      "version": "old"
+    },
+    "act2-009": {
+      "file": "audio/act2-009.mp3",
+      "dur": 2.531,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "别动！石头！别动！",
+      "version": "old"
+    },
+    "act2-015": {
+      "file": "audio/act2-015.mp3",
+      "dur": 4.54,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "石头，抓稳。听我数，一、二、三！",
+      "version": "old"
+    },
+    "act2-024": {
+      "file": "audio/act2-024.mp3",
+      "dur": 2.334,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "皮外伤。走。",
+      "version": "old"
+    },
+    "act2-027": {
+      "file": "audio/act2-027.mp3",
+      "dur": 2.705,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "何大姐，队伍——",
+      "version": "old"
+    },
+    "act2-031": {
+      "file": "audio/act2-031.mp3",
+      "dur": 2.68,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "这地方，哪儿有干处？",
+      "version": "new"
+    },
+    "act2-036": {
+      "file": "audio/act2-036.mp3",
+      "dur": 2.067,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "背得动。",
+      "version": "old"
+    },
+    "act2-040": {
+      "file": "audio/act2-040.mp3",
+      "dur": 5.58,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "离了脚印，下回要告诉大家。刚才你喊得对，我们才听见。",
+      "version": "old"
+    },
+    "act2-042": {
+      "file": "audio/act2-042.mp3",
+      "dur": 9.24,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "还有——后面的人，看着我们的脚印走。你刚才踩的那个地方，插根棍子，做个记号。",
+      "version": "old"
+    },
+    "act3-003": {
+      "file": "audio/act3-003.mp3",
+      "dur": 4.31,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "泥沼边那根留给后队，这根咱们带着走。",
+      "version": "old"
+    },
+    "act3-007": {
+      "file": "audio/act3-007.mp3",
+      "dur": 6.34,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "没绕回来。刚才的泥发黄，这儿是黑的。再找找前头的记号。",
+      "version": "old"
+    },
+    "act3-009": {
+      "file": "audio/act3-009.mp3",
+      "dur": 5.39,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "看到那棵歪树没有？树后头有根绑布的木棍。往那儿走。",
+      "version": "old"
+    },
+    "act3-010o0": {
+      "file": "audio/act3-010o0.mp3",
+      "dur": 4,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "是。前面的人顾着后面的人。",
+      "version": "new"
+    },
+    "act3-010o1": {
+      "file": "audio/act3-010o1.mp3",
+      "dur": 2.41,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "过了这片泥地就插一根。",
+      "version": "new"
+    },
+    "act3-010o2": {
+      "file": "audio/act3-010o2.mp3",
+      "dur": 4.27,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "先到那棵树下。那儿地实，能歇。",
+      "version": "old"
+    },
+    "act3-012": {
+      "file": "audio/act3-012.mp3",
+      "dur": 6.31,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "看见了吧？他们留给咱们的。走过去，咱们也给后面的人留。",
+      "version": "new"
+    },
+    "act3-031": {
+      "file": "audio/act3-031.mp3",
+      "dur": 4.19,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "鞋绳断了。先收起来，天亮再想办法。",
+      "version": "old"
+    },
+    "act3-033": {
+      "file": "audio/act3-033.mp3",
+      "dur": 7.024,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "{player}。你还认得字。你说，等这仗打完，孩子们是不是都能进学堂？",
+      "version": "old",
+      "variants": {
+        "文书": {
+          "file": "audio/act3-033-address0-local.mp3",
+          "dur": 6.6459,
+          "generation": {
+            "provider": "Qwen3-TTS Base local",
+            "referenceFile": "voice/audio/prologue-020o0.mp3",
+            "referenceText": "草地吃鞋。先穿我的，过了泥地再说。",
+            "referenceSeed": 147,
+            "referenceSha256": "a722d1b6ee72b4be034bd9a758bd35e109843deb51a8909a46ae7c004db8dadc",
+            "signature": "6cc69b73de2ef0e46311f4489466691acc391a17c28120d2b51809b2f24cfd8c",
+            "sha256": "1fd6fb4bdf7ecd074d80d641f94ca9b932a3e31e84a97d7a4888c6dcab56cf45"
+          }
+        },
+        "同志": {
+          "file": "audio/act3-033-address1-local.mp3",
+          "dur": 7.018,
+          "generation": {
+            "provider": "Qwen3-TTS Base local",
+            "referenceFile": "voice/audio/prologue-020o0.mp3",
+            "referenceText": "草地吃鞋。先穿我的，过了泥地再说。",
+            "referenceSeed": 147,
+            "referenceSha256": "a722d1b6ee72b4be034bd9a758bd35e109843deb51a8909a46ae7c004db8dadc",
+            "signature": "ae354ab78f572a43327fb57f4dcd89ec30677d196ad1cb42484833f9144a3339",
+            "sha256": "17b76139f53b9620cb462bde25ff8d646e165093122d73ccfb9e5a1d60e58787"
+          }
+        },
+        "你": {
+          "file": "audio/act3-033-address2-local.mp3",
+          "dur": 8.4297,
+          "generation": {
+            "provider": "Qwen3-TTS Base local",
+            "referenceFile": "voice/audio/prologue-020o0.mp3",
+            "referenceText": "草地吃鞋。先穿我的，过了泥地再说。",
+            "referenceSeed": 147,
+            "referenceSha256": "a722d1b6ee72b4be034bd9a758bd35e109843deb51a8909a46ae7c004db8dadc",
+            "signature": "0add3c4b3466b157392f4ec213d4f94faa17691567fd260cb9b1eeed04402838",
+            "sha256": "f29d4b2f4bf7743ee1334df919f81b01df3fe08476e0a89740453c33a769ec3e"
+          }
+        }
+      }
+    },
+    "act3-034o0": {
+      "file": "audio/act3-034o0.mp3",
+      "dur": 1.28,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "一个都别落下。",
+      "version": "old"
+    },
+    "act3-034o1": {
+      "file": "audio/act3-034o1.mp3",
+      "dur": 4.27,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "认得名字，好。总得先把名留下。",
+      "version": "old"
+    },
+    "act3-034o2": {
+      "file": "audio/act3-034o2.mp3",
+      "dur": 5.03,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "看何大姐一夜还在认名册，想起这个了。",
+      "version": "old"
+    },
+    "act3-036": {
+      "file": "audio/act3-036.mp3",
+      "dur": 7.06,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "要是再走散了，替我跟前队说一声：炊事班李长河，河南信阳人。",
+      "version": "old"
+    },
+    "act3-038": {
+      "file": "audio/act3-038.mp3",
+      "dur": 0.98,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "睡吧。",
+      "version": "old"
+    },
+    "act3-042": {
+      "file": "audio/act3-042.mp3",
+      "dur": 6.22,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "老家还有个闺女，闹灾那年走散了。等我出去，还想再找她。",
+      "version": "old"
+    },
+    "act3-061": {
+      "file": "audio/act3-061.mp3",
+      "dur": 3.42,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "等到了能读书的地方，我陪你去问。",
+      "version": "old"
+    },
+    "act3-064": {
+      "file": "audio/act3-064.mp3",
+      "dur": 1.46,
+      "who": "li-changhe",
+      "display": "老班长",
+      "text": "都走出去。",
+      "version": "new"
+    },
+    "epilogue-005": {
+      "file": "audio/epilogue-005.mp3",
+      "dur": 16.72,
+      "who": "he-xiuying-old",
+      "display": "晚年何秀英",
+      "text": "那年在草地上，我说想继续念书，学医。后来我学成了，在延安的医院工作，也带过年轻的护士。每教她们认一个名字，我都会想起那天夜里。",
+      "version": "old"
+    },
+    "epilogue-007": {
+      "file": "audio/epilogue-007.mp3",
+      "dur": 10.66,
+      "who": "he-xiuying-old",
+      "display": "晚年何秀英",
+      "text": "李长河，河南信阳人。桂香，给伤员留过麦粒。还有许多人的名字，我记了一辈子。",
+      "version": "old"
+    },
+    "prologue-010": {
+      "file": "audio/prologue-010-local.mp3",
+      "dur": 4.1183,
+      "who": "shitou",
+      "display": "石头",
+      "text": "何大姐……这人哪来的？会不会是……",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "bf23b43fdd8f38a92d173dbd18ebf88e18eb0223395ad9ed441b3f771e58d5d1",
+        "sha256": "b0bf31da9d15f701806e377b1dfde7768195457c7896ae9722cdf17100fdf15e"
+      }
+    },
+    "prologue-011": {
+      "file": "audio/prologue-011-local.mp3",
+      "dur": 1.9429,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "别瞎说。老班长有数。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "a673286ac65263cf1667d60f21e37ebb1431b50e1b624814f7f34a27da6f4c2f",
+        "sha256": "c45f39301fafe73d16fa7081d21fb742a01fd0727944bea9e146249ab05a8507"
+      }
+    },
+    "prologue-012": {
+      "file": "audio/prologue-012-local.mp3",
+      "dur": 1.7978,
+      "who": "shitou",
+      "display": "石头",
+      "text": "可他连自己哪个连的都不知道……",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "19dbfafe45114a865384b7279521462dd6f8b2507caa3cace9a4eb48a11fa717",
+        "sha256": "23924bd4b5cb2db5c461696f6352979090fd8cb3a37a30f1c225251b9f83212c"
+      }
+    },
+    "prologue-021": {
+      "file": "audio/prologue-021-local.mp3",
+      "dur": 4.2114,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "老李，光脚那边我给你裹一层。你也别逞强。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "dba6bc027a9086203bf07cce41e1c3980b3dbe191aa3f82cd3c8ec85e7a8e8de",
+        "sha256": "42a22e2adfe5ad4653584b03fea09c76bdb53d0b95be14268429139489331b55"
+      }
+    },
+    "act1-004": {
+      "file": "audio/act1-004-local.mp3",
+      "dur": 3.9558,
+      "who": "shitou",
+      "display": "石头",
+      "text": "老班长……今天能多给我一口不？我……我不多要，就一口。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "33949c4b729f8642201f9c16eb9986a01662180a9a9599c0f9fa261d6baa3dbb",
+        "sha256": "d1d86debe3b11a31445d1486214340ac22b4112c637fe4d0c0acdb6c6fac6a05"
+      }
+    },
+    "act1-006": {
+      "file": "audio/act1-006-local.mp3",
+      "dur": 1.3835,
+      "who": "shitou",
+      "display": "石头",
+      "text": "我知道……我就是问问。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "ef3cb695b62caeb8b935f28c3758897327c8c8805d6845836f98d920f1add2d5",
+        "sha256": "0c9d7ba7796201fc3363c10c3c66e0b5d1985cea12c0c511cf168296f480eec1"
+      }
+    },
+    "act1-007": {
+      "file": "audio/act1-007-local.mp3",
+      "dur": 3.6431,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "石头。你那勺已经盛了。伤员还没喝。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "1df50f49c4b06b686b29d8c6aa06b83d9c71021f28449fd95f564c1a0e946adc",
+        "sha256": "a80a0c448ca38e77504b1b3ca19e5dbac809c3ad21bb41f2f6857c671154907d"
+      }
+    },
+    "act1-009": {
+      "file": "audio/act1-009-local.mp3",
+      "dur": 0.753,
+      "who": "shitou",
+      "display": "石头",
+      "text": "……我知道了。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "50cb910b3a68f2188523a82c0beb4225e3094a4656829ee39942913c6b387f65",
+        "sha256": "978115f3858d6679a359526b18651727ad3878fc4c4663a00de7563162eb60b2"
+      }
+    },
+    "act1-025": {
+      "file": "audio/act1-025-local.mp3",
+      "dur": 1.0998,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "又拿草根顶饿？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "2ae74605194907f00a5e5bd4ef3ca2cfb018770664dcddcdb56672d39cfb1959",
+        "sha256": "a504aaedb7618f10e06ef17391b66f81a664426c21bd15a849542a78835b4982"
+      }
+    },
+    "act1-027": {
+      "file": "audio/act1-027-local.mp3",
+      "dur": 3.487,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "你上回肚子疼了一宿。明天还得带路，别硬撑。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "6b892c6003d4c75b9e82e65b9529a3a5cffe1513339731205a1614601e0235a1",
+        "sha256": "6c47be534d7e2571edaac23c83dfdf90ee71699c7646ca408ab8c60654f347bd"
+      }
+    },
+    "act1-029": {
+      "file": "audio/act1-029-local.mp3",
+      "dur": 1.5029,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "漱口。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "a12b11e7fe0d03901fbe4254a5eefea8786195400423417240b9a90192c1b9cc",
+        "sha256": "fb64d5ce2e2da8f4b01bc8a2ecccda6a809c541b891c04b400f89df0b509ba03"
+      }
+    },
+    "act1-032": {
+      "file": "audio/act1-032-local.mp3",
+      "dur": 2.8512,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "那个新来的……你打算怎么办？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "53f01d42be020350e03ddac7c55ce82b96a8624ac5703a67c6914f856e470267",
+        "sha256": "55ea8476276d6cdaa397ccc744508113388631787e5e95edebf1ae89c89c18a6"
+      }
+    },
+    "act1-034": {
+      "file": "audio/act1-034-local.mp3",
+      "dur": 0.8546,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "底细清楚吗？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "7180423a38716fb76b810d6bb5da5d2bc67891514afa57af6192eaffb15effcf",
+        "sha256": "f5284fae7b3f9ee499a14adc7879ec4212737c5bad79fab39d1cfc4f5ada384e"
+      }
+    },
+    "act1-036": {
+      "file": "audio/act1-036-local.mp3",
+      "dur": 1.7182,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "还得多留个心眼。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "b96dd61b9c0fcf92a719d56ba28a42bc9da2a0b331ae787aada87a364bb33c35",
+        "sha256": "8450dd60afb1997467142e7d634524f36e695744f01bb4261483d6aeca8ef3b7"
+      }
+    },
+    "act1-039": {
+      "file": "audio/act1-039-local.mp3",
+      "dur": 3.7624,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "伤员的名册淋花了。你认得字吗？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "82c2852cb1d55eda077a966294d28739ea51666ac6ba01ac0bd7902026790252",
+        "sha256": "9476e449f42637cad9e9bb25c19f804af5ed1b0f8d5074e5a9c849ba0a1d8e51"
+      }
+    },
+    "act1-041": {
+      "file": "audio/act1-041-local.mp3",
+      "dur": 4.4274,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "把这三个名字先记住。队伍走散了，好一个个找。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "0f65f0243a956a729741aef1a8e6d9a40fb29d7cda2bc6d4818c2081f95c8dc9",
+        "sha256": "3ee53850d43b055de5a48b2bc2adb6ea2a2db46932d7f239577c6dc53d69efb2"
+      }
+    },
+    "act1-042": {
+      "file": "audio/act1-042-local.mp3",
+      "dur": 2.8235,
+      "who": "shitou",
+      "display": "石头",
+      "text": "你识字？那往后我叫你文书，好不好？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "4bd47a57376a7e071163efa31e87ab3b55a5f31ef7d527adecd1b0bbe0c7396c",
+        "sha256": "fc59db1813dc952ddfa1df50efd94d9aca31282b70e13841217ba34d13a12e69"
+      }
+    },
+    "act2-005": {
+      "file": "audio/act2-005-local.mp3",
+      "dur": 0.6143,
+      "who": "shitou",
+      "display": "石头",
+      "text": "啊——！",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "27c548de04d304cd9d82439fd18604ac4505c050a077fc98746ae3db297cd83b",
+        "sha256": "7cc0cc6985e349666e5da3784657a02df4ce0f71f1141feabe373d1a7b8da3d1"
+      }
+    },
+    "act2-008": {
+      "file": "audio/act2-008-local.mp3",
+      "dur": 1.7862,
+      "who": "shitou",
+      "display": "石头",
+      "text": "老班长！老班长——！",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "90dd91f3a5904b17b565fb941e5a97946b9fbfced446e642655b8b774dd3d150",
+        "sha256": "d2a2f76f8395450ddb459dc30a90b60a5328fdaf3caa3ffd0e3fa9db82234a04"
+      }
+    },
+    "act2-011": {
+      "file": "audio/act2-011-local.mp3",
+      "dur": 2.7448,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "先站稳！老李，把木棍递给他。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "b50f8acd7650e09bea4475c3b18adf9f1304096b864d7d4ba847c73bc2f1bc4d",
+        "sha256": "55f67305f27a0c8c6d37e8167bc34d514f648e213bb6eeec50417a634816b917"
+      }
+    },
+    "act2-018": {
+      "file": "audio/act2-018-local.mp3",
+      "dur": 2.4785,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "老李！你脚底下在往下陷！",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "0dc8d42fbdc3c5c3f73caa4edddc184bef9032389f036c74098d56228dbf54a4",
+        "sha256": "5de1086c2ccb1146a94a8b6113e392a65ebf56040b3bc8b515c3264bf20f9bc7"
+      }
+    },
+    "act2-019": {
+      "file": "audio/act2-019-local.mp3",
+      "dur": 3.8478,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "石头抓牢！老李，把手给我。两个都得上来。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "4586ee4a7b36b6112c0e104d38048ed64bfbaf47e8b1a5b3304f2ac3eeeb7e1f",
+        "sha256": "752ca0e4a5b49c64b80b648a490020ae4be6d6c4b53989943c2274be62275c07"
+      }
+    },
+    "act2-023": {
+      "file": "audio/act2-023-local.mp3",
+      "dur": 2.159,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "老李！你脚——",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "0a395649f1f971b97a1b203916eaa7288ca4b586ba396ea3b697b5baedd6ddd7",
+        "sha256": "65dab0ab0a5b6986e201322ac4b37920358eb539018e134a803d61665e5a5bc4"
+      }
+    },
+    "act2-026": {
+      "file": "audio/act2-026-local.mp3",
+      "dur": 0.6916,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "坐下。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "009fe6e65785f381096c84005126d3eee76c32b30548b7d083947c3058e28765",
+        "sha256": "d3c8e580a2d352faa5ae4995a36c8b77ec9b892c30ada38a250cd9d408ba75e7"
+      }
+    },
+    "act2-028": {
+      "file": "audio/act2-028-local.mp3",
+      "dur": 3.729,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "你这脚若走不了，后面的人也得停。让我看。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "921d3637d13a1bbfd2b5d52a37e7badb188df2717514b2c6c576cf25c7a3a0df",
+        "sha256": "5afc6445c50de722f11b7eefb484f35f40658ef512ab1a6f794f21dcfc1b5a13"
+      }
+    },
+    "act2-030": {
+      "file": "audio/act2-030-local.mp3",
+      "dur": 3.0216,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "伤口先包住。到干处再换一回布。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "abe5391eb207aef3d47e27f23c752df33e6a585eb1938a86c1a6b9da414bc894",
+        "sha256": "50490d01dc75b8a0a77a779906448d28b2370fd1f7dc90ad02275c83e0d6dd7c"
+      }
+    },
+    "act2-033": {
+      "file": "audio/act2-033-local.mp3",
+      "dur": 1.9694,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "那就找一处。你先坐稳。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "1d4b7ed5100eec25db719b5823409f27cb0fe8d2aecce39f92e7977aefa370e4",
+        "sha256": "e129f751c7d668817dd20f8dcb4af58b04b1a844f08b41d167d9dbc4aa783552"
+      }
+    },
+    "act2-035": {
+      "file": "audio/act2-035-local.mp3",
+      "dur": 3.3093,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "老李。你那口锅，还背得动吗？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "f066aaac328c94ae42e8dc3f3d851f81ec599341b548804cbde45627bd220b3a",
+        "sha256": "5d44576b4aa05c1ff9461db12f3b9cc44ee6fc832ad430ab9c96df6479a40329"
+      }
+    },
+    "act2-037": {
+      "file": "audio/act2-037-local.mp3",
+      "dur": 3.5925,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "那你背着。我扶着伤员。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "7be4ad5decf802c91d13d34491747690a0c6c53908487fba81e4fcd83205cdb7",
+        "sha256": "af4037acdea378c89261ada35b4a0a76f6bd1994ea64d646699333d604f43f28"
+      }
+    },
+    "act2-038": {
+      "file": "audio/act2-038-local.mp3",
+      "dur": 3.6644,
+      "who": "shitou",
+      "display": "石头",
+      "text": "老班长，我不该离开脚印。还害你伤了脚。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "a82c60ca076eec4f449fb9856161810eb1cad92e7f632552b7cefc0b79e54ade",
+        "sha256": "8d05d8c47d19c55ddf84550f54bbed3f52f9281fcfa82f7b133a725bf1c56dcd"
+      }
+    },
+    "act2-041": {
+      "file": "audio/act2-041-local.mp3",
+      "dur": 2.6587,
+      "who": "shitou",
+      "display": "石头",
+      "text": "嗯。我跟紧你们。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "7e450563c576c921cea9c996d4601f5c9c95189c7d0aeebc40dca1ef70bd56f3",
+        "sha256": "d1ddee13faf48fa231defadd61f6cd0c35b53646933b4a16199adbfc29c68951"
+      }
+    },
+    "act2-047": {
+      "file": "audio/act2-047-local.mp3",
+      "dur": 2.1962,
+      "who": "shitou",
+      "display": "石头",
+      "text": "何大姐，你捡这个干啥？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "a319b4cb3a5e8b80f36d58733fde796d9e14d5dfcd14dc650ad341f0e50f6f3d",
+        "sha256": "1d24c716657ccf2ca69c5a227a630e144bf6738176e834be55200f06c8b22a1b"
+      }
+    },
+    "act2-048": {
+      "file": "audio/act2-048-local.mp3",
+      "dur": 4.163,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "收好。洗净煮熟，给伤员添一口。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "40e5d1f06432185f2cad6a74b9b6cad655bb84d3aebfc04a39874e38e057746a",
+        "sha256": "3372c16bf8f987f344203e7fff315cd46aae39e283644f262237268ae2c16cf2"
+      }
+    },
+    "act2-049": {
+      "file": "audio/act2-049-local.mp3",
+      "dur": 0.7584,
+      "who": "shitou",
+      "display": "石头",
+      "text": "就这几颗……",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "95e68c54b156b04c92da7ebb38fe11d2f385284b67fbda0b78df07b55bd02c53",
+        "sha256": "e4084a7fcf169e812a7850b483618f9a234ef2cf61f018ebf9afc135577affae"
+      }
+    },
+    "act2-050": {
+      "file": "audio/act2-050-local.mp3",
+      "dur": 2.3973,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "就这几颗，也是粮食。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "c5f090c75d7166918785260139d81f489886576ee6dd3775e512a0d5450a41e1",
+        "sha256": "8429192f9ef4b57d78bf41fd3fd0abf07a3a06a74ed5d200525c42ddc82d6c0f"
+      }
+    },
+    "act3-002": {
+      "file": "audio/act3-002-local.mp3",
+      "dur": 5.3145,
+      "who": "shitou",
+      "display": "石头",
+      "text": "老班长，我把军号上的红布系在你的探路棍上。雾里我能认出来。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "3d35c7287705c8eae6eeef1852cd74801a47d022d5a5af0e78d5e8d28a421eb5",
+        "sha256": "eff5787f6c66106b24d7b79edc8f37faf7005a75300b6ed908fa2351d5d314dc"
+      }
+    },
+    "act3-005": {
+      "file": "audio/act3-005-local.mp3",
+      "dur": 5.0108,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "老李，方向不对。我们是不是绕回来了？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "1687fb8a71f207641b3bd430fe94f53cb681c904bb57b2fd2ff6cf639d82ad31",
+        "sha256": "7148bad462a33a5465f730f48f470f614e7d5960370cc130b9591024874224a0"
+      }
+    },
+    "act3-017": {
+      "file": "audio/act3-017-address0-local.mp3",
+      "dur": 2.5953,
+      "who": "shitou",
+      "display": "石头",
+      "text": "{player}……你说，天亮了还能找到前队吗？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "b12cbf01b14620c68730422b5582bcfab6c6e4e01bb26b8fb3d85a2eadac8800",
+        "sha256": "07463a86d9cb2acd3585bb629699bfa25c94112df6d6aa9fbb87f39676c37f52"
+      },
+      "variants": {
+        "文书": {
+          "file": "audio/act3-017-address0-local.mp3",
+          "dur": 2.5953,
+          "generation": {
+            "provider": "Qwen3-TTS Base local",
+            "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+            "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+            "referenceSeed": 148,
+            "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+            "signature": "b12cbf01b14620c68730422b5582bcfab6c6e4e01bb26b8fb3d85a2eadac8800",
+            "sha256": "07463a86d9cb2acd3585bb629699bfa25c94112df6d6aa9fbb87f39676c37f52"
+          }
+        },
+        "同志": {
+          "file": "audio/act3-017-address1-local.mp3",
+          "dur": 3.206,
+          "generation": {
+            "provider": "Qwen3-TTS Base local",
+            "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+            "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+            "referenceSeed": 148,
+            "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+            "signature": "af4b4b2b7421eb0edfe9e984593e40dfc2eb38443f9856baff8eae08b3fe793f",
+            "sha256": "2ed75947635a1335f57e61e724d15a7a74f44e9250fb5a79480d56dcc7f699d5"
+          }
+        },
+        "你": {
+          "file": "audio/act3-017-address2-local.mp3",
+          "dur": 2.8727,
+          "generation": {
+            "provider": "Qwen3-TTS Base local",
+            "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+            "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+            "referenceSeed": 148,
+            "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+            "signature": "ae564ab7b54eedfb34ec22df763f51b113f22eb93234c62bc513d14d30f3ee48",
+            "sha256": "054dcbf37cdce16a4b188699c1e620efa6052df9af4c9251a8a78c9eead23419"
+          }
+        }
+      }
+    },
+    "act3-018o0": {
+      "file": "audio/act3-018o0-local.mp3",
+      "dur": 3.1416,
+      "who": "shitou",
+      "display": "石头",
+      "text": "嗯，我盯着木棍，不乱跑。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "aeff1a2e2f5bd3c52634b1c631966fba21869c3118c7e300076caae49d27f430",
+        "sha256": "52d1948473aabfcbc4722d8721575039265a18f2e79bcafb75899e8d0af86580"
+      }
+    },
+    "act3-018o1": {
+      "file": "audio/act3-018o1-local.mp3",
+      "dur": 3.3826,
+      "who": "shitou",
+      "display": "石头",
+      "text": "原来你也怕。那我不装了，我也怕。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "54b0e0a3a296573bab4c7bdde1f4bd70220c040904839610c4a0d4db6e5535db",
+        "sha256": "8d51fe198ed9794da79488c349e5512411ce488734e4d44efd510d60ecd69893"
+      }
+    },
+    "act3-018o2": {
+      "file": "audio/act3-018o2-local.mp3",
+      "dur": 2.432,
+      "who": "shitou",
+      "display": "石头",
+      "text": "我把军号抱紧。明早我叫醒你。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "cfecea75509b39eb0405a0204f21ced6aa3541e5f61fdde6ad04bf1e4a83b561",
+        "sha256": "5a6f01f8aa549a0bf898bfbfffe1b1030d1aa4f73ff45a6c2ab94861f263d3b2"
+      }
+    },
+    "act3-019": {
+      "file": "audio/act3-019-local.mp3",
+      "dur": 6.8893,
+      "who": "shitou",
+      "display": "石头",
+      "text": "我昨天晚上梦见我娘了。她给我烙饼，白面的。我一口咬下去——醒了，嘴里全是草。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "be8620a0031cbde8960aebcbaea1fd44d931db9f198ea9b488b1d3f09327bb74",
+        "sha256": "e14ce8e92f98a11146d862100170679263312c49f773f8bb50fe4e6426bc9ecd"
+      }
+    },
+    "act3-021": {
+      "file": "audio/act3-021-address0-local.mp3",
+      "dur": 3.8683,
+      "who": "shitou",
+      "display": "石头",
+      "text": "{player}，你说……革命胜利了，是不是天天吃白面馍？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "05d2a79a52d3f10b6f71d1bdc6cb10414dcdf4ff5c12b8de52aef5e25962e8c7",
+        "sha256": "0b475c7998018b9cf41f58b903a04505da4a37c6c4af717104e40eff9db484b3"
+      },
+      "variants": {
+        "文书": {
+          "file": "audio/act3-021-address0-local.mp3",
+          "dur": 3.8683,
+          "generation": {
+            "provider": "Qwen3-TTS Base local",
+            "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+            "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+            "referenceSeed": 148,
+            "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+            "signature": "05d2a79a52d3f10b6f71d1bdc6cb10414dcdf4ff5c12b8de52aef5e25962e8c7",
+            "sha256": "0b475c7998018b9cf41f58b903a04505da4a37c6c4af717104e40eff9db484b3"
+          }
+        },
+        "同志": {
+          "file": "audio/act3-021-address1-local.mp3",
+          "dur": 3.6358,
+          "generation": {
+            "provider": "Qwen3-TTS Base local",
+            "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+            "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+            "referenceSeed": 148,
+            "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+            "signature": "c9f1e96b22ee254236202b0b71b687817763f982f0174f2f0fd2d46aa86ea42e",
+            "sha256": "e8a36edf56cca96d1ed7f5980cc529a96682b3aef7bd59d41f5dadc073eda280"
+          }
+        },
+        "你": {
+          "file": "audio/act3-021-address2-local.mp3",
+          "dur": 3.1915,
+          "generation": {
+            "provider": "Qwen3-TTS Base local",
+            "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+            "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+            "referenceSeed": 148,
+            "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+            "signature": "94cb7ef90724aabb56ff8a9f2ba3e863361b0afc52107047bdcbe45ff42abe26",
+            "sha256": "6b3c1c6bcf74827b854d7cac5f92efbfa1d4e41801c982f53c60ec109fb030dd"
+          }
+        }
+      }
+    },
+    "act3-022o0": {
+      "file": "audio/act3-022o0-local.mp3",
+      "dur": 1.946,
+      "who": "shitou",
+      "display": "石头",
+      "text": "那我娘也得有白面馍吃。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "3c21f8f62250847c1a6f5f55de61ccbc8f8d47055c38b59f127af4fe510c6055",
+        "sha256": "2015afb5102b9c6da08eef30adc2ff3f057b9edcf8c6c0852dba1226bf920096"
+      }
+    },
+    "act3-022o1": {
+      "file": "audio/act3-022o1-local.mp3",
+      "dur": 2.5677,
+      "who": "shitou",
+      "display": "石头",
+      "text": "有口热汤就成。馍以后再想。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "20ec38eb7899ab7dca30cecddc7149165149a50330566dded0cc3de0464f1e07",
+        "sha256": "43828adcb8d8233e030e84e349d0f7bc2ee3f76ba1262ac9e205c5c19d9ec75f"
+      }
+    },
+    "act3-022o2": {
+      "file": "audio/act3-022o2-local.mp3",
+      "dur": 3.042,
+      "who": "shitou",
+      "display": "石头",
+      "text": "可香了。等见着她，让她烙给你尝。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "970c26934d9b4ec2fb5753767cb91b51039a982f429dcb26aae4c1612e153068",
+        "sha256": "fa69ec1d6459495fae70b98357328242734b2905fa2931ccc23577c7b6efc026"
+      }
+    },
+    "act3-024": {
+      "file": "audio/act3-024-local.mp3",
+      "dur": 3.306,
+      "who": "shitou",
+      "display": "石头",
+      "text": "那我得活着走出去。我娘还等我呢。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "1103dd9fe23cc2e7da4dd0a90a6f8404a85e2c9c0373eb8528b1844229c3d659",
+        "sha256": "9c5f402c7a0d085c9a6a2cd8b8dada97a503835e0f3d6cd9c54d7bee9df1bff1"
+      }
+    },
+    "act3-028o0": {
+      "file": "audio/act3-028o0-local.mp3",
+      "dur": 3.0488,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "好。找到后先烧开。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "065578ba054594480c20e360a303cee6c13551d5a92fddf99fef91c5ac5bc6ef",
+        "sha256": "eb7af717023526fc79d26488e1fd12bf579c7a7adc263fd204a33e36d0854a10"
+      }
+    },
+    "act3-028o1": {
+      "file": "audio/act3-028o1-local.mp3",
+      "dur": 3.5638,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "好，托住他的肩。我把药箱收起来。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "09fb8c74b87b23f6473e4c57a2ad4a82da509d62d940d5317e5122cdcf9ccb7c",
+        "sha256": "e66ebc6a195f9aeaeeb321119ac082a147210e26d47d2356ad0a292964853320"
+      }
+    },
+    "act3-028o2": {
+      "file": "audio/act3-028o2-local.mp3",
+      "dur": 2.782,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "最后一口刚喂了。明天得找水。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "6918c2310f7e770440a7421e80a27c7c19c6752cac44db977da5240ae3422fe9",
+        "sha256": "efc6f9e270d2809edc291f4ea72bdc18e7b89ae970c1093bf4484a41987c38ad"
+      }
+    },
+    "act3-028a": {
+      "file": "audio/act3-028a-local.mp3",
+      "dur": 2.662,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "明天得找水，烧开了再装壶。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "07d8eb3ee03b3f78e5df3b869c3ddc2ac1bcceb93cb0fe19e478611eedf5d38e",
+        "sha256": "28e3f71e3b33e29cd039b009d3b19f1bfb7f0804547f13573cb0eafa88c541f7"
+      }
+    },
+    "act3-030": {
+      "file": "audio/act3-030-local.mp3",
+      "dur": 2.8279,
+      "who": "shitou",
+      "display": "石头",
+      "text": "老班长，你左脚那只草鞋也散了。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "054dd7820e73f6497114eff1393b28b6046e2c304839ae587d1b72b77f9fc620",
+        "sha256": "8f5ad399fbb2146e801ae8d083fb6930a287eb4fc7841deba4f0d68c2131a6f7"
+      }
+    },
+    "act3-046": {
+      "file": "audio/act3-046-local.mp3",
+      "dur": 1.8516,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "老李让你记他的名字？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "89ee2c40b3e37abf9863664b6abf80b30f02249e91821be5ee0a13aa899f7000",
+        "sha256": "9d0a942b1fbea152d825ecfc0f8457c77cf8e2be8a5f1b3f04ad424003a3d7dd"
+      }
+    },
+    "act3-047o0": {
+      "file": "audio/act3-047o0-local.mp3",
+      "dur": 2.869,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "嗯。他还惦记着后面的人。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "2af95f5e7095f865637b852898271f23606082c80df26e0337b091cf17172ea0",
+        "sha256": "92271cd44c24ade3088c4463fd43a40ee72a39d404d651b0a4262abb8f924a1c"
+      }
+    },
+    "act3-047o1": {
+      "file": "audio/act3-047o1-local.mp3",
+      "dur": 1.9174,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "那我先告诉你一个名字。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "02bb26facbb30df54520a8aa4956eab098d030fc30ff24c0ec3ada298cf6706a",
+        "sha256": "ab6266fdf3a4d6ab791b3c20a96b4f825d10fdf7e3b31f17fc8467beb26bbec7"
+      }
+    },
+    "act3-047o2": {
+      "file": "audio/act3-047o2-local.mp3",
+      "dur": 4.0993,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "我也担心。天亮我再看看他的脚。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "0e4fe47f6c2610cb21c5f0d3b1e2a990cd4e27788fe127fabefa5ad29474e6fc",
+        "sha256": "4e9a74586689da5738cc1dcf43408276fc57a9eea21569fdb05e0b77c5e73b64"
+      }
+    },
+    "act3-049": {
+      "file": "audio/act3-049-local.mp3",
+      "dur": 9.6944,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "有个女同志叫桂香，先前跟我们同行。她怕伤员饿，总往自己袋里省麦粒。后来走散了，我还不知道她到哪儿了。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "624848eb32e2ca186a879dd14e8e3dc018662e799bddf1bbafdb5fae6d1ce591",
+        "sha256": "21b36dbe738d9e3911588619ad09b863b66d1068bc203c4f10eb4c0b40bb68ad"
+      }
+    },
+    "act3-051": {
+      "file": "audio/act3-051-local.mp3",
+      "dur": 2.7734,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "桂香。这个名字也替我记着。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "5aad7e4bfecff7877287587a39187791e2c929edd5e022ea05de080491ea8ad6",
+        "sha256": "1e9dea271caefd0948c8843ca2bf3b11cbbe6734b133e0cd638cb45f9ad9a843"
+      }
+    },
+    "act3-052o0": {
+      "file": "audio/act3-052o0-local.mp3",
+      "dur": 2.6837,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "好。先问有没有人见过她。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "26a5499b09607588befe80a8c50e82d857a849de4fdc9b0d12505a469de95f01",
+        "sha256": "456f1116e0817e75b1717056da2b513b54d2975f38e0cb35e26c6c3b087d0121"
+      }
+    },
+    "act3-052o1": {
+      "file": "audio/act3-052o1-local.mp3",
+      "dur": 2.9162,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "是。我也盼着她在前面。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "4af25cb5404bd80482f969c2be982e381b90cf5e027abfa91cdefd7e11affd5b",
+        "sha256": "a111eafe6e9ccac1324041592389f914ff446b0df42992b493cf3df33dbc85ab"
+      }
+    },
+    "act3-052o2": {
+      "file": "audio/act3-052o2-local.mp3",
+      "dur": 4.0024,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "桂香。桂花的桂，香气的香。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "336cca9f030b03d067a570f39692200a557c4c73e02bc5043922b616e8bcf201",
+        "sha256": "016afed04637bca75a92a1be1c43b6b1fd0b8ffff4723dd1c9c11c43260888e8"
+      }
+    },
+    "act3-054": {
+      "file": "audio/act3-054-local.mp3",
+      "dur": 4.3366,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "我叫何秀英，江西瑞金人。你连我也一块记上。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "17602a917ab8462ce44187c4ce87ef08bcbe57d025d0f584e04c8f1aa16f99a4",
+        "sha256": "d976a0bac8ed52a5941428866be9cd8cee671882e46d8438abbf9903069b33cc"
+      }
+    },
+    "act3-056": {
+      "file": "audio/act3-056-local.mp3",
+      "dur": 8.3531,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "湘江那一仗，我丈夫没回来。他从前教我认过一些字。往后我又自己学，能认名册，还想学更多。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "8776c7dee7524236fa1b6e578fe7ad974b961891899ca0e498f5889c80e56d6a",
+        "sha256": "86af7e99494a81fbad7f67b6e83d1ab172d00efeca7fad6a5e898bdbd28af3eb"
+      }
+    },
+    "act3-058o0": {
+      "file": "audio/act3-058o0-local.mp3",
+      "dur": 4.0957,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "学医。能看病、能教人的那种。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "373bfb3185c36b3708bd6f11662e1a3c3c0b7566c672f899bd8e0ddfe95c173c",
+        "sha256": "13bea947875ef7111f3804551cd6074b4d929b6b40a412b93e61b0b9eeb7feed"
+      }
+    },
+    "act3-058o1": {
+      "file": "audio/act3-058o1-local.mp3",
+      "dur": 2.988,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "好。先把这一路的人名记全。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "6e9112af7bc5f5bd14e5189223765c45b34f323fc5b36f7dd58a2b606106fc10",
+        "sha256": "b2c75c788a43417d53ba526ab4806c84b1515a5c2279820d5919656955aee992"
+      }
+    },
+    "act3-058o2": {
+      "file": "audio/act3-058o2-local.mp3",
+      "dur": 2.8642,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "记住就好。剩下的路，咱们一起走。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "024a41edcc372337407de069ba56f8724c7d2d1ad85c5a9d76b42cf74e314195",
+        "sha256": "a92cd2ebc608fc728783a2b33239393f7086d310c9211eacf0777b1654798c86"
+      }
+    },
+    "act3-059": {
+      "file": "audio/act3-059-local.mp3",
+      "dur": 6.691,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "等走出去，我想继续念书，学医。下回伤员发烧，我能做的不该只有等。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "118aa73a96e35dd61382cec955cc7d20af95dc35d8825e8cff645b46103972d8",
+        "sha256": "81e1a0afefaf6dc87819e52e99e742aabc5c16a44ada3105aa2255077e6988d7"
+      }
+    },
+    "act3-063": {
+      "file": "audio/act3-063-local.mp3",
+      "dur": 3.696,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "我自己也会问。你到时候可得好好养脚。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "57ffdb99e432df2cfbe98eee3adc39975521e8b2d24493baeeaa4e595022ac09",
+        "sha256": "27591a76f16ea9895d230bf71d6b0932fb3f7141842335cda189e6d4c1e6abcc"
+      }
+    },
+    "act4-002": {
+      "file": "audio/act4-002-local.mp3",
+      "dur": 3.0817,
+      "who": "shitou",
+      "display": "石头",
+      "text": "河！河——！看到河了——！",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "515042bfaf9b3bccb4822f8f3fce68bfc28268a359123435d735ddab53f62dfc",
+        "sha256": "f643ce4f6132b0a844e1b32e63aee38d2b80cc18578d1632e6c164ce0f4e5da4"
+      }
+    },
+    "act4-005": {
+      "file": "audio/act4-005-local.mp3",
+      "dur": 2.0501,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "班佑就在前面。快到了。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "6f561518f9d8208c519b48421250f6fb06577a0bd436c910fa509a33d89d01b7",
+        "sha256": "b33143e2bd692a3d4f74f7e41a6d6ac5075f83da969b2fd668e36d9f709b838b"
+      }
+    },
+    "act4-012": {
+      "file": "audio/act4-012-local.mp3",
+      "dur": 2.1149,
+      "who": "shitou",
+      "display": "石头",
+      "text": "老班长！你看见河没有？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "e83d889ac8414d362e920f66c44a28180b6bc7bf71c800594d62c5707fe41be8",
+        "sha256": "08167d50e6211522ccf191c1f4765b62c060e4f75d0aaea160041f302f028c37"
+      }
+    },
+    "act4-013": {
+      "file": "audio/act4-013-local.mp3",
+      "dur": 0.6657,
+      "who": "shitou",
+      "display": "石头",
+      "text": "老班长……？",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "d98a69bc6ebcc69b70fefb21a0de822b13983f1352f9396b6094d311837eb82b",
+        "sha256": "71749abdd59bea91c7b9f4fd94852d3ac3921835970e7eb40903df78bc2c8c48"
+      }
+    },
+    "act4-016": {
+      "file": "audio/act4-016-local.mp3",
+      "dur": 6.3985,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "昨夜他把油布留给伤员，自己守在这里。我说来换他，他让我先歇。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "a60e73620280426f989a622bd84ec8a55d1e9163d79bb62a8f4a559197583e48",
+        "sha256": "704c8e69fd9e4a934e20b4992e0686720d433abd827edc1925f1fae83f0934e2"
+      }
+    },
+    "act4-018": {
+      "file": "audio/act4-018-local.mp3",
+      "dur": 1.7953,
+      "who": "shitou",
+      "display": "石头",
+      "text": "老班长，我们看见河了。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "c40e1531834c53a44acbc75c4840feb68468c239c982332398c1aee8c4c6a2fc",
+        "sha256": "591029eff36a16053a7c81df758953a49c741b2afd3acc28283cefbb71ccb1ab"
+      }
+    },
+    "act4-019": {
+      "file": "audio/act4-019-local.mp3",
+      "dur": 3.6332,
+      "who": "he-xiuying",
+      "display": "何大姐",
+      "text": "把那根木棍插在他身旁。后面的人还能看见。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/he-xiuying-caring-v4.wav",
+        "referenceText": "坐下，别逞强。我看看你的脚。疼就说……到了干处，我再给你换块布。",
+        "referenceSeed": 149,
+        "referenceSha256": "2f4076b9f3cd290c3e7b6da8d44fe16d4ccdd69faf2917621866149f4272a66d",
+        "signature": "aba31879cdebc3c4f571c93ea2d4906829144722aeeebb6374b58d29c76b7555",
+        "sha256": "16f9519c7df3a4279ae52bac726164c9abc5f45d1fef6c6a1bbb7c4564907cdd"
+      }
+    },
+    "act4-021": {
+      "file": "audio/act4-021-local.mp3",
+      "dur": 2.4266,
+      "who": "shitou",
+      "display": "石头",
+      "text": "我扶着老田。咱们接着走。",
+      "version": "local",
+      "generation": {
+        "provider": "Qwen3-TTS Base local",
+        "referenceFile": "assets/audio/voice-candidates/shitou-qwen-local.wav",
+        "referenceText": "我跟你说，前面就是河了！我不怕……真的。你可别跟老班长讲啊。",
+        "referenceSeed": 148,
+        "referenceSha256": "4ce767bd90aadf87c96360fd10b1863b5636054fb39970425a7dd1ecf2c9c7e4",
+        "signature": "59aca88104d9734c041666612e0352a1dd103321db5e4a2b97cc4dcc13c66167",
+        "sha256": "897fa383995b8d46ceb53250fb39d5083dea84d76833f843039825d23d828b12"
+      }
+    }
+  }
+}

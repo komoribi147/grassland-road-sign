@@ -9,6 +9,7 @@ export class AiClient {
   }
 
   endpoint(path) {
+    if (["localhost", "127.0.0.1", "[::1]"].includes(globalThis.location?.hostname)) return path;
     const base = String(globalThis.__AI_API_BASE__ || "").replace(/\/+$/, "");
     return base ? `${base}/${path}` : path;
   }
@@ -44,6 +45,7 @@ export class AiClient {
   }
 
   async request(path, payload, timeoutMs) {
+    if (["localhost", "127.0.0.1", "[::1]"].includes(globalThis.location?.hostname)) timeoutMs = Math.max(timeoutMs, 150000);
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeoutMs);
     try {

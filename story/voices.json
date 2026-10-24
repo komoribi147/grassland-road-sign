@@ -1,0 +1,34 @@
+{
+  "li-changhe": {
+    "name": "老班长",
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "-15%",
+    "pitch": "-8Hz",
+    "description": "沉厚男声，语速偏慢，短句克制",
+    "sample": "不碍事。你踩着我的脚印走，别踩偏了。先走出去再说。"
+  },
+  "shitou": {
+    "name": "石头",
+    "voice": "zh-CN-YunxiaNeural",
+    "rate": "+8%",
+    "pitch": "+4Hz",
+    "description": "清亮少年男声，说话稍快，带一点逞强",
+    "sample": "我跟你说，前面就是河了。你说嘛，我听着呢。我不怕，真的。"
+  },
+  "he-xiuying": {
+    "name": "何大姐",
+    "voice": "zh-CN-XiaoyiNeural",
+    "rate": "-7%",
+    "pitch": "-4Hz",
+    "description": "成年女声，朴实、耐心、关切，日常语气，句尾自然收稳",
+    "sample": "坐下，我看看。把那块布收好，到了干处再换。伤员要紧。"
+  },
+  "he-xiuying-old": {
+    "name": "何秀英（晚年）",
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-24%",
+    "pitch": "-12Hz",
+    "description": "低缓成熟女声，停顿较长，平静回忆",
+    "sample": "后来，我继续认字，也学了医。那些名字，我一直记着。"
+  }
+}

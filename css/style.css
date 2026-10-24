@@ -329,6 +329,28 @@ button { font-family: var(--font-sans); cursor: pointer; }
 .text.who { color: var(--ink-faint); }
 .text.thinking { color: var(--ink-faint); font-family: var(--font-sans); font-size: 14px; }
 
+.voice-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 5px 11px;
+  border: 1px solid rgba(200,85,61,0.38);
+  border-radius: 999px;
+  background: rgba(20,26,22,0.45);
+  color: var(--ink-dim);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+.voice-btn:hover { border-color: rgba(200,85,61,0.75); color: var(--ink); }
+.voice-btn[hidden] { display: none; }
+.voice-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.voice-source { color: var(--ink-faint); font: 11px/1.5 var(--font-sans); }
+.bubble .voice-btn { display: block; font-size: 11px; }
+
 .choices {
   margin-top: 16px;
   display: flex;

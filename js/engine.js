@@ -7,6 +7,7 @@ import { Save } from "./save.js";
 import { frameOf, guttersFromProfiles, panelBoxes } from "./sheet-geometry.js";
 import { buildReflectionReport } from "./reflection-report.js";
 import { imageSource, visualLayout } from "./visual-delivery.js?v=20261023-hair2";
+import { VoicePlayer } from "./voice.js?v=20261024-voice-public";
 
 const $ = (id) => document.getElementById(id);
 const PLAYER = "__player__";
@@ -98,9 +99,22 @@ export class StoryEngine {
       trustAddress: $("trustAddress"), trustFill: $("trustFill"),
       dialogue: $("dialogue"), speaker: $("speakerName"),
       text: $("dialogueText"), choices: $("choices"), hint: $("clickHint"),
+      voiceBtn: $("voiceBtn"),
+      voiceStatus: $("voiceStatus"),
       portrait: $("portrait"),
       visual: $("storyVisual"), visualHint: $("visualHint"),
     };
+    this.voice = new VoicePlayer({ onStatus: event => {
+      if (this.ui.voiceBtn) this.ui.voiceBtn.hidden = !event.replayable;
+      if (this.ui.voiceStatus) this.ui.voiceStatus.textContent = event.source === "confirmed"
+        ? "已选定配音" : event.source === "realtime" ? event.provider === "qwen-clone" ? "角色音色配音" : event.state === "loading" ? "正在生成角色声音…" : "实时朗读 · 基础音色" : "";
+      if (event.state === "error") this.on.toast?.(event.message);
+    } });
+    this.ui.voiceBtn?.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      void this.voice.replay();
+    });
     this._portraitToken = 0;
     this._visualToken = 0;
     this._bgToken = 0;
@@ -1088,6 +1102,7 @@ export class StoryEngine {
         finish();
       };
       const onKey = (e) => {
+        if (e.target.closest?.("button, a, input, textarea, select, [contenteditable='true']")) return;
         if (e.target instanceof HTMLInputElement) return;
         if (e.key === " " || e.key === "Enter") finish();
       };
@@ -1101,6 +1116,11 @@ export class StoryEngine {
   async speak(step, opts = {}) {
     this.ui.dialogue.hidden = false;
     this.ui.visualHint.hidden = true;
+    // 上一句的配音先停，避免两句叠在一起。
+    this.voice.stop();
+    const voiceId = Object.hasOwn(opts, "voiceId") ? opts.voiceId : (this.state?.sceneId
+      ? `${this.state.sceneId}-${String(this.state.step).padStart(3, "0")}`
+      : null);
     const isPlayer = step.who === PLAYER;
     const who = isPlayer
       ? "我"
@@ -1112,7 +1132,15 @@ export class StoryEngine {
     this.ui.speaker.textContent = who;
     this.ui.text.className = isPlayer ? "text who" : "text";
 
-    const text = step.raw ? step.text : this.interpolate(step.text);
+    const state = this.state, epoch = this.epoch, voiceSerial = this.voice.serial;
+    await this.voice.ready;
+    if (this.state !== state || this.epoch !== epoch) return "stop";
+    const fixed = voiceId ? this.voice.fixedLine(voiceId, step.who, step.text) : null;
+    const text = fixed ? this.interpolate(fixed.text) : step.raw ? step.text : this.interpolate(step.text);
+    if (!isPlayer && voiceSerial === this.voice.serial && !document.hidden && this.on.voiceAllowed?.() !== false) {
+      if (fixed) void this.voice.speak(step.who, text, { mode: "fixed", id: voiceId, template: fixed.text });
+      else if (opts.voiceMode === "dynamic") void this.voice.speak(step.who, text, { mode: "dynamic", mood: step.mood || this.lastMood });
+    }
     // 回看用：把这一句记下来（幕 + 步号 + 说话人 + 文本），按快了也能回去看
     const log = (this.state.log ||= []);
     log.push({
@@ -1139,6 +1167,7 @@ export class StoryEngine {
     if (opts.autoNext) return "next";
     this.ui.hint.hidden = false;
     await this.waitClick();
+    this.voice.stop();
     this.ui.hint.hidden = true;
     return "next";
   }
@@ -1146,6 +1175,7 @@ export class StoryEngine {
   async choose(step) {
     this.ui.dialogue.hidden = false;
     this.ui.visualHint.hidden = true;
+    this.voice.stop();
     const box = this.ui.choices;
     box.hidden = false;
     box.innerHTML = "";
@@ -1170,7 +1200,9 @@ export class StoryEngine {
 
     box.hidden = true;
     box.innerHTML = "";
-    this.markSeen(`${this.state.step}:o${step.options.indexOf(picked)}`);
+    this.voice.stop();
+    const pickedIndex = step.options.indexOf(picked);
+    this.markSeen(`${this.state.step}:o${pickedIndex}`);
     this.state.picks.push(picked.text);
     this.state.history.push({ role: "player", name: "我", text: picked.text });
     if (picked.visual) await this.visualBeat({ visual: picked.visual, description: picked.text });
@@ -1178,9 +1210,15 @@ export class StoryEngine {
     if (picked.trust) this.addTrust(picked.trust, picked.why);
     if (picked.reply) {
       const who = picked.replyWho || step.replyWho;
-      if (who) await this.speak({ t: "say", who, text: picked.reply });
+      if (who) {
+        const voiceId = this.state?.sceneId
+          ? `${this.state.sceneId}-${String(this.state.step).padStart(3, "0")}o${pickedIndex}`
+          : null;
+        await this.speak({ t: "say", who, text: picked.reply }, { voiceId });
+      }
     }
-    if (await this.runAfter(picked)) return "moved";
+    const afterResult = await this.runAfter(picked);
+    if (afterResult) return afterResult;
     return this.applyMove(picked);
   }
 
@@ -1209,7 +1247,8 @@ export class StoryEngine {
     box.innerHTML = "";
     this.state.picks.push(step.label || "继续");
     if (step.trust) this.addTrust(step.trust, step.why);
-    if (await this.runAfter(step)) return "moved";
+    const afterResult = await this.runAfter(step);
+    if (afterResult) return afterResult;
     return this.applyMove(step);
   }
 
@@ -1223,10 +1262,16 @@ export class StoryEngine {
   /** 执行步骤里的 after 追加内容。声音已在画面/台词出现时播放时跳过。 */
   async runAfter(step, skipSfx = false) {
     if (!Array.isArray(step.after)) return false;
+    const state = this.state, epoch = this.epoch;
     for (const sub of step.after) {
+      if (this.state !== state || this.epoch !== epoch) return "stop";
       if (skipSfx && sub.t === "sfx") continue;
-      const r = await this.play(sub);
-      if (r === "moved") return true;
+      const opts = sub.t === "say" && this.state?.sceneId
+        ? { voiceId: `${this.state.sceneId}-${String(this.state.step).padStart(3, "0")}a` }
+        : {};
+      const r = await this.play(sub, opts);
+      if (this.state !== state || this.epoch !== epoch || r === "stop") return "stop";
+      if (r === "moved") return "moved";
     }
     return false;
   }
@@ -1242,8 +1287,10 @@ export class StoryEngine {
   /** 预选项回答：点一句，主角说出口，NPC 回应。也可以按住语音说自己的话（走 submitSpoken）。
    *  AI 在线时交给大模型接话；离线用选项自带的 reply 台词（语音回答用步骤的 fallback）。 */
   async selectStep(step) {
+    const selectionState = this.state, selectionEpoch = this.epoch;
     this.ui.dialogue.hidden = false;
     this.ui.visualHint.hidden = true;
+    this.voice.stop();
     const box = this.ui.choices;
     box.hidden = false;
     box.innerHTML = "";
@@ -1266,8 +1313,10 @@ export class StoryEngine {
     box.innerHTML = "";
     this._resolveSelect = null;
     if (picked.aborted) return "stop";   // 中途重开：旧循环直接收场
+    if (this.state !== selectionState || this.epoch !== selectionEpoch) return "stop";
     const spoken = !!picked.spoken;
-    if (!spoken && step.options.includes(picked)) this.markSeen(`${this.state.step}:o${step.options.indexOf(picked)}`);
+    const pickedIndex = !spoken ? step.options.indexOf(picked) : -1;
+    if (!spoken && pickedIndex >= 0) this.markSeen(`${this.state.step}:o${pickedIndex}`);
     if (!spoken) this.state.picks.push(picked.text);
     this.state.answers.push(picked.text);
     this.state.turns++;
@@ -1292,7 +1341,21 @@ export class StoryEngine {
 
     let reply = "";
     let aiTrust = 0;
-    if (this.ai.online) {
+    let fixedReply = false;
+    let liveReply = false;
+    this.lastMood = "";
+    await this.voice.ready;
+    if (this.state !== selectionState || this.epoch !== selectionEpoch) return "stop";
+    const fixedReplyId = !spoken && pickedIndex >= 0 && this.state?.sceneId
+      ? `${this.state.sceneId}-${String(this.state.step).padStart(3, "0")}o${pickedIndex}`
+      : null;
+    // 这句话有确认配音时，优先用回放对应的原台词，避免 AI 改写后和声音对不上。
+    const confirmedReply = fixedReplyId && picked.reply ? this.voice.fixedLine(fixedReplyId, step.ai, picked.reply) : null;
+    if (confirmedReply) {
+      reply = confirmedReply.text;
+      fixedReply = true;
+      aiTrust = picked.trust ?? step.trust ?? 0;
+    } else if (this.ai.online) {
       try {
         const previous = this.memoryOf(step.ai).slice(0, -1);
         const out = await this.ai.reply({
@@ -1305,23 +1368,28 @@ export class StoryEngine {
           history: previous.slice(-10),
         });
         reply = out.text;
+        liveReply = true;
         aiTrust = out.trust;
         this.lastMood = out.mood || "";
       } catch (err) {
         this.lastAiError = String(err.message || err); // 超时或报错，退回选项写好的回应
       }
     }
+    if (this.state !== selectionState || this.epoch !== selectionEpoch) return "stop";
     if (!reply) {
       if (spoken) {
         reply = this.pickFallback(step);
         aiTrust = step.trust ?? 0;
       } else {
         reply = picked.reply || this.pickFallback(step);
+        fixedReply = !!picked.reply;
         aiTrust = picked.trust ?? step.trust ?? 0;
       }
     }
 
-    await this.speak({ t: "say", who: step.ai, text: reply, raw: true });
+    const replyVoiceId = fixedReply ? fixedReplyId : null;
+    await this.speak({ t: "say", who: step.ai, text: reply, raw: true }, { voiceId: replyVoiceId, voiceMode: liveReply || spoken ? "dynamic" : "fixed" });
+    if (this.state !== selectionState || this.epoch !== selectionEpoch) return "stop";
     if (this.lastMood) this.setPortrait(step.ai);
     if (aiTrust) {
       this.addTrust(aiTrust, this.ai.online
@@ -1334,7 +1402,8 @@ export class StoryEngine {
         if (r === "moved") return "moved";
       }
     }
-    if (await this.runAfter(step)) return "moved";
+    const afterResult = await this.runAfter(step);
+    if (afterResult) return afterResult;
     return this.applyMove(picked);
   }
 
@@ -1374,6 +1443,7 @@ export class StoryEngine {
 
   /** 重开 / 读档时收掉旧的等待，别让旧循环卡住新游戏 */
   abortWaits() {
+    this.voice?.stop();
     if (this._resolveSelect) {
       this._resolveSelect({ aborted: true, text: "" });
       this._resolveSelect = null;
@@ -1428,20 +1498,22 @@ export class StoryEngine {
 
   // ---------- 主循环 ----------
 
-  async play(step) {
+  async play(step, opts = {}) {
     switch (step.t) {
       case "visual": {
         const pending = this.visualBeat(step);
         this.playCues(step);
         const done = await pending;
-        if (step.after && await this.runAfter(step, true)) return "moved";
+        const afterResult = step.after && await this.runAfter(step, true);
+        if (afterResult) return afterResult;
         return done;
       }
       case "say": {
-        const pending = this.speak(step);
+        const pending = this.speak(step, opts);
         this.playCues(step);
         const done = await pending;
-        if (step.after && await this.runAfter(step, true)) return "moved";
+        const afterResult = step.after && await this.runAfter(step, true);
+        if (afterResult) return afterResult;
         return done;
       }
       case "choose":
@@ -1509,6 +1581,10 @@ export class StoryEngine {
         this.warmVisuals(scene.id, this.state.step);
         this.markSeen();
         const result = await this.play(step);
+        // 回看跳转会在旧循环还停在 waitClick 时改 epoch 并重设 state.step。
+        // 旧循环被 abort 后仍会拿到 "next"，若不在这里拦住，它会把
+        // 新落点的 step +1，表现就是「回看选中的句子，一开口就跳到下一句」。
+        if (epoch !== this.epoch) break;
         if (result === "stop") break;
         if (result === "next") this.state.step++;
         this.autosave();

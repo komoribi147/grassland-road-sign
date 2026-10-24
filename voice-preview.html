@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>配音融合预览 · 草地上的路标</title>
+  <style>
+    :root{color-scheme:dark;--paper:#e9e3d5;--muted:#a5aaa3;--line:#36423d;--green:#aec8ac}
+    *{box-sizing:border-box}body{margin:0;background:#111b18;color:var(--paper);font:16px/1.8 system-ui,"Microsoft YaHei",sans-serif;background-image:radial-gradient(ellipse at 70% 0,#30473a80,transparent 65%)}
+    main{max-width:1120px;margin:auto;padding:50px 28px 80px}header{border-bottom:1px solid var(--line);padding-bottom:30px;margin-bottom:30px}.eyebrow{color:var(--green);font-size:12px;letter-spacing:.25em}h1{font-family:serif;font-size:40px;font-weight:500;margin:12px 0 10px}h2{font-family:serif;font-size:25px;font-weight:500;margin:0}p{margin:10px 0}.sub,.note{color:var(--muted);font-size:14px}.toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:15px;margin-top:24px}.toolbar label{display:flex;align-items:center;gap:10px}a{color:var(--green);text-underline-offset:5px}button,select,input{font:inherit}button{cursor:pointer;background:#b9c9ad;color:#17231b;border:1px solid transparent;border-radius:5px;padding:9px 19px}button:hover{background:#d2ddc8}button:disabled{opacity:.45;cursor:wait}.ghost{background:transparent;border-color:#5b6c60;color:var(--paper)}.ghost:hover{background:#293d32}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.card{padding:25px;border:1px solid var(--line);border-radius:8px;background:#1c2923a8;position:relative}.number{font-size:12px;letter-spacing:.15em;color:#809787;float:right}.tag{font-size:12px;color:var(--green);margin-bottom:13px}.quote{font-family:serif;font-size:19px;line-height:1.9;min-height:108px;color:#ddd8ca;border-left:2px solid #687e66;padding-left:16px;margin:20px 0}.card button{min-width:120px}.status{font-size:13px;color:#a8c3a6;margin-left:13px}.conversation{margin-top:36px;border-top:1px solid var(--line);padding-top:28px}.talk-top{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}select,input{color:var(--paper);background:#17251e;border:1px solid #526556;border-radius:4px;padding:10px}#messages{min-height:150px;max-height:330px;overflow:auto;padding:18px 0}.message{padding:10px 15px;border-left:2px solid #576d58;margin:10px 0;background:#24362b66;white-space:pre-wrap}.message.me{border-left-color:#a59571;color:#c7c0ae}.message b{font-size:12px;display:block;color:#9cb09b;margin-bottom:4px}form{display:flex;gap:12px}form input{flex:1;min-width:0}#globalStatus{min-height:25px}footer{margin-top:30px;padding-top:15px;border-top:1px solid var(--line)}@media(max-width:650px){main{padding:26px 18px 50px}h1{font-size:30px}.cards{grid-template-columns:1fr}.quote{min-height:0}form button{padding:9px 13px}.toolbar{gap:12px}}
+  .library{border:1px solid var(--line);border-radius:6px;padding:18px;margin:25px 0}.library summary{cursor:pointer;color:var(--green);margin-bottom:12px}.library-list{max-height:360px;overflow:auto;margin-top:12px}.library-line{display:flex;gap:14px;align-items:center;border-top:1px solid var(--line);padding:12px 0}.library-line p{flex:1;margin:0;font-size:14px}.library-line small{display:block;color:var(--muted)}.library-line button{padding:5px 13px;white-space:nowrap}.source-flag{display:inline-block;border:1px solid #62715c;border-radius:4px;padding:2px 8px;color:var(--green);font-size:11px;margin-top:12px}.message .ghost{display:block;margin-top:8px;padding:3px 10px;font-size:12px}</style>
+</head>
+<body><main>
+  <header>
+    <div class="eyebrow">草地上的路标 / 声音工作台</div>
+    <h1>把他们的声音接回故事</h1>
+    <p class="sub"><span id="voiceIntro">组员选定的剧情配音、年龄声线候选和实时回复朗读，都在这里试听。</span>何大姐采用你已确认的朴实关切声线，可在下方逐个试听角色。<a href="voice-candidates.html">听何大姐调整前后对比 →</a></p>
+    <div class="toolbar"><button class="ghost" id="stop" type="button">停止配音</button><button class="ghost" id="replay" type="button" hidden>回放上一句</button><label>音量 <input id="volume" type="range" min="0" max="100" value="85" aria-label="试听音量"></label><a href="/">进入完整剧情 →</a></div>
+  </header>
+  <p class="note" id="coverage">正在核对选定配音…</p><section class="cards" id="cards" aria-label="四个角色声音"></section>
+  <p class="note" id="globalStatus" role="status" aria-live="polite">正在准备角色声音…</p>
+  <details class="library"><summary id="librarySummary">展开全部剧情配音</summary><label>筛选角色 <select id="libraryFilter" aria-label="筛选剧情配音"><option value="all">全部角色</option><option value="li-changhe">老班长</option><option value="shitou">石头</option><option value="he-xiuying">何大姐</option><option value="he-xiuying-old">晚年何秀英</option></select></label><div id="library" class="library-list"></div></details>
+  <section class="conversation">
+    <div class="talk-top"><h2>和他们说句话</h2><select id="npc" aria-label="选择对话角色"></select></div>
+    <p class="note" id="voiceModeNote">新回答先显示文字，再生成角色配音。此处不改动剧情进度。</p>
+    <div id="messages" role="log" aria-live="polite"><p class="note">可以问：“走了这么久，你累不累？”</p></div>
+    <form id="talk"><input id="question" maxlength="60" required placeholder="写下你想对他说的话…" aria-label="想说的话"><button id="send" type="submit">发送并听回答</button></form>
+    <p class="note" id="connection">正在检查对话服务…</p><div id="replyAudio" aria-label="这句回答的音频播放器"></div>
+  </section>
+  <footer class="note" id="voiceFooter">本地融合预览 · 角色剧情配音直接播放；新回答使用角色参考录音生成声音。何大姐使用已确认的朴实关切声线。网站未发布。</footer>
+</main><script src="js/site-config.js?v=20261021-network-check"></script><script type="module" src="js/voice-preview.js?v=20261024-voice-public"></script></body></html>

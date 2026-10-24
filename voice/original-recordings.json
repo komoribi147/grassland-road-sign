@@ -1,0 +1,506 @@
+{
+  "prologue-002": {
+    "file": "audio/prologue-002.mp3",
+    "dur": 5.75,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "醒了？醒了就爬起来。这地方不能躺，躺下就起不来了。",
+    "version": "old",
+    "sha256": "8210b33cc49c8cb6d8c55c372df5e785eadada3e0f288f9f22178ead0febdac0"
+  },
+  "prologue-006": {
+    "file": "audio/prologue-006.mp3",
+    "dur": 2.75,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "你是哪个连的？",
+    "version": "old",
+    "sha256": "64402d59f716e51e63e4762e03ebb69f0e775f9113431913e9c2631941295576"
+  },
+  "prologue-007o0": {
+    "file": "audio/prologue-007o0-v2.mp3",
+    "dur": 4.42,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "先起来。想起来了再告诉我。",
+    "version": "old",
+    "sha256": "466c7d6a5c54506bf6fa7918bd0ad06c62504ea6cce9c70aedc8949143a1d3f8"
+  },
+  "prologue-007o1": {
+    "file": "audio/prologue-007o1.mp3",
+    "dur": 2.14,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "跟在后头，别乱走。",
+    "version": "old",
+    "sha256": "f0ed91543f78ae6ade68b8af237929605b2fd8e108a682e6cdf26fad5a95399d"
+  },
+  "prologue-007o2": {
+    "file": "audio/prologue-007o2.mp3",
+    "dur": 3.11,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "话先放着。起来，跟上。",
+    "version": "old",
+    "sha256": "6dac6aeefd9c2fde5030f2d2a9419ef69dc0e8594fb54c49bc7b96ae6ab62c38"
+  },
+  "prologue-013": {
+    "file": "audio/prologue-013.mp3",
+    "dur": 3.15,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "石头。去前面探路。",
+    "version": "new",
+    "sha256": "52c06adfddc8e1e521a467c1fd2a9589c28f2341a07e978b58f1111d59e82efb"
+  },
+  "prologue-015": {
+    "file": "audio/prologue-015.mp3",
+    "dur": 5.86,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "别怪他。他哥在毛儿盖没了，心里还没缓过来。",
+    "version": "old",
+    "sha256": "9cb6c9e6c0f415a451cf5bf9da3cb4fcefe80fad768dd726868795eea9fe6e42"
+  },
+  "prologue-019": {
+    "file": "audio/prologue-019.mp3",
+    "dur": 1.79,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "鞋呢？",
+    "version": "old",
+    "sha256": "8287b5fa97f174e343fe3b6d3240060c4c3a4433e7cb162962e4f7023942bfe6"
+  },
+  "prologue-020o0": {
+    "file": "audio/prologue-020o0.mp3",
+    "dur": 4.91,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "草地吃鞋。先穿我的，过了泥地再说。",
+    "version": "old",
+    "sha256": "a722d1b6ee72b4be034bd9a758bd35e109843deb51a8909a46ae7c004db8dadc"
+  },
+  "prologue-020o1": {
+    "file": "audio/prologue-020o1.mp3",
+    "dur": 4.91,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "你那脚包不住。穿上，我还站得稳。",
+    "version": "old",
+    "sha256": "eb2f1c9bc0b25846008188a1dfc6c8ebdf6872a461a554689a48719a4c475d88"
+  },
+  "prologue-020o2": {
+    "file": "audio/prologue-020o2.mp3",
+    "dur": 4.27,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "绳子有。鞋也有。都拿着，别让脚烂了。",
+    "version": "old",
+    "sha256": "52575dd614cd3313d29c0f1c4abd41005718bd994df319f8c8b03378e8b51002"
+  },
+  "prologue-022": {
+    "file": "audio/prologue-022.mp3",
+    "dur": 2.43,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "你先看伤员，我跟着。",
+    "version": "old",
+    "sha256": "6e6d39606af67f4637ff4b9d189c19531d77cb27555efb5d1f17e355ce4f35cb"
+  },
+  "prologue-026": {
+    "file": "audio/prologue-026.mp3",
+    "dur": 3.4,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "听见没？队伍在前面。走！",
+    "version": "old",
+    "sha256": "523267d75c94d908d1b38b6fa36dc5135fcbafc626320e9706641c2979bcbd11"
+  },
+  "act1-005": {
+    "file": "audio/act1-005.mp3",
+    "dur": 3.91,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "一人一勺。伤员两勺。这是规矩。",
+    "version": "old",
+    "sha256": "478407125166dda3b99a97d05141695b71a708cbf6ada847dc0f04e5663cee68"
+  },
+  "act1-011": {
+    "file": "audio/act1-011.mp3",
+    "dur": 1.56,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "你喝。",
+    "version": "old",
+    "sha256": "86b9a6af34b8653e22b0d0bee7af8ede1fd4431da91dc5c569285aaabc86eb91"
+  },
+  "act1-012o0": {
+    "file": "audio/act1-012o0.mp3",
+    "dur": 2.91,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "我胃小。你喝吧。",
+    "version": "old",
+    "sha256": "53abe5e966e3d390502b1d0a6d4413b06879470197f965d9e4ce450bc4dd5732"
+  },
+  "act1-012o1": {
+    "file": "audio/act1-012o1.mp3",
+    "dur": 3.95,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "你那勺也少。收着，明天要赶路。",
+    "version": "old",
+    "sha256": "4e45ec7f08a2c5cf5d98d6958b39463b018f7b3837c197802019635dcdee9676"
+  },
+  "act1-012o2": {
+    "file": "audio/act1-012o2.mp3",
+    "dur": 4.63,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "锅沉。先把自己的脚养好，明早再说。",
+    "version": "old",
+    "sha256": "0d0b9d9304542d039ee19427ad523a58b0dddfd73428c216b12a122f75050630"
+  },
+  "act1-017a": {
+    "file": "audio/act1-017a.mp3",
+    "dur": 4.27,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "别跟石头说。那小子嘴碎。",
+    "version": "old",
+    "sha256": "0e3f75a39c90dce72ac59bad8c9e5a7bb39f2fc9d496b7fc03c560002686c9a3"
+  },
+  "act1-017o0": {
+    "file": "audio/act1-017o0.mp3",
+    "dur": 5.14,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "知道。走出这片泥地，就能想法子找粮。",
+    "version": "old",
+    "sha256": "8941e9caa77f3f317fd23974ae1d4aac7d96998d21e83cae45edd6196dde14e5"
+  },
+  "act1-017o1": {
+    "file": "audio/act1-017o1.mp3",
+    "dur": 3.67,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "别乱挖。草根有的不能吃。",
+    "version": "old",
+    "sha256": "75e7a14eae6c5bdf6bb917496b4c92dbd6ce98424b009d8764612c8d0897c71a"
+  },
+  "act1-017o2": {
+    "file": "audio/act1-017o2.mp3",
+    "dur": 4.19,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "也别学我。吃错了，连路都走不了。",
+    "version": "new",
+    "sha256": "322df927134786ca799ebc8cef32689662e6a31d001c1e453c2308548b405523"
+  },
+  "act1-026": {
+    "file": "audio/act1-026.mp3",
+    "dur": 2.51,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "就嚼两口。",
+    "version": "old",
+    "sha256": "eb6840c0a5023cc59790b88615fa392249fc8f4943ee76847687e98cfb298e55"
+  },
+  "act1-030": {
+    "file": "audio/act1-030.mp3",
+    "dur": 2.4,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "听你的，何大姐。",
+    "version": "old",
+    "sha256": "ac5807c0743d63cb133171229bac6a261b991294c3f75601027168573ca0c6fe"
+  },
+  "act1-033": {
+    "file": "audio/act1-033.mp3",
+    "dur": 1.75,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "先带着。",
+    "version": "old",
+    "sha256": "a645fcaff2830d9cf0c16272f36ea011e3215c0e675156705f6ce2687bbdfb4b"
+  },
+  "act1-035": {
+    "file": "audio/act1-035.mp3",
+    "dur": 1.95,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "不清楚。",
+    "version": "old",
+    "sha256": "13364746ba5bb2743f5716aab1a7bb20e83a8335679401e9232c36c9069707d6"
+  },
+  "act1-037": {
+    "file": "audio/act1-037.mp3",
+    "dur": 3.39,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "我知道。让他跟着走，慢慢看。",
+    "version": "old",
+    "sha256": "c365f7042282c2274dbc98fefb76662a66256273492c968be4ccc9c6e751150e"
+  },
+  "act1-043": {
+    "file": "audio/act1-043.mp3",
+    "dur": 3.7,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "先把路走稳了，称呼往后再说。",
+    "version": "old",
+    "sha256": "dc041f9e0478ca4b5e41c94dc753d4b45ffd015e5804fbf5ea93d69d265ca4ed"
+  },
+  "act2-002": {
+    "file": "audio/act2-002.mp3",
+    "dur": 6.99,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "跟着前面的脚印。看着是草，底下有的地方全是泥。别自己找近路。",
+    "version": "old",
+    "sha256": "7544ecdf9220dc3e0bd1bfb6959d6c8a9f5226b23246b201c93fb0e894bde283"
+  },
+  "act2-009": {
+    "file": "audio/act2-009.mp3",
+    "dur": 2.531,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "别动！石头！别动！",
+    "version": "old",
+    "sha256": "ca4a533435f7ac690fd5a84c9938c7a01bc182779a0b0d913158507a44e9ce40"
+  },
+  "act2-015": {
+    "file": "audio/act2-015.mp3",
+    "dur": 4.54,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "石头，抓稳。听我数，一、二、三！",
+    "version": "old",
+    "sha256": "0f1209d34df834502eeb161b7193ae06c682db117f7f64a79920b9c0753bdc8b"
+  },
+  "act2-024": {
+    "file": "audio/act2-024.mp3",
+    "dur": 2.334,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "皮外伤。走。",
+    "version": "old",
+    "sha256": "f2fdea0a5266bbd3f683fcd4f6cf017f62d7d6ab1d232310aaa64c9ae0e30d64"
+  },
+  "act2-027": {
+    "file": "audio/act2-027.mp3",
+    "dur": 2.705,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "何大姐，队伍——",
+    "version": "old",
+    "sha256": "57ad5ecc67e0d1c38a48cce4915ae626f2253b900ccbc706217a34bee56b4bdb"
+  },
+  "act2-031": {
+    "file": "audio/act2-031.mp3",
+    "dur": 2.68,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "这地方，哪儿有干处？",
+    "version": "new",
+    "sha256": "54987f92e51e1e3ca7df4671c36565c3ef7faac39de8151e7fd6e455cb1798b7"
+  },
+  "act2-036": {
+    "file": "audio/act2-036.mp3",
+    "dur": 2.067,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "背得动。",
+    "version": "old",
+    "sha256": "86861547bf44a8d990df402b6b2d17d01b0e52c61d22d66ff64353d6783f9f9f"
+  },
+  "act2-040": {
+    "file": "audio/act2-040.mp3",
+    "dur": 5.58,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "离了脚印，下回要告诉大家。刚才你喊得对，我们才听见。",
+    "version": "old",
+    "sha256": "6f3ffc0d1f449b7e98832b6275133de194a6e87f6f38a66fee9cc713fe158b1b"
+  },
+  "act2-042": {
+    "file": "audio/act2-042.mp3",
+    "dur": 9.24,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "还有——后面的人，看着我们的脚印走。你刚才踩的那个地方，插根棍子，做个记号。",
+    "version": "old",
+    "sha256": "7e63d6a89ba1b5dea66c828d2e556814944b662de584460e16666495655bc6fe"
+  },
+  "act3-003": {
+    "file": "audio/act3-003.mp3",
+    "dur": 4.31,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "泥沼边那根留给后队，这根咱们带着走。",
+    "version": "old",
+    "sha256": "d27b83f78964bbc369ed3f25fd9044fb632abf8caecfbfcd89f726ceeec36aa0"
+  },
+  "act3-007": {
+    "file": "audio/act3-007.mp3",
+    "dur": 6.34,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "没绕回来。刚才的泥发黄，这儿是黑的。再找找前头的记号。",
+    "version": "old",
+    "sha256": "0bdcd3d729cea2f8586b5825fa2d0629964cc82ed686587dc7d3e833d692310c"
+  },
+  "act3-009": {
+    "file": "audio/act3-009.mp3",
+    "dur": 5.39,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "看到那棵歪树没有？树后头有根绑布的木棍。往那儿走。",
+    "version": "old",
+    "sha256": "4b4bf535fd271b504bd82f861e8194d21607ce3f3cd5a32368d9b8c7eb4b13b0"
+  },
+  "act3-010o0": {
+    "file": "audio/act3-010o0.mp3",
+    "dur": 4,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "是。前面的人顾着后面的人。",
+    "version": "new",
+    "sha256": "f442e0a4884d1cc21834cb48ea458b2d2ed9e7f9a6f1e665064970133a5da30f"
+  },
+  "act3-010o1": {
+    "file": "audio/act3-010o1.mp3",
+    "dur": 2.41,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "过了这片泥地就插一根。",
+    "version": "new",
+    "sha256": "9ebd96c62f92fa8aa17ee4cb81cc15ce865826033c8519d7abc3306d29effc42"
+  },
+  "act3-010o2": {
+    "file": "audio/act3-010o2.mp3",
+    "dur": 4.27,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "先到那棵树下。那儿地实，能歇。",
+    "version": "old",
+    "sha256": "619c508492b52a50babb7a40b0dcc120332afaa2ce9af6428d90a729774588fb"
+  },
+  "act3-012": {
+    "file": "audio/act3-012.mp3",
+    "dur": 6.31,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "看见了吧？他们留给咱们的。走过去，咱们也给后面的人留。",
+    "version": "new",
+    "sha256": "1f4d09f21d4598890760e487172d4d940a8757ef9622ee9c87c85ba7f16e80c5"
+  },
+  "act3-031": {
+    "file": "audio/act3-031.mp3",
+    "dur": 4.19,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "鞋绳断了。先收起来，天亮再想办法。",
+    "version": "old",
+    "sha256": "78982523a655ca3f52b6f00ccb4902217be8cda6afff3c8b512c5c60782b196d"
+  },
+  "act3-033": {
+    "file": "audio/act3-033.mp3",
+    "dur": 7.024,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "{player}。你还认得字。你说，等这仗打完，孩子们是不是都能进学堂？",
+    "version": "old",
+    "sha256": "d543907d294037c44bee4e1febf609cacf97c5efd8bb4ac2a1c3fe610400c447"
+  },
+  "act3-034o0": {
+    "file": "audio/act3-034o0.mp3",
+    "dur": 1.28,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "一个都别落下。",
+    "version": "old",
+    "sha256": "e0cbc754759928f857e46b64a99a5254893500eb87ad8a4acbd44c6678708006"
+  },
+  "act3-034o1": {
+    "file": "audio/act3-034o1.mp3",
+    "dur": 4.27,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "认得名字，好。总得先把名留下。",
+    "version": "old",
+    "sha256": "b41b3d37243581c98d8ab81e6dcb2694e84d07397a6ce4a7cf723aef433b6339"
+  },
+  "act3-034o2": {
+    "file": "audio/act3-034o2.mp3",
+    "dur": 5.03,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "看何大姐一夜还在认名册，想起这个了。",
+    "version": "old",
+    "sha256": "16d9dd809b2a78294462e66361cab4cef56a9cbe7905998e302e5915b9bd1316"
+  },
+  "act3-036": {
+    "file": "audio/act3-036.mp3",
+    "dur": 7.06,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "要是再走散了，替我跟前队说一声：炊事班李长河，河南信阳人。",
+    "version": "old",
+    "sha256": "eb87fa0c4bc90a812fb367ac6c8379c0104d56846c56d91915ad023df341e8dc"
+  },
+  "act3-038": {
+    "file": "audio/act3-038.mp3",
+    "dur": 0.98,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "睡吧。",
+    "version": "old",
+    "sha256": "da6433de67a40e031ffbfcbca2d678fbd41e8e6c68ed4173d2643d3dde37ccc2"
+  },
+  "act3-042": {
+    "file": "audio/act3-042.mp3",
+    "dur": 6.22,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "老家还有个闺女，闹灾那年走散了。等我出去，还想再找她。",
+    "version": "old",
+    "sha256": "d1e0b8b83e34e206631a68768c38db32f9dd80a55321d4df31d1a9f9983f03df"
+  },
+  "act3-061": {
+    "file": "audio/act3-061.mp3",
+    "dur": 3.42,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "等到了能读书的地方，我陪你去问。",
+    "version": "old",
+    "sha256": "f1861b9da7fe70e573b4a32defa6ff5f839346449095a4a2299e177be8261641"
+  },
+  "act3-064": {
+    "file": "audio/act3-064.mp3",
+    "dur": 1.46,
+    "who": "li-changhe",
+    "display": "老班长",
+    "text": "都走出去。",
+    "version": "new",
+    "sha256": "9aa74d1f06dbf63cd445338c03794c698d9b1e43e02e6766ff51f912fec5d7a2"
+  },
+  "epilogue-005": {
+    "file": "audio/epilogue-005.mp3",
+    "dur": 16.72,
+    "who": "he-xiuying-old",
+    "display": "晚年何秀英",
+    "text": "那年在草地上，我说想继续念书，学医。后来我学成了，在延安的医院工作，也带过年轻的护士。每教她们认一个名字，我都会想起那天夜里。",
+    "version": "old",
+    "sha256": "5b3f01ca5536036b229d08d3e39fe564446e849f1833de085535ed275a789f87"
+  },
+  "epilogue-007": {
+    "file": "audio/epilogue-007.mp3",
+    "dur": 10.66,
+    "who": "he-xiuying-old",
+    "display": "晚年何秀英",
+    "text": "李长河，河南信阳人。桂香，给伤员留过麦粒。还有许多人的名字，我记了一辈子。",
+    "version": "old",
+    "sha256": "b9ee0743f39f80a9cec4c436fb803b18c54d2e1fd04f958ba20aa8fb25e348b2"
+  }
+}

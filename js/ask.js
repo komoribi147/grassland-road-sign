@@ -84,6 +84,7 @@ export function initAsk(engine) {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         if (busy || npc === activeNpc) return;
+        engine.voice?.stop();
         activeNpc = npc;
         renderWho();
         renderLog();
@@ -111,11 +112,19 @@ export function initAsk(engine) {
     }
     for (const item of list) {
       addMsg("q", "你：" + item.q);
-      addMsg("a", displayOf(activeNpc) + "：" + item.a);
+      const answer = addMsg("a", displayOf(activeNpc) + "：" + item.a);
+      const npc = activeNpc;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "voice-btn";
+      button.textContent = "▶ 听这句";
+      button.addEventListener("click", () => void engine.voice?.speak(npc, item.a, { mode: "dynamic", mood: item.mood || "平静" }));
+      if (engine.voice?.canSynthesize !== false) answer.appendChild(button);
     }
   }
 
   function open(fromChoice = false) {
+    engine.voice?.stop();
     const list = present();
     if (!list.length) {
       engine.on?.toast?.("这会儿身边没有人。");
@@ -135,6 +144,7 @@ export function initAsk(engine) {
   }
 
   function close() {
+    engine.voice?.stop();
     requestVersion++;
     busy = false;
     sendBtn.disabled = false;
@@ -161,6 +171,7 @@ export function initAsk(engine) {
   async function send() {
     const text = input.value.trim();
     if (!text || busy) return;
+    engine.voice?.stop();
     const list = present();
     if (!list.includes(activeNpc)) {
       engine.on?.toast?.("他不在这儿。");
@@ -168,6 +179,7 @@ export function initAsk(engine) {
     }
 
     const npc = activeNpc;
+    const voiceIntent = engine.voice?.serial;
     const state = engine.state;
     const epoch = engine.epoch;
     const version = ++requestVersion;
@@ -201,9 +213,10 @@ export function initAsk(engine) {
     };
 
     try {
-      let answer = "";
+      let answer = "", answerMood = "平静";
       try {
         const data = await engine.ai.ask(payload);
+        answerMood = data.mood || "平静";
         answer = String(data.text).trim();
         if (!answer) throw new Error("empty");
       } catch {
@@ -219,10 +232,11 @@ export function initAsk(engine) {
       askedCount++;
       lastAsked = text;
       const listMem = memory()[npc] || (memory()[npc] = []);
-      listMem.push({ q: text, a: answer });
+      listMem.push({ q: text, a: answer, mood: answerMood });
       if (listMem.length > 12) listMem.splice(0, listMem.length - 12);
       try { engine.autosave?.(); } catch { /* 忽略 */ }
       renderLog();
+      if (!document.hidden && engine.voice?.serial === voiceIntent) await engine.voice?.speak(npc, answer, { mood: answerMood });
     } finally {
       pending.remove();
       if (version === requestVersion) {

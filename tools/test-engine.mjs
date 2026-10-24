@@ -399,5 +399,81 @@ console.log("自由对话连接恢复、失败提示与记忆隔离通过。");
   await e.load();
   assert.equal(e.manifest.start, "old", "离线时仍可读缓存");
 }
+// 回看修改 epoch 后，旧循环不能再把新位置推进一格。
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [{ t: "say" }, { t: "say" }] } });
+  e.state = e.newState();
+  e.play = async () => { e.epoch++; e.state.step = 1; return "next"; };
+  await e.run();
+  assert.equal(e.state.step, 1, "旧循环不得把回看目标推进到下一句");
+}
+
+// 自由回答在本地对话不可用时使用剧本兜底文字，仍应按角色声音回答。
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  e.state = e.newState();
+  e.ai.online = false;
+  e.voice = { ready: Promise.resolve(), stop() {}, fixedLine: () => null };
+  e.appendAskEntry = () => {};
+  e.setPortrait = () => {};
+  e.applyMove = () => false;
+  const said = [];
+  e.speak = async (step, opts) => { said.push({ step, opts }); return "next"; };
+  const pending = e.selectStep({ ai: "a", options: [], fallback: ["先歇一会儿。"] });
+  e._resolveSelect({ spoken: true, via: "ask", text: "我的脚疼。" });
+  await pending;
+  assert.equal(said.at(-1).step.text, "先歇一会儿。");
+  assert.equal(said.at(-1).opts.voiceId, null);
+  assert.equal(said.at(-1).opts.voiceMode, "dynamic", "兜底回复也要发起角色配音，不能无声");
+}
+
+// 已选定配音的字幕按录音清单展示；AI 的新回答明确禁用固定步骤音频。
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [{ t: "say", who: "a", text: "中。跟上。" }] } });
+  e.state = e.newState();
+  const spoken = [];
+  e.voice = { serial: 0, ready: Promise.resolve(), stop() {}, fixedLine: () => ({ text: "跟上。" }), speak: (...args) => { spoken.push(args); return Promise.resolve(true); } };
+  e.type = async text => { e.ui.text.textContent = text; };
+  e.waitClick = async () => {};
+  await e.speak({ t: "say", who: "a", text: "中。跟上。" });
+  assert.equal(e.ui.text.textContent, "跟上。");
+  assert.equal(spoken.at(-1)[2].mode, "fixed");
+  e.voice.fixedLine = () => { throw new Error("AI 新回答不应查当前步骤录音"); };
+  await e.speak({ t: "say", who: "a", text: "新的回答。", raw: true }, { voiceId: null, voiceMode: "dynamic" });
+  assert.equal(spoken.at(-1)[2].mode, "dynamic");
+  assert.equal(e.ui.text.textContent, "新的回答。");
+}
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  const add = document.addEventListener, remove = document.removeEventListener;
+  const savedInput = globalThis.HTMLInputElement;
+  globalThis.HTMLInputElement = class {};
+  const listeners = new Map();
+  document.addEventListener = (type, fn) => listeners.set(type, fn);
+  document.removeEventListener = () => {};
+  let resolved = false;
+  const pending = e.waitClick().then(() => { resolved = true; });
+  listeners.get("keydown")({ key: "Enter", target: { closest: () => ({ id: "voiceBtn" }) } });
+  await Promise.resolve();
+  assert.equal(resolved, false, "键盘激活回放按钮不能推进剧情");
+  listeners.get("keydown")({ key: "Enter", target: { closest: () => null } });
+  await pending;
+  document.addEventListener = add; document.removeEventListener = remove;
+  if (savedInput) globalThis.HTMLInputElement = savedInput; else delete globalThis.HTMLInputElement;
+}
+{
+  const e = makeEngine({ act1: { id: "act1", steps: [] } });
+  e.state = e.newState();
+  const played = [];
+  let release;
+  e.play = async step => { played.push(step.t); if (step.t === "visual") return new Promise(resolve => { release = resolve; }); return "next"; };
+  const pending = e.runAfter({ after: [{ t: "visual" }, { t: "say", who: "a", text: "旧位置的台词" }] });
+  e.epoch++; e.state = e.newState();
+  release("next");
+  const result = await pending;
+  assert.deepEqual(played, ["visual"], "回看后旧 after 不能继续播下一句");
+  assert.equal(result, "stop", "取消结果需传递给调用者，避免旧步骤继续移动");
+}
+console.log("回看步号隔离、录音字幕对齐、AI 配音来源、键盘回放与 after 取消隔离通过。");
 console.log(ok === 19 ? "\n全部通过" : `\n有断言没过（${ok}/19）`);
 process.exit(ok === 19 ? 0 : 1);

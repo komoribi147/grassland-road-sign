@@ -21,21 +21,23 @@ globalThis.MutationObserver = class { observe() {} };
 function setup() {
   elements = new Map([".dialogue-inner", "#askWho", "#askLog", "#askForm", "#askInput", "#askSend", "#askClose"].map(id => [id, new Element()]));
   const body = new Element();
-  globalThis.document = { body, getElementById: () => new Element(), createElement: () => new Element() };
+  globalThis.document = { body, hidden: false, getElementById: () => new Element(), createElement: () => new Element() };
   let finish;
   let saved = 0;
+  const spoken = [];
   const engine = {
     state: { askMemory: {} }, epoch: 1,
     characters: { a: { display: "班长", freeFallback: ["跟紧队伍。"] }, b: { display: "石头" } },
     presentNpcs: () => ["a", "b"],
     ai: { check: async () => true, ask: () => new Promise((resolve, reject) => { finish = value => value instanceof Error ? reject(value) : resolve(value); }) },
     autosave: () => { saved++; },
+    voice: { serial: 0, stop() { this.serial++; }, speak: (...args) => { spoken.push(args); return Promise.resolve(true); } },
   };
   initAsk(engine);
   const open = elements.get(".dialogue-inner").children[0];
   open.emit("click");
   const start = (text) => { elements.get("#askInput").value = text; elements.get("#askForm").emit("submit"); return finish; };
-  return { engine, start, close: () => elements.get("#askClose").emit("click"), open: () => open.emit("click"), saved: () => saved };
+  return { engine, start, close: () => elements.get("#askClose").emit("click"), open: () => open.emit("click"), saved: () => saved, spoken };
 }
 const flush = () => new Promise(resolve => setImmediate(resolve));
 
@@ -43,7 +45,7 @@ const flush = () => new Promise(resolve => setImmediate(resolve));
   const app = setup();
   app.start("我能帮什么忙？")({ text: "扶着小石头。" });
   await flush();
-  assert.deepEqual(app.engine.state.askMemory.a, [{ q: "我能帮什么忙？", a: "扶着小石头。" }]);
+  assert.deepEqual(app.engine.state.askMemory.a, [{ q: "我能帮什么忙？", a: "扶着小石头。", mood: "平静" }]);
   assert.equal(app.saved(), 1);
   assert.equal(elements.get("#askSend").disabled, false);
 }
@@ -80,7 +82,7 @@ const flush = () => new Promise(resolve => setImmediate(resolve));
   assert.equal(elements.get("#askSend").disabled, true, "旧请求不能释放新请求的等待状态");
   newFinish({ text: "新回答" });
   await flush();
-  assert.deepEqual(app.engine.state.askMemory.a, [{ q: "新问题", a: "新回答" }]);
+  assert.deepEqual(app.engine.state.askMemory.a, [{ q: "新问题", a: "新回答", mood: "平静" }]);
 }
 {
   const app = setup();
@@ -91,4 +93,21 @@ const flush = () => new Promise(resolve => setImmediate(resolve));
   assert.equal(app.saved(), 0);
   assert.equal(elements.get("#askSend").disabled, false);
 }
-console.log("自由提问通过：正常保存、关闭重开、重新开始、回看跳转、过期请求隔离和断线重试。");
+{
+  const app = setup();
+  const finish = app.start("等我回来再说");
+  document.hidden = true;
+  finish({ text: "知道，先歇着。" });
+  await flush();
+  assert.equal(app.engine.state.askMemory.a.length, 1, "后台到达的回答保留文字");
+  assert.equal(app.spoken.length, 0, "后台到达的新回答不能重新开口");
+}
+{
+  const app = setup();
+  const finish = app.start("等一等");
+  app.engine.voice.stop();
+  finish({ text: "不急。" });
+  await flush();
+  assert.equal(app.spoken.length, 0, "等待 AI 期间停止或试听别句后，不自动抢回声音");
+}
+console.log("自由提问通过：正常保存、关闭重开、过期请求隔离、断线重试、后台和停止期间的迟到配音。");
