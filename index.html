@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>草地上的路标 · 沉浸式叙事</title>
-<meta name="description" content="1935年8月，松潘草地。我从泥水里醒来，记不起自己的番号，只能跟着他们走。" />
-<link rel="stylesheet" href="css/style.css?v=20261024-voice-public" />
+<title>草地上的路标 · 历史情境探究</title>
+<meta name="description" content="走进长征过草地的历史情境，在故事与史料之间学习区分、解释与追问。" />
+<link rel="stylesheet" href="css/style.css?v=20261025-inquiry" />
 <link rel="stylesheet" href="css/landscape.css?v=20261023-toasttop" />
 <link rel="stylesheet" href="css/ask.css?v=20261023-askchoice" />
 </head>
@@ -37,9 +37,17 @@
       <button class="ghost-btn" id="btnTalk" type="button">开口说话</button>
       <button class="ghost-btn" id="btnReplay" type="button" title="整份剧本都能翻：可以搜、可以跳到某一句（往回或往后）">回看</button>
       <button class="ghost-btn" id="btnLore" type="button">史料卡 <b id="loreCount">0</b></button>
+      <a class="ghost-btn" href="inquiry.html?from=story">史料探究</a>
       <button class="ghost-btn" id="btnMenu" type="button">菜单</button>
     </div>
   </header>
+
+  <aside class="inquiry-cue" id="inquiryCue" aria-label="与当前情境相关的史料探究" hidden>
+    <button class="ghost-btn cue-close" id="btnDismissInquiry" type="button" aria-label="收起本次探究提示">×</button>
+    <p>把故事放回史料旁</p><h2 id="inquiryCueTitle"></h2>
+    <a id="inquiryCueLink" href="inquiry.html?from=story">保留进度，去核对史料 →</a>
+    <small>也可以继续故事，稍后从史料卡进入。</small>
+  </aside>
 
   <img id="portrait" alt="" hidden />
 
@@ -61,11 +69,13 @@
       <p class="eyebrow">1935 · 松潘草地</p>
       <h1>草地上的路标</h1>
       <p class="subtitle">我从泥水里醒来，记不起自己的番号，只能跟着他们走。</p>
+      <p class="learning-intro">初中历史 · 长征主题活动课<br />区分史实与艺术创作，用史料解释人物处境。</p>
       <div class="title-actions">
-        <button class="primary-btn" id="btnStart" type="button">开始</button>
+        <button class="primary-btn" id="btnStart" type="button">进入故事</button>
         <button class="ghost-btn" id="btnResume" type="button" hidden>继续上次</button>
         <button class="ghost-btn" id="btnAbout" type="button">这是什么</button>
       </div>
+      <a class="inquiry-entry" href="inquiry.html"><span>历史探究课堂 <i aria-hidden="true">→</i></span><small>从一根路标出发：核对史料，写出自己的解释</small></a>
       <p class="footnote">一次约 20 分钟的沉浸式体验 · 点「开始」之后才有声音 · 建议戴耳机</p>
       <p class="footnote"><a class="motion-demo-link" href="rescue-demo.html">体验「泥沼拉人」动态样张 →</a></p>
     </div>
@@ -79,6 +89,7 @@
         <button class="ghost-btn" data-close="screenLore" type="button">关闭</button>
       </div>
       <p class="panel-note">剧情中解锁的历史背景。人物为艺术形象，史实供延伸阅读。</p>
+      <p class="panel-note"><a href="inquiry.html">把故事放回史料旁：开始“路标与证据”探究 →</a></p>
       <div class="lore-list" id="loreList"></div>
     </div>
   </section>
@@ -168,6 +179,7 @@
         <p>《草地上的路标》是一件以长征过草地为背景的沉浸式叙事作品。我从泥水里醒来，说不清自己的番号，只能跟着这支队伍往外走。</p>
         <p>故事人物与具体遭遇为艺术创作；1935 年红军过草地的时间、地点和历史背景参考公开史料。完整行军历时数日，作品选取其中几个片段。</p>
         <p>人物会记住你说过的话，并据此改变称呼。史料卡标明了可继续阅读的来源，也注明了剧中的虚构部分。</p>
+        <p>“历史探究课堂”面向长征主题活动课试用：先表达理解，再对照有来源的资料，在 AI 阅读建议或人工提示的帮助下修改解释，保留自己的思考过程。教学效果仍待真实课堂试用。</p>
         <p><a href="docs/草地上的路标完整互动剧本修订版.docx" download>下载修订版完整剧本（Word）</a></p>
         <p class="small">河南工业大学 · 讯飞杯参赛作品（AI + 教育）</p>
       </div>
@@ -195,6 +207,7 @@
         <h2 id="reportTitle">走过草地以后</h2>
         <div class="head-actions">
           <button class="ghost-btn" id="btnReportSave" type="button">保存回望</button>
+          <a class="ghost-btn" href="inquiry.html">再走一步：史料探究</a>
           <button class="ghost-btn" id="btnReportClose" type="button">回到首页</button>
         </div>
       </div>

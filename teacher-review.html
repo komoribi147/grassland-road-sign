@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>课堂试用记录 · 草地上的路标</title><link rel="stylesheet" href="css/inquiry.css?v=20261025-2"></head>
+<body>
+<header class="site-header"><a class="wordmark" href="index.html">草地上的路标<span>教师试用记录</span></a><nav aria-label="页面导航"><a href="inquiry.html">学生探究页</a><a href="index.html">返回故事</a></nav></header>
+<main>
+  <section class="review-hero"><p class="eyebrow"><span></span> 先记录，再判断</p><h1>让教学效果，<br>有真实的观察依据。</h1><p class="hero-description">导入学生自愿分享的匿名探究成果，观察解释、依据与修订过程。所有记录留在当前浏览器，不上传至服务器。</p></section>
+  <section class="review-preparation"><h2>一次小规模试用，可以这样开始</h2><ol><li>确定同一课堂目标，说明艺术创作与资料整理的边界。</li><li>学生先独立表达，再对照资料；记录实际使用了哪些帮助。</li><li>请学生自愿分享导出的匿名学习记录，按同一观察标准阅读。</li><li>记下具体表现、常见误解与使用困难，整理后再调整活动。</li></ol><p>未导入实际记录时，这里保持空白。小样本观察用于改进活动，不能据此证明普遍效果。</p></section>
+  <section class="review-summary" aria-label="本轮记录概况"><div><b id="reviewTotal">0</b><span>已导入成果</span></div><div><b id="reviewAi">0</b><span>实际收到 AI 建议</span></div><div><b id="reviewObserved">0</b><span>教师已完成观察</span></div><div><b id="reviewFollowup">0</b><span>需继续追问</span></div></section>
+  <div class="review-toolbar"><label class="button primary upload-button" for="importRecords">导入匿名学习记录<input type="file" id="importRecords" accept=".json,application/json" multiple></label><div><button class="button secondary" id="exportReview" type="button">下载试用观察报告</button><button class="button secondary" id="backupReview" type="button">备份记录</button></div></div>
+  <p class="field-help">学生在完成页选择“下载供教师导入的记录”。也可以导入此前从本页备份的文件。学生文件不超过 1 MB，整班备份不超过 8 MB，本轮最多 100 份成果。</p>
+  <p class="request-status" id="reviewStatus" role="status">正在准备试用记录工具…</p>
+  <aside class="review-recovery" id="reviewRecovery" hidden><h2>之前的记录暂时未能恢复</h2><p>浏览器中的原始数据仍保留，当前操作不会覆盖它。请先下载原始备份，再尝试导入可用备份。</p><button class="button secondary" id="downloadOriginalReview" type="button">下载未恢复的原始数据</button><button class="button secondary" id="adoptRecoveredRecords" type="button" disabled>采用当前导入的记录</button></aside>
+  <section class="review-empty" id="reviewEmpty" hidden><h2>还没有导入学生记录</h2><p>完成一轮真实试用后，再把学生自愿分享的记录放到这里。页面不会生成样本或代替教师下结论。</p><a class="button secondary" href="inquiry.html">先看看学生的探究过程 →</a></section>
+  <section class="review-workspace" id="reviewWorkspace" hidden>
+    <aside><h2 class="case-heading">本轮匿名成果</h2><div id="caseList" class="case-list"></div></aside>
+    <div>
+      <div class="case-header"><h2 id="caseTitle">查看一份探究记录</h2><label for="caseAlias">匿名编号（请勿填写姓名）<input id="caseAlias" maxlength="20" placeholder="例如 S01"></label></div>
+      <p id="caseMeta" class="field-help"></p>
+      <div class="comparison"><article><span class="card-label">学生 · 最初的解释</span><p id="reviewBefore"></p><small id="reviewBeforeBoundary"></small></article><article><span class="card-label">学生 · 对照资料后</span><p id="reviewAfter"></p><small id="reviewAfterBoundary"></small></article></div>
+      <div class="reason-record"><h3>学生自己说明的依据与理由</h3><p id="reviewEvidence"></p><p id="reviewReason"></p><p id="reviewSources"></p></div>
+      <section class="teacher-feedback"><h3>分别核对两次 AI 实际说了什么</h3><p class="field-help">先看对应的学生原话和资料，再判断解释与追问是否有帮助。初稿和修订稿反馈分别保留，不把两次核查混为一个结论。旧反馈会注明缺少逐句依据。</p><div id="reviewFeedback"></div><div id="reviewRevisionFeedback"></div></section>
+      <form id="observationForm" class="observation-form"><h3>教师观察</h3><p class="field-help">逐项结合实际表达判断。学生的选项和 AI 回复不会自动填入这里。</p>
+        <div class="observation-fields"><label>区分史实与创作<select id="observeBoundary" data-observation="boundary"></select></label><label>说明相关依据<select id="observeEvidence" data-observation="evidence"></select></label><label>说明修订或保留的理由<select id="observeRevision" data-observation="revision"></select></label><label>本次课堂能否顺利用起来<select id="observeClassroom" data-observation="classroom"></select></label><label>初稿 AI 建议是否可用（人工核查）<select id="observeFeedback" data-observation="feedbackReview"></select></label><label>修订稿 AI 建议是否可用（人工核查）<select id="observeRevisionFeedback" data-observation="revisionFeedbackReview"></select></label></div>
+        <label class="question" for="feedbackNote">初稿 AI 核查备注</label><p class="field-help">记录具体哪句话有帮助、需要补充或可能误导。该阶段没有收到 AI 反馈时无需填写。</p><textarea id="feedbackNote" maxlength="1000" rows="3" placeholder="例如：摘录能够对应，但解释把“资料不足”说成“不曾发生”，需要纠正。"></textarea>
+        <label class="question" for="revisionFeedbackNote">修订稿 AI 核查备注</label><textarea id="revisionFeedbackNote" maxlength="1000" rows="3" placeholder="例如：确实回应了修订稿中的证据边界；后续追问可留作课堂讨论。"></textarea>
+        <fieldset class="support-field"><legend>需要跟进的误解或困难</legend><div class="radio-options" id="misconceptionList"></div></fieldset>
+        <label class="question" for="observationNote">记录一个具体表现或困难</label><textarea id="observationNote" maxlength="1000" rows="4" placeholder="例如：能指出红布是创作，但所选资料还没有对应到自己的观点；手机上阅读原始来源较慢。"></textarea>
+      </form>
+    </div>
+  </section>
+  <section class="session-note"><label class="question" for="sessionNote">本轮课堂使用情况</label><p class="field-help">可记录人数、设备、网络、活动安排、教师意见与需要调整之处。不要填写可识别个人的信息。</p><textarea id="sessionNote" maxlength="2000" rows="4" placeholder="尚未试用时可以留空。完成真实试用后，再记录观察结果。"></textarea><p class="save-status" id="reviewSaveStatus" role="status">记录仅保存在当前浏览器，请及时备份。</p></section>
+  <p class="privacy-note">这里的数量是导入记录与人工观察的汇总，不是学习成绩或效果提升百分比。教师与学生应按所在学校要求决定记录的收集、分享和保存方式。</p>
+</main>
+<footer><a href="inquiry.html">返回学生探究页 →</a><a href="docs/TEACHING_ACTIVITY.md" target="_blank" rel="noopener">教师活动单 ↗</a></footer>
+<script type="module" src="js/classroom-review-view.js?v=20261026-1"></script>
+</body></html>

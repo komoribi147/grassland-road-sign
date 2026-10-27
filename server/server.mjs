@@ -13,6 +13,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadVoiceService } from "./voice-service.mjs";
+import { reviewInquiry } from "./inquiry-service.mjs";
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -21,6 +22,8 @@ try { process.loadEnvFile(path.join(root, ".env")); } catch { /* 没有 .env 就
 const PORT = Number(process.env.PORT || 8787);
 const characters = JSON.parse(await readFile(path.join(root, "story/characters.json"), "utf8"));
 const aiConfig = JSON.parse(await readFile(path.join(root, "server/ai-config.json"), "utf8"));
+const inquiryTask = JSON.parse(await readFile(path.join(root, "story/inquiry.json"), "utf8"));
+const inquiryLore = JSON.parse(await readFile(path.join(root, "story/lore.json"), "utf8"));
 const { provider: voiceProvider, profiles: voiceProfiles, service: voiceService } = await loadVoiceService();
 
 /** 把 default 和某个角色的单独配置合起来 */
@@ -42,7 +45,7 @@ function configFor(npc) {
 const MOODS = ["警惕", "缓和", "疲惫", "难过", "坚定", "好奇", "平静"];
 
 // 1935 年的人物不该说出的现代词。先靠提示词约束，生成后再兜底检查一次。
-const MODERN_RE = /手机|互联网|网络|系统|程序|软件|人工智能|AI|数据|信息|视频|微信|APP|项目|任务|压力|焦虑|抑郁|心理|逻辑|概念|理论|科技|科学|情绪|沟通|体验|反馈|机制|流程|资源|效率/;
+const MODERN_RE = /手机|互联网|软件|人工智能|\bAI\b|微信|\bAPP\b|短视频|二维码|直播|电脑/;
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -100,7 +103,7 @@ function buildMessages({
     isAsk ? "绝不能提到、暗示或预言此后的情节、结局、人物生死、胜负；未来的事你不可能知道。" : "",
     isAsk ? "如果玩家问以后会怎样，只能按你的见识去猜，用“我估摸”“说不准”“要真能走出去”这样的口吻，不能当成事实。" : "",
     isAsk && loreText ? `你已经知道的史料（可参考，不要整段背）：${loreText}` : "",
-    isAsk ? "不要使用1935年以后才出现的词，例如手机、网络、系统、程序、数据、信息、视频、心理、压力、项目、任务、科学、科技等。" : "",
+    isAsk ? "保持1935年人物的口语与见识，不提手机、互联网、人工智能、微信等后来出现的事物。不要把今天的技术或制度带入当时。" : "",
     isAsk ? "回答1到3句，短句，口语，只说你嘴里说出来的话；不要旁白、括号、解释，也不要反问太多。" : "",
     isAsk && noModern ? "特别注意：上一句出现了现代词，这次一个现代词都不许用。" : "",
     "不要编造人物设定中未给出的亲属、生平和未来经历；没有交代的事就说不知道。",
@@ -226,7 +229,7 @@ const send = (res, code, body, type = "application/json; charset=utf-8") => {
 };
 
 // 只发布网页需要的文件。尤其不能让浏览器读取根目录的 .env、.git 或 server/。
-const PUBLIC_FILES = new Set(["index.html", "rescue-demo.html", "voice-preview.html", "voice-candidates.html", "favicon.ico"]);
+const PUBLIC_FILES = new Set(["index.html", "inquiry.html", "teacher-review.html", "rescue-demo.html", "voice-preview.html", "voice-candidates.html", "favicon.ico"]);
 const PUBLIC_DIRS = new Set(["assets", "voice", "css", "js", "story", "docs", "openworld"]);
 const allowedOrigins = new Set((process.env.AI_ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean));
 // 部分 CloudBase 网关会为已登记域名自动注入 CORS。仅对显式配置的域名交由网关写该响应头。
@@ -339,7 +342,7 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   // CloudBase 默认 HTTP 访问服务会去掉已匹配的 /api 前缀。
   // 两种入口统一走同一套来源校验、限频与参数校验。
-  if (["/health", "/npc", "/ask"].includes(url.pathname)) url.pathname = `/api${url.pathname}`;
+  if (["/health", "/npc", "/ask", "/inquiry"].includes(url.pathname)) url.pathname = `/api${url.pathname}`;
 
   if (url.pathname.startsWith("/api/")) {
     if (!allowOrigin(req, res)) return send(res, 403, JSON.stringify({ error: "来源不允许" }));
@@ -360,8 +363,25 @@ const server = http.createServer(async (req, res) => {
       ready,
       total: Object.keys(detail).length,
       characters: detail,
+      capabilities: { inquiry: true },
       reason: ready ? "" : "没有配置 AI_API_KEY（.env），使用剧本兜底台词",
     }));
+  }
+
+  if (url.pathname === "/api/inquiry" && req.method === "POST") {
+    if (!withinRateLimit(req)) return send(res, 429, JSON.stringify({ error: "请稍等一会儿，再请助手阅读。" }));
+    let input;
+    try { input = await readBody(req); }
+    catch { return send(res, 400, JSON.stringify({ error: "探究记录格式不正确。" })); }
+    const controller = new AbortController();
+    res.once("close", () => { if (!res.writableEnded) controller.abort(); });
+    try {
+      const feedback = await reviewInquiry(input, { task: inquiryTask, lore: inquiryLore, config: configFor("li-changhe"), signal: controller.signal });
+      if (!res.destroyed) return send(res, 200, JSON.stringify(feedback));
+    } catch (err) {
+      if (!res.destroyed) return send(res, err.status || 502, JSON.stringify({ error: err.status ? err.message : "史料助手暂时未能回应，可以对照资料继续完成。" }));
+    }
+    return;
   }
 
   if (url.pathname === "/api/npc" && req.method === "POST") {

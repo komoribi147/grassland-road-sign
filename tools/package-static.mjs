@@ -12,6 +12,8 @@ if (!out.startsWith(`${root}${path.sep}`)) throw new Error("Refusing to write ou
 await rm(out, { recursive: true, force: true });
 await mkdir(out, { recursive: true });
 await copyFile(path.join(root, "index.html"), path.join(out, "index.html"));
+await copyFile(path.join(root, "inquiry.html"), path.join(out, "inquiry.html"));
+await copyFile(path.join(root, "teacher-review.html"), path.join(out, "teacher-review.html"));
 await copyFile(path.join(root, "rescue-demo.html"), path.join(out, "rescue-demo.html"));
 await copyFile(path.join(root, "voice-preview.html"), path.join(out, "voice-preview.html"));
 await copyFile(path.join(root, "voice-candidates.html"), path.join(out, "voice-candidates.html"));
@@ -19,11 +21,13 @@ for (const dir of ["css", "js", "story", "voice"]) {
   await cp(path.join(root, dir), path.join(out, dir), { recursive: true });
 }
 await mkdir(path.join(out, "assets"));
+await mkdir(path.join(out, "docs"));
+await copyFile(path.join(root, "docs/TEACHING_ACTIVITY.md"), path.join(out, "docs/TEACHING_ACTIVITY.md"));
 for (const dir of ["audio", "rescue", "ui"]) {
   await cp(path.join(root, "assets", dir), path.join(out, "assets", dir), { recursive: true });
 }
 
-const images = new Set(["assets/stills/today-path-monument.png"]);
+const images = new Set(["assets/stills/today-path-monument.png", "assets/stills/last-signpost.png"]);
 const collect = value => {
   if (typeof value === "string" && value.startsWith("assets/stills/")) images.add(value);
   else if (value && typeof value === "object") Object.values(value).forEach(collect);

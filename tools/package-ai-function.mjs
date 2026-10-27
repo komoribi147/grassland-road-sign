@@ -11,6 +11,11 @@ if (!out.startsWith(root + path.sep)) throw new Error("Refusing to write outside
 await rm(out, { recursive: true, force: true });
 await mkdir(path.join(out, "server"), { recursive: true });
 await mkdir(path.join(out, "story"), { recursive: true });
+await mkdir(path.join(out, "js"), { recursive: true });
+await copyFile(path.join(root, "server/inquiry-service.mjs"), path.join(out, "server/inquiry-service.mjs"));
+await copyFile(path.join(root, "js/inquiry.js"), path.join(out, "js/inquiry.js"));
+await copyFile(path.join(root, "story/inquiry.json"), path.join(out, "story/inquiry.json"));
+await copyFile(path.join(root, "story/lore.json"), path.join(out, "story/lore.json"));
 await copyFile(path.join(root, "server/server.mjs"), path.join(out, "server/server.mjs"));
 await copyFile(path.join(root, "server/voice-service.mjs"), path.join(out, "server/voice-service.mjs"));
 await copyFile(path.join(root, "server/synthesize-voice.py"), path.join(out, "server/synthesize-voice.py"));
@@ -28,7 +33,7 @@ const bootstrap = path.join(out, "scf_bootstrap");
 await writeFile(bootstrap, "#!/bin/sh\nPORT=9000 node server/server.mjs\n", { encoding: "utf8" });
 
 // Windows 打包工具会丢掉可执行位；这里生成一个小型 ZIP，并把启动脚本标记为 755。
-const files = ["package.json", "scf_bootstrap", "server/server.mjs", "server/voice-service.mjs", "server/synthesize-voice.py", "server/synthesize-clone.py", "server/ai-config.json", "story/characters.json", "story/voices.json"];
+const files = ["package.json", "scf_bootstrap", "server/server.mjs", "server/inquiry-service.mjs", "js/inquiry.js", "story/inquiry.json", "story/lore.json", "server/voice-service.mjs", "server/synthesize-voice.py", "server/synthesize-clone.py", "server/ai-config.json", "story/characters.json", "story/voices.json"];
 const crcTable = Array.from({ length: 256 }, (_, n) => {
   let c = n;
   for (let i = 0; i < 8; i++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;

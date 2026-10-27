@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import vm from "node:vm";
+import { readFile } from "node:fs/promises";
+import * as review from "../js/classroom-review.js";
+let writes = 0;
+const status = { textContent: "" };
+const context = vm.createContext({ ...review, document: { getElementById: () => status }, localStorage: { setItem() { writes++; } } });
+const script = (await readFile(new URL("../js/classroom-review-view.js", import.meta.url), "utf8")).replace(/^import .*;\s*$/gm, "").replace(/\nbootReview\(\);\s*$/, "");
+vm.runInContext(script + '\nreviewRecoveryRaw="未恢复的旧数据";saveReview();', context);
+assert.equal(writes, 0, "旧记录恢复失败时不能用空白状态覆盖本机原始数据");
+vm.runInContext('reviewRecoveryRaw=null;saveReview();', context);
+assert.equal(writes, 1, "正常恢复后应继续保存人工观察");
+console.log("教师恢复保护通过：恢复失败不覆盖原数据，正常状态继续保存。");

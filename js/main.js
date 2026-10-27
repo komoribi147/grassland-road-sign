@@ -4,6 +4,7 @@ import { Save } from "./save.js";
 import { initAsk } from "./ask.js?v=20261023-voices";
 import { buildReflectionText } from "./reflection-report.js";
 import { renderReflectionReport } from "./reflection-view.js?v=20261023-hair2";
+import { contextualInquiry, learningInquiryLink } from "./learning-context.js";
 
 const $ = (id) => document.getElementById(id);
 const screens = ["screenTitle", "screenLore", "screenReplay", "screenMenu", "screenAbout", "screenReport", "screenTalk", "screenError"];
@@ -11,7 +12,7 @@ const screens = ["screenTitle", "screenLore", "screenReplay", "screenMenu", "scr
 const engine = new StoryEngine({
   toast: showToast,
   report: showReport,
-  stateChange: renderLoreCount,
+  stateChange: renderLearningState,
   voiceAllowed: () => screens.every(id => $(id).hidden) && (!$("askLayer") || $("askLayer").hidden),
 });
 
@@ -59,8 +60,21 @@ function renderLoreCount() {
   $("loreCount").textContent = engine.state ? engine.state.lore.length : 0;
 }
 
+function renderLearningState() {
+  renderLoreCount();
+  const cue = $("inquiryCue");
+  if (!cue) return;
+  const context = globalThis.location?.protocol === "file:" ? null : contextualInquiry(engine.state);
+  cue.hidden = !context;
+  if (context) {
+    $("inquiryCueTitle").textContent = context.title;
+    $("inquiryCueLink").href = context.href;
+  }
+}
+
 function renderLoreList() {
   const list = $("loreList");
+  const inquiryHref = learningInquiryLink(globalThis.location?.protocol);
   list.innerHTML = "";
   const unlocked = new Set(engine.state?.lore || []);
   for (const [id, card] of Object.entries(engine.lore)) {
@@ -73,6 +87,13 @@ function renderLoreList() {
       const body = document.createElement("p");
       body.textContent = card.text;
       div.appendChild(body);
+      if (id === "lubiao" && inquiryHref) {
+        const activity = document.createElement("a");
+        activity.href = inquiryHref;
+        activity.className = "lore-inquiry-link";
+        activity.textContent = "把这张资料与自己的理解放在一起：进入史料探究 →";
+        div.appendChild(activity);
+      }
       if (card.think) {
         const think = document.createElement("p");
         think.className = "think";
@@ -356,6 +377,10 @@ async function boot() {
     $("screenError").hidden = true;
     renderLoreCount();
     $("btnResume").hidden = !Save.read();
+    if (globalThis.location?.hash === "#resume") {
+      const saved = Save.read();
+      if (saved) { closeScreens(); engine.resume(saved); }
+    }
   } catch (err) {
     // 数据下不下来就停下来等人，别让人对着一个点了没反应的页面猜
     $("errorDetail").textContent = String(err.message || err);
@@ -394,6 +419,17 @@ $("btnResume").addEventListener("click", () => {
 
 $("btnAbout").addEventListener("click", () => openScreen("screenAbout"));
 $("btnAbout2").addEventListener("click", () => openScreen("screenAbout"));
+$("btnDismissInquiry")?.addEventListener("click", () => {
+  if (engine.state) {
+    engine.state.vars ||= {};
+    engine.state.vars.learningCueDismissed = true;
+    engine.autosave();
+  }
+});
+document.addEventListener("click", event => {
+  const link = event.target.closest?.('a[href="inquiry.html?from=story"]');
+  if (link && engine.state) { engine.autosave(); engine.voice.stop(); }
+});
 
 $("btnLore").addEventListener("click", () => {
   renderLoreList();

@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node server/server.mjs",
     "check": "node tools/check-story.mjs",
-    "test": "node tools/test-engine.mjs && node tools/test-audio.mjs && node tools/test-reflection-report.mjs && node tools/test-visual-delivery.mjs && node tools/test-image-package.mjs",
+    "test": "node tools/test-engine.mjs && node tools/test-audio.mjs && node tools/test-reflection-report.mjs && node tools/test-visual-delivery.mjs && node tools/test-image-package.mjs && node tools/test-inquiry.mjs && node tools/test-inquiry-server.mjs && node tools/test-inquiry-view.mjs && node tools/test-inquiry-package.mjs && node tools/test-learning-record.mjs && node tools/test-learning-context.mjs && node tools/test-classroom-review.mjs && node tools/test-feedback-evidence.mjs && node tools/test-review-recovery.mjs && node tools/test-revision-feedback.mjs",
+    "test:inquiry": "node tools/test-inquiry.mjs && node tools/test-inquiry-server.mjs && node tools/test-inquiry-view.mjs && node tools/test-inquiry-package.mjs && node tools/test-learning-record.mjs && node tools/test-learning-context.mjs && node tools/test-classroom-review.mjs && node tools/test-feedback-evidence.mjs && node tools/test-review-recovery.mjs && node tools/test-revision-feedback.mjs",
     "test:ai": "node tools/test-cloud-settings.mjs && node tools/test-ai-client.mjs && node tools/test-ask.mjs && node tools/test-ai-server.mjs",
     "test:voice": "node tools/test-story-voice-lines.mjs && node tools/test-local-voice-checkpoint.mjs && node tools/test-voice-service.mjs && node tools/test-voice-player.mjs && node tools/test-voice-integration.mjs && node tools/test-fixed-voice-assets.mjs",
     "voices:generate": "node tools/generate-voices.mjs",

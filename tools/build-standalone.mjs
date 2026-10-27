@@ -92,7 +92,7 @@ const stripModule = (src) => src
   .replace(/^export\s+(class|const|function|let)\s/gm, "$1 ");
 
 const parts = [];
-for (const f of ["js/save.js", "js/audio.js", "js/ai.js", "js/sheet-geometry.js", "js/image-assets.js", "js/visual-delivery.js", "js/reflection-report.js", "js/reflection-view.js", "js/engine.js", "js/ask.js", "js/landscape.js", "js/main.js"]) {
+for (const f of ["js/save.js", "js/audio.js", "js/ai.js", "js/sheet-geometry.js", "js/image-assets.js", "js/visual-delivery.js", "js/reflection-report.js", "js/reflection-view.js", "js/learning-context.js", "js/engine.js", "js/ask.js", "js/landscape.js", "js/main.js"]) {
   parts.push(`/* ===== ${f} ===== */\n` + stripModule(await read(f)));
 }
 let bundle = parts.join("\n\n");
@@ -169,6 +169,8 @@ html = html.replace(
   () => `<script type="module">\n${inline}\n${bundle}\n</script>`
 );
 html = html.replace("<title>", "<title>（单文件版）");
+// 独立课堂需要读取资料与服务接口；单文件版不留下打不开的相对链接。
+html = html.replace(/<a\b[^>]*href="inquiry\.html(?:\?[^\"]*)?"[^>]*>[\s\S]*?<\/a>/g, "");
 
 await writeFile(outPath, html, "utf8");
 const kb = Math.round(Buffer.byteLength(html, "utf8") / 1024);

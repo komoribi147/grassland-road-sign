@@ -1,0 +1,14 @@
+import assert from "node:assert/strict";
+const context = await import("../js/learning-context.js").catch(() => ({}));
+assert.equal(typeof context.contextualInquiry, "function", "需要把史料探究接回具体剧情位置");
+assert.equal(typeof context.learningInquiryLink, "function", "单文件模式不能创建课堂断链");
+assert.equal(context.learningInquiryLink("file:"), null);
+assert.equal(context.learningInquiryLink("http:"), "inquiry.html?from=story");
+assert.equal(context.contextualInquiry(null), null);
+assert.equal(context.contextualInquiry({ sceneId: "prologue", step: 5, lore: ["songpan"] }), null);
+assert.equal(context.contextualInquiry({ sceneId: "act2", step: 40, lore: [] }), null);
+assert.equal(context.contextualInquiry({ sceneId: "act2", step: 46, lore: ["lubiao"] }).sourceId, "lubiao");
+assert.equal(context.contextualInquiry({ sceneId: "act3", step: 3, lore: ["lubiao"] }).href, "inquiry.html?from=story");
+assert.equal(context.contextualInquiry({ sceneId: "act3", step: 30, lore: ["lubiao"] }), null);
+assert.equal(context.contextualInquiry({ sceneId: "act2", step: 46, lore: ["lubiao"], vars: { learningCueDismissed: true } }), null);
+console.log("剧情教学衔接通过：相关位置显示史料入口、其他情境不打断、可关闭。");

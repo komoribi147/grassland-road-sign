@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>一根路标，能告诉我们什么？ · 草地上的路标</title>
+  <meta name="description" content="从一段故事出发，核对史料，保留自己修改前后的解释。长征主题历史情境探究试用。" />
+  <link rel="stylesheet" href="css/inquiry.css?v=20261025-1" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="index.html">草地上的路标<span>历史情境探究</span></a>
+    <nav aria-label="页面导航"><a href="index.html" data-return-story>返回故事</a><a href="teacher-review.html">教师试用记录</a></nav>
+  </header>
+  <main id="inquiryMain">
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> 从故事出发 · 回到证据</p>
+        <h1 id="pageTitle">一根路标，<br />能告诉我们什么？</h1>
+        <p class="hero-description">故事让我们走近一个人的处境。史料帮助我们分清：哪些是创作，哪些有依据，哪些还需要继续追问。</p>
+        <div class="hero-meta"><span>初中历史 · 长征主题活动课</span><span>建议 10–15 分钟</span><span>无需登录</span></div>
+      </div>
+      <figure class="hero-figure">
+        <img src="assets/optimized/last-signpost-small-4a6a1d5151d0.webp" alt="作品中的草地与红布路标，属于艺术画面" width="1536" height="1024" />
+        <figcaption>作品画面 · 艺术创作，不作为史料</figcaption>
+      </figure>
+    </section>
+    <section class="learning-goals" aria-label="本课学习目标"><b>这节课，我们练习</b><span>区分史实与创作</span><span>用相关资料支持解释</span><span>说清修改或保留观点的理由</span></section>
+    <p class="story-origin" id="storyOrigin" hidden>你从故事中的探路棍与红布来到这里。故事进度已保留，核对资料后可以回去接着走。</p>
+    <div class="workspace" id="workspace" hidden>
+      <aside class="journey" aria-label="探究步骤">
+        <p class="side-label">这一次，我们练习</p>
+        <ol class="step-list">
+          <li><button type="button" data-stage="1"><span class="step-number">01</span><span>先说说你的理解<small>保留最初的想法</small></span></button></li>
+          <li><button type="button" data-stage="2"><span class="step-number">02</span><span>把故事放回史料旁<small>找到依据与边界</small></span></button></li>
+          <li><button type="button" data-stage="3"><span class="step-number">03</span><span>再写一次解释<small>让证据进入表达</small></span></button></li>
+          <li><button type="button" data-stage="4"><span class="step-number">04</span><span>留下一次理解的变化<small>保存自己的探究记录</small></span></button></li>
+        </ol>
+        <p class="save-status" id="saveStatus" role="status">记录只保存在当前浏览器</p>
+        <p class="side-note">这里不评判感受，也不以角色信任值判断学习水平。</p>
+      </aside>
+      <div class="activity">
+        <section class="step-panel" data-panel="1" aria-labelledby="step1Title">
+          <p class="section-kicker">01 / 先说说你的理解</p>
+          <h2 id="step1Title" tabindex="-1">先不急着寻找“标准答案”</h2>
+          <div class="scene-card"><span class="card-label">故事中的一个片段</span><p id="sceneText"></p><small id="sceneNote"></small></div>
+          <form id="initialForm">
+            <label class="question" for="initialAnswer" id="inquiryQuestion"></label>
+            <p class="field-help" id="initialHelp">写下此刻的判断和理由。暂时不确定，也可以如实写下来。</p>
+            <textarea id="initialAnswer" maxlength="800" rows="5" aria-describedby="initialHelp" placeholder="我觉得……因为……；但我还不确定……" required></textarea>
+            <p class="field-help" id="initialLocked" hidden>这段初始解释已保留，之后的修改请写在第三步。这样才能回看真实的理解过程。</p>
+            <fieldset class="boundary-field"><legend id="boundaryClaim"></legend><div id="initialBoundary" class="radio-options"></div></fieldset>
+            <div class="panel-actions"><span class="quiet">下一步会保留这段原话</span><button class="button primary" type="submit">带着想法，去看资料 <span aria-hidden="true">→</span></button></div>
+          </form>
+        </section>
+        <section class="step-panel" data-panel="2" aria-labelledby="step2Title" hidden>
+          <p class="section-kicker">02 / 把故事放回史料旁</p>
+          <h2 id="step2Title" tabindex="-1">同一个画面，哪些信息有依据？</h2>
+          <p class="section-intro">阅读下面两张资料卡，勾选你准备引用的资料。整理文字帮助定位线索；需要进一步核实时，请打开原始来源。</p>
+          <div class="source-list" id="sourceList"></div>
+          <fieldset class="support-field"><legend>你希望先解决哪个困惑？</legend><p class="field-help">自己选择需要的帮助，不代表能力评价。</p><div class="radio-options" id="supportNeed"></div></fieldset>
+          <div class="support-hint"><span class="card-label">按你的选择提供的资料引导 · 项目组编写</span><p id="supportHint"></p></div>
+          <div class="assistant-box">
+            <div class="assistant-header"><div><span class="card-label">史料阅读助手</span><h3>请它读一读我的解释</h3></div><span class="optional-tag">可选</span></div>
+            <p>助手会结合本页资料回应你的原话，并留一个追问。它的建议仍需核对，最终解释由你来写。</p>
+            <button class="button secondary" type="button" id="askInquiry">请 AI 帮我核对依据</button>
+            <p class="privacy-note">提问时，初始解释与资料编号会发送给 AI 服务。记录留在当前浏览器，不填写姓名或班级。</p>
+            <p class="request-status" id="requestStatus" role="status" aria-live="polite"></p>
+            <div data-feedback></div>
+          </div>
+          <details class="manual-hints"><summary>自己核对，也可以从这三点开始</summary><p class="hint-label">项目组编写的资料提示 · 非 AI 反馈</p><ol id="manualHints"></ol></details>
+          <div class="panel-actions"><button class="button text-button" type="button" data-go="1">← 回看最初的想法</button><button class="button primary" type="button" id="toRevision">我选好了，修改解释 →</button></div>
+          <p id="sourceError" class="field-error" role="alert" hidden>请先选一张你准备引用的资料。</p>
+        </section>
+        <section class="step-panel" data-panel="3" aria-labelledby="step3Title" hidden>
+          <p class="section-kicker">03 / 再写一次解释</p>
+          <h2 id="step3Title" tabindex="-1">让新的依据，进入自己的话</h2>
+          <div class="original-note"><span class="card-label">你最初这样说</span><blockquote id="originalQuote"></blockquote></div>
+          <div data-feedback></div>
+          <div class="selected-sources" id="selectedSources"></div>
+          <form id="revisionForm">
+            <label class="question" for="revisionAnswer">现在，你会怎样解释这根路标？</label>
+            <p class="field-help" id="revisionHelp">说明你的理由与资料依据，也可以写出仍然不确定的地方。保留原来的观点也可以，但请说清楚依据。</p>
+            <textarea id="revisionAnswer" maxlength="800" rows="6" aria-describedby="revisionHelp" placeholder="对照资料后，我认为……依据是……；故事中的……属于艺术设计。" required></textarea>
+            <label class="question" for="evidenceNote">哪条资料支持你的解释？</label><p class="field-help">用自己的话说明对应关系即可，资料卡整理不作为原文引文。</p>
+            <textarea id="evidenceNote" maxlength="500" rows="3" placeholder="我引用……卡，其中……支持我的……解释。"></textarea>
+            <label class="question" for="changeReason">你为什么修改，或为什么保留原来的想法？</label>
+            <textarea id="changeReason" maxlength="500" rows="3" placeholder="我原来认为……；核对……后，我……。"></textarea>
+            <fieldset class="boundary-field"><legend>对“当年统一使用红布路标”的说法，现在你怎样判断？</legend><div id="revisionBoundary" class="radio-options"></div></fieldset>
+            <div class="panel-actions"><button class="button text-button" type="button" data-go="2">← 再看看资料</button><button class="button primary" type="submit">保留这次理解的变化 →</button></div>
+          </form>
+        </section>
+        <section class="step-panel" data-panel="4" aria-labelledby="step4Title" hidden>
+          <p class="section-kicker">04 / 留下一次理解的变化</p>
+          <h2 id="step4Title" tabindex="-1">你留下的，是一次思考的过程</h2>
+          <p class="section-intro">不必为了“变化”而改口。重要的是，你现在能说清楚依据和边界。</p>
+          <div class="comparison"><article><span class="card-label">起初 · 我的解释</span><p id="beforeText"></p><small id="beforeBoundary"></small></article><article><span class="card-label">现在 · 对照资料后</span><p id="afterText"></p><small id="afterBoundary"></small></article></div>
+          <div class="record-sources" id="recordSources"></div>
+          <div class="reason-record"><h3>依据与理解过程</h3><p id="recordEvidence"></p><p id="recordReason"></p><small>这些是你的说明，教师仍需结合资料观察，系统不据此自动判定掌握程度。</small></div>
+          <div class="assistant-box">
+            <h3>这次修改，依据说清楚了吗？</h3>
+            <p class="field-help">可选：请 AI 对照你的两次表达与依据说明，指出一处变化或仍需核对的地方，并留下一个追问。它不会替你改写，也不会给分。</p>
+            <button class="button secondary" type="button" id="askRevision">请 AI 再看我的修订</button>
+            <p class="privacy-note">此时会发送初稿、修订稿、两次判断、所选资料编号，以及你填写的依据和修改理由。请勿填写姓名等个人信息。</p>
+            <p class="request-status" id="revisionRequestStatus" role="status" aria-live="polite"></p>
+            <div data-revision-feedback></div>
+          </div>
+          <div class="panel-actions"><button class="button text-button" type="button" data-go="3">← 继续修改</button><button class="button primary" type="button" id="downloadInquiry">下载我的探究记录 ↓</button></div>
+          <div class="record-options"><button class="button secondary" type="button" id="downloadLearningRecord">下载供教师导入的记录</button><button class="button text-button" type="button" id="restartInquiry">开始新一次探究</button></div>
+          <p class="privacy-note">记录仅保存在当前浏览器。AI 帮助由你自行选择；初稿与修订稿反馈分别保留。未收集姓名或班级。下载后可自行选择是否交给老师。</p>
+        </section>
+      </div>
+    </div>
+    <p class="load-message" id="loadStatus" role="status">正在准备探究资料…</p>
+    <section class="teacher-note" id="teacher" aria-labelledby="teacherTitle">
+      <div><p class="section-kicker">给教师与带领者</p><h2 id="teacherTitle">把一段体验，接上一场有依据的讨论</h2></div>
+      <div class="teacher-content"><p>适用于初中历史长征主题活动课试用。建议先体验相关故事片段，再进行这段探究；也可直接阅读本页情境独立使用。</p><ol><li><b>2 分钟：</b>学生先写解释，了解原有理解。</li><li><b>5 分钟：</b>对照资料，区分创作、史实与推断；按需请 AI 追问。</li><li><b>3–8 分钟：</b>修改解释并交流：你的依据在哪里？还有什么不能确定？</li></ol><p>观察重点：能否准确区分艺术设计、引用相关依据、说明推断边界。不同感受没有统一答案。本页尚未验证课堂效果，建议时长也需在试用中调整。</p><a href="teacher-review.html">打开教师试用记录：导入匿名成果、记录误解与教学困难 →</a><br /><a href="docs/TEACHING_ACTIVITY.md" target="_blank" rel="noopener">查看教师活动单与试用记录建议 ↗</a></div>
+    </section>
+  </main>
+  <footer><span>草地上的路标 · 从体验走向理解</span><a href="index.html" data-return-story>回到故事 →</a></footer>
+  <script src="js/site-config.js?v=20261021-network-check"></script>
+  <script type="module" src="js/inquiry-view.js?v=20261026-1"></script>
+</body>
+</html>
