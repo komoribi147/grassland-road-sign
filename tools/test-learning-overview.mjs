@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import { learningOverview } from '../js/learning-overview.js';
+const task={id:'signpost-evidence',version:'2026-10-25.1'};
+assert.equal(learningOverview(JSON.stringify({taskId:task.id,taskVersion:'old',initialCommitted:true,initial:'旧稿',stage:4,revision:'旧修订',completedAt:100}),task).stage,0,'旧任务记录不可显示成当前学习进度');
+assert.equal(learningOverview(null).stage, 0);
+assert.equal(learningOverview('{broken').stage, 0);
+assert.equal(learningOverview(JSON.stringify({ initial: '尚未提交', initialCommitted: false })).stage, 0);
+const first = learningOverview(JSON.stringify({ initial: '我认为……', initialCommitted: true, sourceIds: ['lubiao'], stage: 2 }));
+assert.equal(first.stage, 2);
+assert.equal(first.hasInitial, true);
+assert.equal(first.hasRevision, false);
+const completed = learningOverview(JSON.stringify({ initial: '初稿', initialCommitted: true, revision: '修订', completedAt: 100, stage: 4, sourceIds: ['lubiao'] }));
+assert.equal(completed.stage, 4);
+assert.equal(completed.hasRevision, true);
+assert.equal(completed.sources, 1);
+assert.equal(learningOverview(JSON.stringify({ initialCommitted: true, initial: '<script>', stage: 99 })).stage, 1);
+console.log('学习进度摘要通过：空白、损坏、草稿、已提交与完成记录。');

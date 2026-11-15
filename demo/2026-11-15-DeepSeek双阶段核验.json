@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-15",
+  "sampleType": "开发者输入，非课堂数据",
+  "results": [
+    {
+      "mode": "initial",
+      "status": 200,
+      "seconds": 2.2,
+      "valid": true,
+      "data": {
+        "observation": "你把剧中红布的作用和当年是否统一使用连在一起了，这一步需要分开核对。",
+        "evidenceNote": "整理说明红布引路是受探路、拐棍碑记载启发的艺术设计；探路与纪念战友的记载不能推出统一路标制度。",
+        "question": "按资料，红布路标属于哪一类信息？探路和拐棍碑的记载又能支持什么？",
+        "sourceIds": [
+          "lubiao"
+        ],
+        "version": 2,
+        "studentQuote": "我觉得剧中的红布能帮助后来的人，所以当年的红军应该统一使用红布路标。",
+        "citations": [
+          {
+            "evidenceId": "signpost-design",
+            "sourceId": "lubiao",
+            "excerpt": "剧中绑红布引路的木棍是受这些记载启发的艺术设计。",
+            "scope": "这段整理说明作品中红布路标的创作性质；不能据此证明当年统一使用红布路标，也不能据此断言历史上从未有人这样做。"
+          },
+          {
+            "evidenceId": "probe-remembrance",
+            "sourceId": "lubiao",
+            "excerpt": "史料记载，行军者常用树枝探路；有战友牺牲后，同伴把他的拐杖插在原地，后人称作“拐棍碑”。",
+            "scope": "这段整理提供探路和纪念战友的记载。两种作用需要区分，不能直接推导出统一使用红布路标的制度。"
+          }
+        ],
+        "model": "deepseek-chat"
+      }
+    },
+    {
+      "mode": "revision",
+      "status": 200,
+      "seconds": 1.5,
+      "valid": true,
+      "data": {
+        "observation": "你把作品设计与史料记载分开，并给“统一使用”留出了证据边界，没有把资料不足说成绝对不存在。",
+        "evidenceNote": "signpost-design说明红布木棍是受记载启发的艺术设计，不能证明统一使用；probe-remembrance的探路与拐棍碑也不能推出统一制度。",
+        "question": "按你的区分，剧中红布路标和史料里的拐棍碑各承担什么作用？请分别用一条证据说明。",
+        "sourceIds": [
+          "lubiao"
+        ],
+        "version": 2,
+        "studentQuote": "现有资料不足以证明当年统一使用红布路标，也不能据此说从来没有人使用。",
+        "citations": [
+          {
+            "evidenceId": "signpost-design",
+            "sourceId": "lubiao",
+            "excerpt": "剧中绑红布引路的木棍是受这些记载启发的艺术设计。",
+            "scope": "这段整理说明作品中红布路标的创作性质；不能据此证明当年统一使用红布路标，也不能据此断言历史上从未有人这样做。"
+          },
+          {
+            "evidenceId": "probe-remembrance",
+            "sourceId": "lubiao",
+            "excerpt": "史料记载，行军者常用树枝探路；有战友牺牲后，同伴把他的拐杖插在原地，后人称作“拐棍碑”。",
+            "scope": "这段整理提供探路和纪念战友的记载。两种作用需要区分，不能直接推导出统一使用红布路标的制度。"
+          }
+        ],
+        "model": "deepseek-chat"
+      }
+    }
+  ]
+}

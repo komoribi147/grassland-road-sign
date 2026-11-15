@@ -10,7 +10,7 @@
 <body>
   <header class="site-header">
     <a class="wordmark" href="index.html">草地上的路标<span>历史情境探究</span></a>
-    <nav aria-label="页面导航"><a href="index.html" data-return-story>返回故事</a><a href="teacher-review.html">教师试用记录</a></nav>
+    <nav aria-label="页面导航"><a href="learn.html">学习首页</a><a href="index.html" data-return-story>返回故事</a><a href="teacher-review.html">教师核查</a></nav>
   </header>
   <main id="inquiryMain">
     <section class="hero" aria-labelledby="pageTitle">
@@ -62,9 +62,9 @@
           <div class="support-hint"><span class="card-label">按你的选择提供的资料引导 · 项目组编写</span><p id="supportHint"></p></div>
           <div class="assistant-box">
             <div class="assistant-header"><div><span class="card-label">史料阅读助手</span><h3>请它读一读我的解释</h3></div><span class="optional-tag">可选</span></div>
-            <p>助手会结合本页资料回应你的原话，并留一个追问。它的建议仍需核对，最终解释由你来写。</p>
+            <p>云端 DeepSeek 会结合本页资料回应你的原话，并留一个追问。它的建议仍需核对，最终解释由你来写。</p>
             <button class="button secondary" type="button" id="askInquiry">请 AI 帮我核对依据</button>
-            <p class="privacy-note">提问时，初始解释与资料编号会发送给 AI 服务。记录留在当前浏览器，不填写姓名或班级。</p>
+            <p class="privacy-note">提问时，初始解释、判断、帮助方向与所选资料编号经项目服务端发送至 DeepSeek 云端处理。学习记录保存在当前浏览器；请勿填写姓名、班级或联系方式。</p>
             <p class="request-status" id="requestStatus" role="status" aria-live="polite"></p>
             <div data-feedback></div>
           </div>
@@ -101,7 +101,7 @@
             <h3>这次修改，依据说清楚了吗？</h3>
             <p class="field-help">可选：请 AI 对照你的两次表达与依据说明，指出一处变化或仍需核对的地方，并留下一个追问。它不会替你改写，也不会给分。</p>
             <button class="button secondary" type="button" id="askRevision">请 AI 再看我的修订</button>
-            <p class="privacy-note">此时会发送初稿、修订稿、两次判断、所选资料编号，以及你填写的依据和修改理由。请勿填写姓名等个人信息。</p>
+            <p class="privacy-note">此时会将初稿、修订稿、两次判断、所选资料编号，以及依据和修改理由，经项目服务端发送至 DeepSeek 云端处理。请勿填写姓名等个人信息。</p>
             <p class="request-status" id="revisionRequestStatus" role="status" aria-live="polite"></p>
             <div data-revision-feedback></div>
           </div>

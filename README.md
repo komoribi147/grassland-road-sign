@@ -6,6 +6,8 @@
 
 > **第一次来？先看 [docs/START_HERE.md](docs/START_HERE.md)**——三条路，看你想做哪件事，不用先学编程。
 
+**2026 年 11 月教育网站版**：以 `learn.html` 为学习首页，`review.html` 为评审导览。交互和史料阅读引导统一调用云端 DeepSeek API，使用者无需部署本地大模型；剧情使用已有配音，动态 AI 回复以文字呈现。
+
 在线预览：[中国大陆测试站（腾讯云 CloudBase）](https://grassland-road-sign-d8bdfce86570-1453404640.tcloudbaseapp.com/) · [GitHub Pages](https://komoribi147.github.io/grassland-road-sign/)。CloudBase 免费体验版的默认域名仅供开发测试，打开时可能出现腾讯云的访问提示。
 
 完整文本：[下载修订版互动剧本（Word）](docs/草地上的路标完整互动剧本修订版.docx)。
@@ -34,7 +36,7 @@ node server/server.mjs
 > ⚠️ **不要**直接双击 `index.html`。浏览器不允许本地网页（file://）加载剧情数据和脚本，
 > 打开只会是一个点不动的封面。要本地跑就用上面的服务器，或者用单文件版。
 
-想让 NPC 真正"活"起来（预选项回答由大模型即兴回应）：把 `server/.env.example` 复制成项目根目录的 `.env`，填上讯飞开放平台的 APIPassword 和模型名，然后重新运行上面的命令。详见 [docs/DEPLOY.md](docs/DEPLOY.md)。
+启用角色交互与两轮探究引导：把 `server/.env.example` 复制成项目根目录的 `.env`，仅在服务端填写 DeepSeek API Key，模型使用 `deepseek-chat`。网站使用者只需浏览器，密钥不会发给浏览器。详见 [docs/DEPLOY.md](docs/DEPLOY.md)。
 
 想看自动演示（展台播放、录屏）：打开 <http://localhost:8787/#auto>，`#auto60` 是快放。
 

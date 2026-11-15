@@ -229,8 +229,8 @@ const send = (res, code, body, type = "application/json; charset=utf-8") => {
 };
 
 // 只发布网页需要的文件。尤其不能让浏览器读取根目录的 .env、.git 或 server/。
-const PUBLIC_FILES = new Set(["index.html", "inquiry.html", "teacher-review.html", "rescue-demo.html", "voice-preview.html", "voice-candidates.html", "favicon.ico"]);
-const PUBLIC_DIRS = new Set(["assets", "voice", "css", "js", "story", "docs", "openworld"]);
+const PUBLIC_FILES = new Set(["index.html", "learn.html", "review.html", "inquiry.html", "teacher-review.html", "rescue-demo.html", "voice-preview.html", "voice-candidates.html", "favicon.ico"]);
+const PUBLIC_DIRS = new Set(["assets", "voice", "css", "js", "story", "docs", "openworld", "demo"]);
 const allowedOrigins = new Set((process.env.AI_ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean));
 // 部分 CloudBase 网关会为已登记域名自动注入 CORS。仅对显式配置的域名交由网关写该响应头。
 const gatewayCorsOrigins = new Set((process.env.AI_GATEWAY_CORS_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean));

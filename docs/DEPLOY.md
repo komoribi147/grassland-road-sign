@@ -1,16 +1,18 @@
 # 运行与发布
 
+> **2026 年 11 月版以 [云端教育网站说明](CLOUD_EDUCATION.md) 为准。** 默认交互与学习引导均为云端 DeepSeek；下述历史 Ollama 配置仅为旧开发记录，不属于本版运行要求。
+
 ## 一、本地演示（最稳，推荐答辩时用）
 
 ```bash
 node server/server.mjs
 ```
 
-打开 <http://localhost:8787>。本机免费模型可把 `server/.env.ollama.example` 复制成根目录的 `.env`；需要先运行 Ollama 并下载 `qwen2.5:14b`。Ollama 的本机接口不校验真实 API Key，模板里的 `ollama` 只是供现有服务器识别为已配置。
+打开 <http://localhost:8787/learn.html>。将 `server/.env.example` 复制成根目录 `.env`，由维护者在服务端填写 DeepSeek API Key，使用 `deepseek-chat`。学习者无需安装模型。
 
-这台开发电脑已安装 `qwen2.5:14b`，项目根目录的 `.env` 已按此模板配置。启动服务后，菜单应显示三个角色均使用该模型；点“开口说话”可分别与在场人物交谈。`.env` 被 Git 忽略，不会进入静态网页打包。
+这台开发电脑的预览配置本轮已切换为现有云端 DeepSeek 凭据。角色对话和两轮史料探究均调用云端模型；`.env` 被 Git 忽略，不会进入静态网页打包。
 
-如需改回讯飞云端模型，可用 `server/.env.example` 作为模板填写自己的 APIPassword。环境变量 `AI_MODEL` 会统一覆盖三个角色的模型名，但每人的性格、语气和独立对话记忆仍由原有设定控制。
+环境变量 `AI_MODEL=deepseek-chat` 统一模型，但各角色的性格、语气和独立对话记忆仍由原有设定控制。固定剧情配音为已有音频，本版动态回复以文字呈现。
 
 优点：有 AI 实时对话、有音效、不受网络限制（除了大模型那一步）。
 注意：`.env` 已经在 `.gitignore` 里，不会被提交，Key 不会泄露。
@@ -60,7 +62,7 @@ CloudBase 静态托管集成 CDN 和 HTTPS。默认域名可以先用来试访�
 网页继续用静态托管，角色请求交给同一 CloudBase 环境中的 HTTP 云函数。**密钥只填云函数的环境变量，不写入 GitHub、静态网页或 `js/site-config.js`。**
 
 1. 现有环境已有 `grassland-ai` HTTP 云函数与 `/api` 公开路由，无需重复创建。函数使用 Node.js 20.19、监听 `9000` 端口。
-2. 将 `server/.env.cloud.example` 复制为根目录 `.env.cloud`，填写所选云端模型的以下配置。此文件已被 Git 忽略，保留原有本地 Ollama 配置。星火 Lite 需要先在讯飞开放平台开通并取得该版本的 APIPassword；免费用量和并发以平台规则为准。
+2. 将 `server/.env.cloud.example` 复制为根目录 `.env.cloud`，填写以下 DeepSeek 配置。此文件已被 Git 忽略；本版预览与云端服务使用同一云端模型方案。
 
 | 变量 | 值 |
 | --- | --- |

@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 
 const root = new URL("..", import.meta.url);
 execFileSync(process.execPath, ["tools/package-static.mjs"], { cwd: root, stdio: "pipe" });
-for (const page of ["inquiry.html", "teacher-review.html"]) {
+for (const page of ["learn.html", "review.html", "inquiry.html", "teacher-review.html"]) {
 const html = await readFile(new URL("../dist/" + page, import.meta.url), "utf8");
 const files = [...html.matchAll(/(?:src|href)="([^"#?]+)(?:\?[^\"]*)?"/g)].map(match => match[1]).filter(value => !/^(?:https?:|data:)/.test(value));
 for (const file of new Set(files)) {

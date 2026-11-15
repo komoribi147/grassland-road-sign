@@ -20,3 +20,7 @@ node_modules/
 /dist/
 /dist-ai-function/
 /dist-ai-function.zip
+
+# 所有私密环境配置均排除；只允许示例模板
+**/.env*
+!**/.env.example

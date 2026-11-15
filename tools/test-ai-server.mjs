@@ -58,6 +58,9 @@ try {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
   assert.ok(healthy, "API server should start");
+  for (const file of ['learn.html', 'review.html', 'demo/开发演示学习记录.json']) {
+    assert.equal((await fetch(`${base}/${file}`)).status, 200, `教育网站入口应可访问：${file}`);
+  }
 
   const gatewayHealth = await fetch(`${base}/health`, { headers: { Origin: origin } });
   assert.equal(gatewayHealth.status, 200, "CloudBase 网关去掉 /api 前缀后仍能检查服务");

@@ -12,6 +12,8 @@ if (!out.startsWith(`${root}${path.sep}`)) throw new Error("Refusing to write ou
 await rm(out, { recursive: true, force: true });
 await mkdir(out, { recursive: true });
 await copyFile(path.join(root, "index.html"), path.join(out, "index.html"));
+for (const page of ["learn.html", "review.html"]) await copyFile(path.join(root, page), path.join(out, page));
+await cp(path.join(root, "demo"), path.join(out, "demo"), { recursive: true });
 await copyFile(path.join(root, "inquiry.html"), path.join(out, "inquiry.html"));
 await copyFile(path.join(root, "teacher-review.html"), path.join(out, "teacher-review.html"));
 await copyFile(path.join(root, "rescue-demo.html"), path.join(out, "rescue-demo.html"));

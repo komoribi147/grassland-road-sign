@@ -58,7 +58,7 @@
     { "t": "say", "who": "he-xiuying", "text": "老李，光脚那边我给你裹一层。你也别逞强。" },
     { "t": "say", "who": "li-changhe", "text": "中。你先看伤员，我跟着。" },
     { "t": "ambient", "name": "rain" },
-    { "t": "sfx", "name": "shout" },
+    { "t": "label", "name": "distant-shout-text-only" },
     { "t": "visual", "description": "雨声渐大。\n远处传来喊声：“一营的——跟上——别掉队——”", "visual": {"src":"assets/stills/rain-shout-pov.png"} },
     { "t": "say", "who": "li-changhe", "text": "听见没？队伍在前面。走。" },
     { "t": "goto", "scene": "act1" }

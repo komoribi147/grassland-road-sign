@@ -1,5 +1,5 @@
 const normalize = text => String(text || "").replace(/\s+/g, " ").trim();
-export const localVoiceEndpoint = (location = globalThis.location) => !location || /^(localhost|127\.0\.0\.1|\[?::1\]?)$/.test(location.hostname) ? "/api/tts" : null;
+export const localVoiceEndpoint = (location = globalThis.location) => globalThis.__VOICE_DYNAMIC__ === false ? null : !location || /^(localhost|127\.0\.0\.1|\[?::1\]?)$/.test(location.hostname) ? "/api/tts" : null;
 const comparable = text => normalize(text).normalize("NFKC")
   .replace(/^中[。！!，,]\s*/u, "").replace(/[\p{P}\p{S}\s]/gu, "");
 

@@ -1,10 +1,10 @@
 {
-  "_说明": "每个 NPC 一个大模型配置。不填的字段自动用 default。apiKeyEnv 写环境变量名，这样三个人可以各用各的讯飞账号，额度互不占用。",
+  "_说明": "使用云端 DeepSeek API；不同角色共享基础模型，通过独立人设和上下文交互。密钥只从服务端环境变量读取。",
 
   "default": {
-    "baseUrl": "https://spark-api-open.xf-yun.com/v1/chat/completions",
+    "baseUrl": "https://api.deepseek.com/v1/chat/completions",
     "apiKeyEnv": "AI_API_KEY",
-    "model": "4.0Ultra",
+    "model": "deepseek-chat",
     "temperature": 0.85,
     "maxTokens": 220
   },
@@ -16,7 +16,6 @@
       "模型说明": "老班长话少、短句，温度调低一点更稳。"
     },
     "shitou": {
-      "model": "lite",
       "temperature": 1.0,
       "apiKeyEnv": "AI_KEY_SHITOU",
       "模型说明": "石头是个十六岁的孩子，温度调高一点，让他跳脱。"

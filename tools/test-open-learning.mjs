@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import { probeLearningServer } from './open-learning.mjs';
+let mode='other';
+const service=createServer((req,res)=>{res.setHeader('Content-Type','application/json');if(mode==='project'&&req.url==='/api/health')return res.end(JSON.stringify({ok:true,model:'deepseek-chat',capabilities:{inquiry:true},characters:{'li-changhe':{}}}));if(mode==='project'&&req.url==='/learn.html'){res.setHeader('Content-Type','text/html');return res.end('<title>学习首页 · 草地上的路标</title>');}res.writeHead(404);res.end('{}');});
+await new Promise(r=>service.listen(0,'127.0.0.1',r));
+const base=`http://127.0.0.1:${service.address().port}`;
+assert.equal(await probeLearningServer(base),'occupied','其他服务占用时不可当作已就绪');
+mode='project';assert.equal(await probeLearningServer(base),'ready');
+await new Promise(r=>service.close(r));assert.equal(await probeLearningServer(base),'unreachable');
+console.log('教育网站启动检查通过：就绪、其他服务占用与未启动。');
