@@ -372,8 +372,12 @@ let booting = false;
 async function boot() {
   if (booting) { showToast("剧情数据还在路上，马上就好"); return; }   // 别让重复点击变成重复下载
   booting = true;
+  $("btnStart").disabled = true;
+  $("btnStart").textContent = "正在准备故事…";
   try {
     await engine.load();
+    $("btnStart").disabled = false;
+    $("btnStart").textContent = "进入故事";
     $("screenError").hidden = true;
     renderLoreCount();
     $("btnResume").hidden = !Save.read();
